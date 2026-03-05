@@ -848,6 +848,262 @@
     color: rgba(255,255,255,0.4);
     font-style: italic;
   }
+
+  /* ── Primary KPI Deep-Dive Block ── */
+  .kpi-deepdive {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-deepdive::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: var(--fsa-red);
+    border-radius: 4px 0 0 4px;
+  }
+  .kpi-deepdive-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .kpi-deepdive-label {
+    font-family: var(--font-semi);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--fsa-red);
+    margin-bottom: 4px;
+  }
+  .kpi-deepdive-name {
+    font-family: var(--font-semi);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .kpi-deepdive-body {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .kpi-deepdive-body { grid-template-columns: 1fr 1fr; }
+  }
+  .kpi-hero-number {
+    font-family: var(--font-display);
+    font-size: 72px;
+    font-weight: 700;
+    letter-spacing: 0px;
+    line-height: 1;
+    min-width: 140px;
+  }
+  .kpi-hero-number.red   { color: var(--fsa-red); }
+  .kpi-hero-number.green { color: var(--green); }
+  .kpi-hero-number.amber { color: var(--amber); }
+  .kpi-hero-number.gray  { color: var(--muted); }
+  .kpi-hero-number.dark  { color: var(--charcoal); }
+  .kpi-target-stack { display: flex; flex-direction: column; gap: 12px; }
+  .kpi-target-item {}
+  .kpi-target-lbl {
+    font-family: var(--font-semi);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .kpi-target-val {
+    font-family: var(--font-semi);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .kpi-deepdive-insights { display: flex; flex-direction: column; gap: 10px; }
+  .kpi-insight {
+    background: var(--surface2);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--text-sec);
+    line-height: 1.55;
+    border-left: 3px solid var(--border-dk);
+  }
+  .kpi-insight.insight-warn { border-left-color: var(--amber); background: var(--amber-bg); }
+  .kpi-insight.insight-good { border-left-color: var(--green); background: var(--green-bg); }
+  .kpi-insight.insight-bad  { border-left-color: var(--fsa-red); background: var(--red-bg); }
+
+  /* ── Trend Mini-Table ── */
+  .trend-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .trend-table th {
+    text-align: left;
+    font-family: var(--font-semi);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 8px 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .trend-table td {
+    padding: 7px 8px 7px 0;
+    color: var(--text-sec);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .trend-table tr:last-child td { border-bottom: none; }
+  .trend-table td:first-child { font-weight: 500; color: var(--text); }
+  .trend-delta-pos { color: var(--green); font-weight: 600; }
+  .trend-delta-neg { color: var(--fsa-red); font-weight: 600; }
+  .trend-delta-neu { color: var(--muted); font-weight: 500; }
+
+  /* ── Dual KPI split section ── */
+  .dual-kpi-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 700px) { .dual-kpi-split { grid-template-columns: 1fr; } }
+
+  /* ── Funnel vis ── */
+  .funnel-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .funnel-row:last-child { border-bottom: none; }
+  .funnel-label { font-size: 12px; font-weight: 500; color: var(--text); min-width: 130px; }
+  .funnel-bar-wrap { flex: 1; background: var(--surface2); border-radius: 3px; height: 8px; overflow: hidden; }
+  .funnel-bar-fill { height: 100%; border-radius: 3px; background: var(--fsa-red); }
+  .funnel-val { font-family: var(--font-semi); font-size: 12px; font-weight: 600; color: var(--text); min-width: 70px; text-align: right; }
+  .funnel-delta { font-size: 11px; min-width: 42px; text-align: right; }
+
+  /* ── Segmentation pill row ── */
+  .seg-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .seg-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-family: var(--font-semi);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-sec);
+  }
+  .seg-pill.active {
+    background: var(--red-bg);
+    border-color: var(--fsa-red);
+    color: var(--fsa-red);
+  }
+
+  /* ── Channel-specific color accents ── */
+  .accent-search   { color: #1A73E8; }
+  .accent-social   { color: #1877F2; }
+  .accent-ctv      { color: #E50914; }
+  .accent-seo      { color: #34A853; }
+  .accent-email    { color: #C41230; }
+  .accent-sms      { color: #6366F1; }
+  .accent-listings { color: #F59E0B; }
+  .accent-reviews  { color: #10B981; }
+  .accent-dm       { color: #8B5CF6; }
+  .accent-web      { color: #0EA5E9; }
+
+  /* ── Benchmark comparison bar ── */
+  .benchmark-compare { display: flex; flex-direction: column; gap: 12px; }
+  .bench-item { display: flex; flex-direction: column; gap: 4px; }
+  .bench-label-row { display: flex; justify-content: space-between; align-items: center; }
+  .bench-lbl { font-size: 12px; font-weight: 500; color: var(--text); }
+  .bench-val { font-family: var(--font-semi); font-size: 12px; font-weight: 600; color: var(--text); }
+  .bench-track { background: var(--surface2); border-radius: 3px; height: 7px; overflow: hidden; }
+  .bench-fill { height: 100%; border-radius: 3px; }
+  .bench-fill.you  { background: var(--fsa-red); }
+  .bench-fill.comp { background: var(--border-dk); }
+  .bench-fill.tgt  { background: var(--green); }
+
+  /* ── Monitoring KPI mini-cards ── */
+  .monitoring-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .monitor-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 14px 16px;
+  }
+  .monitor-card-label {
+    font-family: var(--font-semi);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .monitor-card-val {
+    font-family: var(--font-semi);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .monitor-card-sub {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ── Heatmap-style cell ── */
+  .heat-red    { background: var(--red-bg);   color: var(--fsa-red); border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 600; }
+  .heat-amber  { background: var(--amber-bg); color: var(--amber);   border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 600; }
+  .heat-green  { background: var(--green-bg); color: var(--green);   border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 600; }
+  .heat-gray   { background: var(--gray-bg);  color: var(--muted);   border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 600; }
+
+  /* ── Attribution / journey strip ── */
+  .journey-strip {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding: 16px 0;
+    scrollbar-width: thin;
+  }
+  .journey-step {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .journey-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 10px 14px;
+    text-align: center;
+    min-width: 100px;
+  }
+  .journey-box-val { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--text); }
+  .journey-box-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: var(--font-semi); letter-spacing: 0.5px; }
+  .journey-arrow { padding: 0 6px; color: var(--muted); font-size: 16px; }
+  .journey-box.highlight { background: var(--red-bg); border-color: var(--fsa-red); }
+  .journey-box.highlight .journey-box-val { color: var(--fsa-red); }
 </style>
 </head>
 <body>
@@ -1061,82 +1317,185 @@
     </div>
   </div>
 
+  <!-- PRIMARY KPI DEEP DIVE -->
+  <div class="kpi-deepdive">
+    <div class="kpi-deepdive-header">
+      <div>
+        <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
+        <div class="kpi-deepdive-name">Google Store Visit Rate &amp; CPC</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="heat-amber">20.0% Target Q1</span>
+        <span class="heat-green">25.0% Target EoY</span>
+        <span class="heat-red">Search: 3.6% Current</span>
+      </div>
+    </div>
+    <div class="kpi-deepdive-body">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Store Visit Rate</div>
+        <div class="kpi-hero-number amber">19.98%</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">Blended (all types)<br>Baseline 2025</div>
+        <div style="margin-top:16px;">
+          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">Progress to Q1 Target (20%)</div>
+          <div class="progress-bar" style="margin-bottom:0;"><div class="progress-fill yellow" style="width:99.9%"></div></div>
+          <div style="font-size:10px; color:var(--amber); margin-top:4px; font-weight:600;">99.9% — On the line</div>
+        </div>
+      </div>
+      <div class="kpi-target-stack">
+        <div class="kpi-target-item">
+          <div class="kpi-target-lbl">By Campaign Type</div>
+        </div>
+        <table class="trend-table">
+          <thead>
+            <tr><th>Type</th><th>SVR</th><th>CPC</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Search</td>
+              <td>13.6%</td>
+              <td>$2.97</td>
+              <td><span class="heat-red">Below</span></td>
+            </tr>
+            <tr>
+              <td>Perf. Max</td>
+              <td>26.1%</td>
+              <td>$4.31</td>
+              <td><span class="heat-green">Above</span></td>
+            </tr>
+            <tr>
+              <td>Demand Gen</td>
+              <td>28.3%</td>
+              <td>$0.94</td>
+              <td><span class="heat-green">Above</span></td>
+            </tr>
+            <tr style="font-weight:600;">
+              <td>Total</td>
+              <td>20.3%</td>
+              <td>$2.37 avg</td>
+              <td><span class="heat-green">On Target</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="font-size:11px; color:var(--muted);">SVR = Store Visits / Clicks. Attribution methodology must be validated before blending types — PMax and Demand Gen ratios are unstudied vs Search's established 3:1 store visit-to-appointment ratio.</div>
+      </div>
+      <div class="kpi-deepdive-insights">
+        <div class="kpi-insight insight-warn">
+          <strong>Attribution Gap:</strong> PMax and Demand Gen SVRs look strong (26–28%) but the relationship between Google's attributed store visits and an actual car in bay has only been studied for Search (3:1 ratio). Validate before using blended rate.
+        </div>
+        <div class="kpi-insight insight-bad">
+          <strong>Search Campaign Underperforming:</strong> Search SVR of 13.6% is well below the 20% Q1 target. Investigate bid strategy, keyword match types, and geographic targeting overlap with PMax campaigns.
+        </div>
+        <div class="kpi-insight insight-good">
+          <strong>Latency Opportunity:</strong> Click → Store Visit lag varies by campaign type. Understanding this window per type will enable smarter attribution windows and better optimization of each campaign's bidding model.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEND & EFFICIENCY FUNNEL -->
+  <div class="section-label">Spend &amp; Efficiency by Campaign Type</div>
   <div class="three-col">
     <div class="card">
-      <div class="card-title">Primary KPI — Store Visit Rate (Search)</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--fsa-red); letter-spacing:1px; font-weight:700;">3.6%</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Current: 9,866 visits / 72,450 clicks</span><span>Target: 20% (Q1) → 25% (EoY)</span></div>
-        <div class="progress-bar"><div class="progress-fill red" style="width:18%"></div></div>
+      <div class="card-title"><span class="accent-search">●</span> Search</div>
+      <div style="font-family:var(--font-display); font-size:44px; font-weight:700; color:var(--charcoal); letter-spacing:0;">$215K</div>
+      <div class="journey-strip" style="padding:10px 0;">
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">908K</div><div class="journey-box-lbl">Impressions</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">72.5K</div><div class="journey-box-lbl">Clicks</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box highlight"><div class="journey-box-val">9,866</div><div class="journey-box-lbl">Store Visits</div></div></div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Search campaign only. PMax (14,543 clicks, 3,799 visits = 26%) and Demand Gen (50,071 clicks, 14,188 visits = 28%) are actually beating the target — but attribution methodology needs validation before blending.</div>
+      <div class="monitor-card-sub">CTR: 7.99% · CPC: $2.97 · SVR: 13.6%</div>
+      <div class="monitor-card-sub" style="margin-top:6px;">Impression Share: track monthly — monitor for cannibalization from PMax</div>
     </div>
     <div class="card">
-      <div class="card-title">Secondary KPI — CPC by Campaign Type</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">$2.97</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Search avg CPC (Jan 28–Feb 24)</span><span>Target: Minimize (mix-dependent)</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:60%"></div></div>
+      <div class="card-title"><span class="accent-search">●</span> Performance Max</div>
+      <div style="font-family:var(--font-display); font-size:44px; font-weight:700; color:var(--charcoal); letter-spacing:0;">$62.7K</div>
+      <div class="journey-strip" style="padding:10px 0;">
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">2.05M</div><div class="journey-box-lbl">Impressions</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">14.5K</div><div class="journey-box-lbl">Clicks</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box highlight"><div class="journey-box-val">3,799</div><div class="journey-box-lbl">Store Visits</div></div></div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Search: $2.97 · PMax: $4.31 · Demand Gen: $0.94. Total period spend: $324,842.</div>
+      <div class="monitor-card-sub">CTR: 0.71% · CPC: $4.31 · SVR: 26.1%</div>
+      <div class="monitor-card-sub" style="margin-top:6px;">Highest SVR of paid search types — but attribution methodology unstudied</div>
     </div>
     <div class="card">
-      <div class="card-title">Cost per Store Visit</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--muted); letter-spacing:1px; font-weight:700;">—</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Need Store Visit data in export to calculate.<br>Search historically shows 3:1 Store Visits to service appointments.</div>
+      <div class="card-title"><span class="accent-search">●</span> Demand Gen</div>
+      <div style="font-family:var(--font-display); font-size:44px; font-weight:700; color:var(--charcoal); letter-spacing:0;">$46.9K</div>
+      <div class="journey-strip" style="padding:10px 0;">
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">271K</div><div class="journey-box-lbl">Impressions</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">50.1K</div><div class="journey-box-lbl">Interactions</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box highlight"><div class="journey-box-val">14.2K</div><div class="journey-box-lbl">Store Visits</div></div></div>
+      </div>
+      <div class="monitor-card-sub">IR: 89.96% · CPC: $0.94 · SVR: 28.3%</div>
+      <div class="monitor-card-sub" style="margin-top:6px;">Lowest CPC of all types — high efficiency if attribution holds</div>
+    </div>
+  </div>
+
+  <!-- SECONDARY + MONITORING KPIs -->
+  <div class="section-label">Secondary &amp; Monitoring KPIs</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">Avg CPC — Search</div>
+      <div class="monitor-card-val">$2.97</div>
+      <div class="monitor-card-sub">Target: minimize (mix-dependent). Q4 2025 avg: $4.23 blended</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Cost / Store Visit</div>
+      <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+      <div class="monitor-card-sub">Search: $21.80 est. · PMax: $16.50 est. · Need validated attribution to confirm</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Total Spend (Period)</div>
+      <div class="monitor-card-val">$324.8K</div>
+      <div class="monitor-card-sub">Jan 28 – Feb 24, 2026 · 28-day window</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Impression Share</div>
+      <div class="monitor-card-val" style="color:var(--muted);">—</div>
+      <div class="monitor-card-sub">Track in Google Ads — monitor Search IS for competitive pressure signals</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Total Store Visits</div>
+      <div class="monitor-card-val">27,853</div>
+      <div class="monitor-card-sub">All campaign types combined. Validated against 3:1 ratio → ~9,284 implied car appointments</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">CAC Impact</div>
+      <div class="monitor-card-val" style="color:var(--amber);">Primary</div>
+      <div class="monitor-card-sub">Paid Search is the primary lever for Customer Acquisition Cost at FSA</div>
     </div>
   </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Campaign Type Breakdown (Jan 28 – Feb 24, 2026)</div>
-      <div class="metric-row">
-        <div class="metric-name">Search</div>
-        <div class="metric-values">
-          <span class="metric-current">$215,203</span>
-          <span class="metric-target">72,450 clicks · 908K impr.</span>
-          <span class="metric-vs">CPC $2.97 · SVR 13.6%</span>
-        </div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Performance Max</div>
-        <div class="metric-values">
-          <span class="metric-current">$62,693</span>
-          <span class="metric-target">14,543 clicks · 2.05M impr.</span>
-          <span class="metric-vs">CPC $4.31 · SVR 26.1%</span>
-        </div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Demand Gen</div>
-        <div class="metric-values">
-          <span class="metric-current">$46,946</span>
-          <span class="metric-target">50,071 clicks · 271K impr.</span>
-          <span class="metric-vs">CPC $0.94 · SVR 28.3%</span>
-        </div>
-      </div>
-      <div class="metric-row" style="font-weight:600;">
-        <div class="metric-name">Total</div>
-        <div class="metric-values">
-          <span class="metric-current">$324,842</span>
-          <span class="metric-target">137,064 clicks</span>
-          <span class="metric-vs">27,853 store visits</span>
-        </div>
-      </div>
-      <div style="font-size:11px; color:var(--muted); margin-top:12px;">SVR = Store Visit Rate (Visits/Clicks). PMax and Demand Gen SVR look strong but attribution methodology must be validated before blending with Search.</div>
+      <div class="card-title">Store Visit Ratio Study — Research Priority</div>
+      <table class="trend-table">
+        <thead><tr><th>Campaign Type</th><th>Store Visits</th><th>Implied Cars</th><th>Ratio</th></tr></thead>
+        <tbody>
+          <tr><td>Search</td><td>9,866</td><td>~3,289</td><td><span class="heat-green">3:1 ✓ Studied</span></td></tr>
+          <tr><td>Perf. Max</td><td>3,799</td><td>?</td><td><span class="heat-amber">Not Yet Studied</span></td></tr>
+          <tr><td>Demand Gen</td><td>14,188</td><td>?</td><td><span class="heat-amber">Not Yet Studied</span></td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px; color:var(--muted); margin-top:10px;">Prioritize PMax and Demand Gen attribution study — these two types combined account for 64% of total estimated store visits. If their ratio differs meaningfully from Search's 3:1, it changes the channel's true ROI calculation significantly.</div>
     </div>
     <div class="card">
       <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Establish Search:Store Visit ratio baseline (currently 3:1 for Search; PMax/Demand Gen unstudied). Prioritize this analysis to connect ad spend to in-store traffic.</li>
-        <li><div class="action-bullet">2</div>Create a unified efficiency metric combining Store Visit Rate + CPC into a single Cost per Car proxy.</li>
-        <li><div class="action-bullet">3</div>Investigate latency window: Click → Store Visit. Understand lag before optimizing bidding.</li>
-        <li><div class="action-bullet">4</div>Primary breakout: All Google first, then Search / PMax / Demand Gen secondary once attribution is understood.</li>
+        <li><div class="action-bullet">1</div>Commission PMax and Demand Gen store-visit-to-appointment ratio study — prioritize before optimizing bids toward either campaign type.</li>
+        <li><div class="action-bullet">2</div>Address Search SVR underperformance (13.6% vs 20% target) — review bid strategy, keyword match types, and negative keyword lists.</li>
+        <li><div class="action-bullet">3</div>Build unified efficiency metric: Cost per Car in Bay = Spend ÷ (Store Visits × Type Ratio). This is the exec-level KPI that ties paid media to business outcomes.</li>
+        <li><div class="action-bullet">4</div>Track Impression Share monthly for Search campaigns — declining IS signals competitive bid pressure and may explain Search SVR lag.</li>
       </ul>
     </div>
   </div>
-
   <div class="notes-box">
-    <strong>Strategic Note:</strong> Google Store Visit metric is the bridge between digital spend and in-store traffic. Until this ratio is understood for PMax and Demand Gen (beyond the 3:1 established for Search), optimize toward CPC as the primary efficiency lever. Mix is dependent on campaign type, so avoid blended targets until segmented data matures.
+    <strong>Strategic Note:</strong> Paid Google is rated High Impact and targets Customer Acquisition Cost as its rollup KPI. The Store Visit Rate is the connective tissue between digital spend and in-store traffic. Until the visit-to-appointment ratio is validated across PMax and Demand Gen, CPC remains the primary optimization lever. 2026 goal: create a unified CAC metric — one number that captures the true cost of getting a car in the bay.
   </div>
 </div>
 
@@ -1170,68 +1529,156 @@
     </div>
   </div>
 
+  <!-- PRIMARY KPI DEEP DIVE -->
+  <div class="kpi-deepdive">
+    <div class="kpi-deepdive-header">
+      <div>
+        <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
+        <div class="kpi-deepdive-name">Sessions + Engaged Sessions by Source (3 Growth Brands)</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="heat-amber">Establish Q4 Baseline</span>
+        <span class="heat-gray">Targets TBD — Growth Brands</span>
+      </div>
+    </div>
+    <div class="kpi-deepdive-body">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Total Sessions</div>
+        <div class="kpi-hero-number dark">1.55M</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">All sources combined<br>Q4 2025 estimated</div>
+        <div style="margin-top:16px;">
+          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">Engaged Sessions</div>
+          <div style="font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--accent-web);">~600K</div>
+          <div style="font-size:10px; color:var(--muted);">Engagement rate ~39% — benchmark 40–60% for service sites</div>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-target-lbl" style="margin-bottom:10px;">Sessions by Channel Group</div>
+        <div class="benchmark-compare">
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">Organic Search</span><span class="bench-val">875K · 56%</span></div>
+            <div class="bench-track"><div class="bench-fill you" style="width:56%;"></div></div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">Paid Search</span><span class="bench-val">381K · 25%</span></div>
+            <div class="bench-track"><div class="bench-fill you" style="width:25%; background:var(--amber);"></div></div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">Cross-network</span><span class="bench-val">101K · 6%</span></div>
+            <div class="bench-track"><div class="bench-fill you" style="width:6%; background:var(--charcoal);"></div></div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">Direct</span><span class="bench-val">81K · 5%</span></div>
+            <div class="bench-track"><div class="bench-fill you" style="width:5%; background:var(--muted);"></div></div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">Paid Social</span><span class="bench-val">67K · 4%</span></div>
+            <div class="bench-track"><div class="bench-fill you" style="width:4%; background:#1877F2;"></div></div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">All Other</span><span class="bench-val">49K · 3%</span></div>
+            <div class="bench-track"><div class="bench-fill you" style="width:3%; background:var(--border-dk);"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-deepdive-insights">
+        <div class="kpi-insight insight-warn">
+          <strong>Data Gap:</strong> Export missing Month dimension. Full Date (YYYY-MM-DD) must be added in Looker Studio to enable proper MoM trending — the single biggest data fix needed for this channel.
+        </div>
+        <div class="kpi-insight insight-warn">
+          <strong>3 Growth Brands:</strong> Sessions need to be broken out specifically for the 3 growth brands. Current data is all-brand aggregate — organic session conversion or growth rate trend is the actual target once segmentation is enabled.
+        </div>
+        <div class="kpi-insight">
+          <strong>Organic Dominance:</strong> 56% organic share is strong. Monitor for Paid cannibalization — if Paid Search grows while Organic declines, it inflates total sessions while increasing CAC.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY EVENTS SECTION -->
+  <div class="section-label">Key Events — Conversion Signals</div>
   <div class="three-col">
     <div class="card">
-      <div class="card-title">Primary KPI — Total Sessions</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">1.55M</div>
+      <div class="card-title">Get Directions CTA</div>
+      <div style="font-family:var(--font-display); font-size:52px; font-weight:700; color:var(--accent-web); letter-spacing:0;">7,000</div>
       <div class="progress-wrap">
-        <div class="progress-label"><span>All channels combined</span><span>Target: establish Q4 baseline</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:75%"></div></div>
-      </div>
-      <div style="font-size:11px; color:var(--muted);">Organic Search dominant at 875K (56%). Paid Search 381K (25%). Export missing Month — full date dimension needed from Looker Studio.</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Key Event — Get Directions CTA</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">7K</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Current: ~7,000/30d</span><span>Target: 8,500/30d</span></div>
+        <div class="progress-label"><span>Current: ~7,000 / 30d</span><span>Target: 8,500 / 30d</span></div>
         <div class="progress-bar"><div class="progress-fill yellow" style="width:82%"></div></div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">82% to target. Strong leading indicator for in-store visits.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">82% to target. Strongest leading indicator for in-store visit intent — a user clicking directions has high purchase intent.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Coupon Request Events</div>
+      <div style="font-family:var(--font-display); font-size:52px; font-weight:700; color:var(--muted); letter-spacing:0;">HOLD</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Key Event tracking TBD — 829 resolving. Note: 2024 data shows more coupon clicks than 2025, which is likely a tracking error. Do not use 2024 coupon data as baseline.</div>
+      <div class="kpi-insight insight-warn" style="margin-top:8px; font-size:11px;">Fix required before this can be used as a KPI</div>
     </div>
     <div class="card">
       <div class="card-title">Risk Monitor — Lighthouse Score</div>
-      <div style="font-family:var(--font-display); font-size:44px; color:var(--amber); letter-spacing:1px; font-weight:700;">WATCH</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">GTM changes may impact page load speed. Monitor Lighthouse scores — establish thresholds before next GTM deployment.</div>
+      <div style="font-family:var(--font-display); font-size:44px; font-weight:700; color:var(--amber); letter-spacing:0;">WATCH</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">GTM changes impact page load speed. No threshold established yet. Every 1-point drop in Performance score correlates with ~7% bounce rate increase on mobile.</div>
+      <div class="kpi-insight insight-warn" style="margin-top:8px; font-size:11px;">Establish threshold before next GTM deployment</div>
+    </div>
+  </div>
+
+  <!-- SECONDARY & MONITORING KPIs -->
+  <div class="section-label">Secondary &amp; Monitoring KPIs</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">Engagement Rate</div>
+      <div class="monitor-card-val">~39%</div>
+      <div class="monitor-card-sub">Q4 est. · Industry benchmark: 40–60% for service/local sites. Slightly below range.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Bounce Rate</div>
+      <div class="monitor-card-val">~61%</div>
+      <div class="monitor-card-sub">Inverse of engagement rate. Monitor by channel — paid traffic typically bounces higher than organic.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">New Users</div>
+      <div class="monitor-card-val">~1.2M</div>
+      <div class="monitor-card-sub">Full-year 2024 data. Primary acquisition signal — track MoM once Month dimension restored.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Avg Session Duration</div>
+      <div class="monitor-card-val">~85s</div>
+      <div class="monitor-card-sub">Organic sessions: 85–99s. Lower-intent sessions (paid display, social) trend shorter.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Call Clicks</div>
+      <div class="monitor-card-val">25K+</div>
+      <div class="monitor-card-sub">Full-year. Strong phone intent signal — track alongside Directions clicks as composite in-store intent score.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Coupon Clicks (Channel)</div>
+      <div class="monitor-card-val" style="color:var(--amber);">Jan 2026</div>
+      <div class="monitor-card-sub">Organic: 8,603 · Paid Search: 4,312 · Direct: 2,189 · Social: 391 (Jan 2026)</div>
     </div>
   </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Sessions by Channel Group</div>
-      <div class="metric-row">
-        <div class="metric-name">Organic Search</div>
-        <div class="metric-values"><span class="metric-current">875,482</span><span class="metric-target">56% of total</span><span class="kpi-delta delta-pos">Primary</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Paid Search</div>
-        <div class="metric-values"><span class="metric-current">380,838</span><span class="metric-target">25% of total</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Cross-network</div>
-        <div class="metric-values"><span class="metric-current">100,643</span><span class="metric-target">6% of total</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Direct</div>
-        <div class="metric-values"><span class="metric-current">81,189</span><span class="metric-target">5% of total</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Paid Social</div>
-        <div class="metric-values"><span class="metric-current">66,507</span><span class="metric-target">4% of total</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">All Other</div>
-        <div class="metric-values"><span class="metric-current">49,351</span><span class="metric-target">3% of total</span></div>
-      </div>
-      <div style="font-size:11px; color:var(--muted); margin-top:12px;">Export missing Month dimension — add full Date field in Looker Studio for proper trending.</div>
+      <div class="card-title">Monthly Trend — Sessions (Full Year 2024)</div>
+      <table class="trend-table">
+        <thead><tr><th>Month</th><th>Sessions</th><th>Engaged</th><th>Eng. Rate</th></tr></thead>
+        <tbody>
+          <tr><td>May 2024</td><td>477,528</td><td>157,179</td><td>32.9%</td></tr>
+          <tr><td>Jun 2024</td><td>478,198</td><td>156,871</td><td>32.8%</td></tr>
+          <tr><td>Jul 2024</td><td>453,566</td><td>157,510</td><td>34.7%</td></tr>
+          <tr><td>Aug 2024</td><td>408,711</td><td>158,902</td><td>38.9%</td></tr>
+          <tr><td>Oct 2025</td><td>315,643</td><td>120,354</td><td>38.1%</td></tr>
+          <tr><td>Nov 2025</td><td>308,160</td><td>126,439</td><td>41.0%</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Sessions declining YoY in late 2025. Investigate whether this is seasonal, or structural decline from algorithm changes or competitive pressure.</div>
     </div>
     <div class="card">
       <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Fix Looker Studio export: add full Date (YYYY-MM-DD) dimension to eliminate month-assumption workaround.</li>
-        <li><div class="action-bullet">2</div>Investigate top organic session source path queries (Sam investigating). Tie findings to content strategy.</li>
-        <li><div class="action-bullet">3</div>Establish Sessions-to-Store Visit conversion rate — this becomes your web efficiency proxy for exec reporting once Store Visit data is available.</li>
-        <li><div class="action-bullet">4</div>Resolve Key Event tracking for Coupon Request (HOLD: 829 figures out Key Event tracking first).</li>
+        <li><div class="action-bullet">1</div>Fix Looker Studio export: add full Date dimension (YYYY-MM-DD). This is the highest-leverage data fix — without it, no MoM trending is possible.</li>
+        <li><div class="action-bullet">2</div>Break out 3 Growth Brands in GA4 — create a filtered view or custom report so growth brand sessions are tracked separately from the fleet average.</li>
+        <li><div class="action-bullet">3</div>Resolve Coupon Request key event tracking (HOLD: 829 resolving). Coupon intent is the closest web signal to purchase intent available.</li>
+        <li><div class="action-bullet">4</div>Establish Lighthouse score thresholds before next GTM deployment — document baseline Performance score today.</li>
       </ul>
     </div>
   </div>
@@ -1267,60 +1714,146 @@
     </div>
   </div>
 
-  <div class="three-col">
-    <div class="card">
-      <div class="card-title">Primary KPI — Opt-in Rate</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--amber); letter-spacing:1px; font-weight:700;">0.6%</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Current: 0.6%</span><span>EoY Target: 1.0%</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:60%"></div></div>
+  <!-- PRIMARY KPI DEEP DIVE -->
+  <div class="kpi-deepdive">
+    <div class="kpi-deepdive-header">
+      <div>
+        <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
+        <div class="kpi-deepdive-name">Opt-Ins / Total Population</div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Opt-ins / Total Population. Competitors benchmark ~1%. Q1 target holds at 0.6% — focus on EoY growth.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="heat-red">Current: 0.6%</span>
+        <span class="heat-amber">Q1 Target: Hold at 0.6%</span>
+        <span class="heat-green">EoY Target: 1.0%</span>
+      </div>
     </div>
+    <div class="kpi-deepdive-body">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Opt-In Rate</div>
+        <div class="kpi-hero-number amber">0.6%</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">of Total Population<br>Baseline 2025</div>
+        <div style="margin-top:16px;">
+          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">Progress to EoY Target (1.0%)</div>
+          <div class="progress-bar" style="margin-bottom:0;"><div class="progress-fill red" style="width:60%"></div></div>
+          <div style="font-size:10px; color:var(--fsa-red); margin-top:4px; font-weight:600;">60% — Growth needed</div>
+        </div>
+        <div style="margin-top:12px; padding:10px; background:var(--surface2); border-radius:4px; font-size:11px; color:var(--muted);">
+          Competitors benchmark at <strong>~1%</strong>. FSA is at half the industry standard — significant growth opportunity.
+        </div>
+      </div>
+      <div>
+        <div class="kpi-target-lbl" style="margin-bottom:10px;">Opt-In Population Growth (Monthly)</div>
+        <table class="trend-table">
+          <thead><tr><th>Month</th><th>New Opt-Ins</th><th>Total Opt-Ins</th><th>Opt-Outs</th></tr></thead>
+          <tbody>
+            <tr><td>Jan 2025</td><td>914</td><td>14,295</td><td>1,681</td></tr>
+            <tr><td>Mar 2025</td><td>1,138</td><td>16,083</td><td>2,055</td></tr>
+            <tr><td>Jun 2025</td><td>1,575</td><td>19,011</td><td>2,305</td></tr>
+            <tr><td>Sep 2025</td><td>1,104</td><td>22,180</td><td>2,270</td></tr>
+            <tr><td>Dec 2025</td><td>933</td><td>24,844</td><td>2,279</td></tr>
+            <tr><td>Jan 2026</td><td>—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:11px; color:var(--muted); margin-top:6px;">New opt-ins peaked Jun 2025 at 1,575/mo. Now declining — investigate what drove mid-year growth and replicate it.</div>
+      </div>
+      <div class="kpi-deepdive-insights">
+        <div class="kpi-insight insight-bad">
+          <strong>Net List Growth Concern:</strong> Monthly opt-outs (2,000–2,300) consistently exceed new opt-ins (900–1,100). Without intervention, total list size will shrink — undermining the entire channel's reach.
+        </div>
+        <div class="kpi-insight insight-warn">
+          <strong>QR Code Opportunity:</strong> Physical point-of-service opt-in (QR codes in locations) is the lowest-cost acquisition method. No digital advertising cost — just operational execution at ~300 locations.
+        </div>
+        <div class="kpi-insight insight-warn">
+          <strong>Tie to Returning Cars:</strong> SMS opt-in should be linked to existing customer return rate programs. Existing customers who opt into SMS are more likely to redeem coupons and return within 180 days.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECONDARY KPI: COUPON REDEMPTION -->
+  <div class="section-label">Secondary KPI — Coupon Redemption Rate</div>
+  <div class="dual-kpi-split">
     <div class="card">
-      <div class="card-title">Secondary — Coupon Redemption Rate</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">0.2%</div>
+      <div class="card-title">Coupon Redemption Rate</div>
+      <div style="font-family:var(--font-display); font-size:52px; font-weight:700; color:var(--fsa-red); letter-spacing:0;">0.2%</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Current: 0.2%</span><span>Target: 0.5%</span></div>
         <div class="progress-bar"><div class="progress-fill red" style="width:40%"></div></div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">SMS Coupon Redemptions / Total SMS Sends containing coupon.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">SMS Coupon Redemptions ÷ Total SMS Sends containing a coupon. 40% to target — the largest gap of any secondary KPI across channels.</div>
     </div>
     <div class="card">
-      <div class="card-title">Monthly Send Volume (Feb 2026)</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--fsa-red); letter-spacing:1px; font-weight:700;">88.8K</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Outgoing messages. Delivery rate: 91.5% (81,260 delivered). Volume trending down from 102K peak (Mar 2025) — monitor for list health issues.</div>
+      <div class="card-title">Coupon Redemption vs Delivery Rate</div>
+      <div class="benchmark-compare" style="margin-top:8px;">
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Delivery Rate</span><span class="bench-val">93.3%</span></div>
+          <div class="bench-track"><div class="bench-fill tgt" style="width:93.3%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Coupon Redemption</span><span class="bench-val">0.2%</span></div>
+          <div class="bench-track"><div class="bench-fill you" style="width:20%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Target Redemption</span><span class="bench-val">0.5%</span></div>
+          <div class="bench-track"><div class="bench-fill comp" style="width:50%;"></div></div>
+        </div>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:10px;">Messages are being delivered — the gap is in getting recipients to act. Test urgency, offer size, and personalization of coupon messaging.</div>
+    </div>
+  </div>
+
+  <!-- MONITORING KPIs -->
+  <div class="section-label">Monitoring KPIs — Send Performance</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">Monthly Send Volume</div>
+      <div class="monitor-card-val">~88–91K</div>
+      <div class="monitor-card-sub">Dec 2025 / Jan 2026. Down from Aug 2025 peak of 113K — monitor for list health decline.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Delivery Rate</div>
+      <div class="monitor-card-val">93.3%</div>
+      <div class="monitor-card-sub">Strong. Industry benchmark: 90%+. Cinch/Twilio infrastructure performing well. Monitor monthly for list decay.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">SMS vs MMS Split</div>
+      <div class="monitor-card-val">97% SMS</div>
+      <div class="monitor-card-sub">Dec 2025: 197,281 SMS / 13,778 MMS. MMS usage spike in Dec — investigate if intentional or platform issue.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Total Opt-Ins (as of Dec 2025)</div>
+      <div class="monitor-card-val">~24,844</div>
+      <div class="monitor-card-sub">Running total of active opt-ins. Track weekly to catch net decline early.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Opt-Out Rate</div>
+      <div class="monitor-card-val">~4.5%/mo</div>
+      <div class="monitor-card-sub">Monthly opt-outs ÷ total opt-ins. If exceeds 5%, investigate message frequency or relevance issues.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">ROAS (Monitoring)</div>
+      <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+      <div class="monitor-card-sub">Track once coupon redemption is reliably measured. Tie to total SMS cost vs revenue from coupon transactions.</div>
     </div>
   </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Monthly Send Trend (Cinch Export)</div>
-      <div class="metric-row">
-        <div class="metric-name">Feb 2026</div>
-        <div class="metric-values"><span class="metric-current">88,804 sent</span><span class="metric-target">81,260 delivered</span><span class="metric-vs">91.5%</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Jan 2026</div>
-        <div class="metric-values"><span class="metric-current">89,245 sent</span><span class="metric-target">81,469 delivered</span><span class="metric-vs">91.3%</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Dec 2025</div>
-        <div class="metric-values"><span class="metric-current">91,313 sent</span><span class="metric-target">83,660 delivered</span><span class="metric-vs">91.6%</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Aug 2025 (peak)</div>
-        <div class="metric-values"><span class="metric-current">113,206 sent</span><span class="metric-target">105,046 delivered</span><span class="metric-vs">92.8%</span></div>
-      </div>
-      <div style="font-size:11px; color:var(--muted); margin-top:12px;">Send volume declining since Aug 2025 peak. Investigate list health and whether campaign cadence has changed.</div>
+      <div class="card-title">Send Volume Trend 2025</div>
+      <div class="funnel-row"><span class="funnel-label">Jan 2025</span><div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:60%;"></div></div><span class="funnel-val">167,103</span><span class="funnel-delta trend-delta-neu">—</span></div>
+      <div class="funnel-row"><span class="funnel-label">Mar 2025</span><div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:79%;"></div></div><span class="funnel-val">203,089</span><span class="funnel-delta trend-delta-pos">+22%</span></div>
+      <div class="funnel-row"><span class="funnel-label">Jun 2025</span><div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:73%;"></div></div><span class="funnel-val">187,826</span><span class="funnel-delta trend-delta-neg">-7%</span></div>
+      <div class="funnel-row"><span class="funnel-label">Aug 2025</span><div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:83%;"></div></div><span class="funnel-val">215,488</span><span class="funnel-delta trend-delta-pos">+15%</span></div>
+      <div class="funnel-row"><span class="funnel-label">Oct 2025</span><div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:89%;"></div></div><span class="funnel-val">228,519</span><span class="funnel-delta trend-delta-pos">Peak</span></div>
+      <div class="funnel-row"><span class="funnel-label">Dec 2025</span><div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:82%;"></div></div><span class="funnel-val">211,059</span><span class="funnel-delta trend-delta-neg">-8%</span></div>
     </div>
     <div class="card">
-      <div class="card-title">Key Actions to Grow Opt-in Rate</div>
+      <div class="card-title">Key Actions to Grow Opt-In Rate</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Add SMS opt-in blocks to more webpages and email campaigns. Include QR codes at point of service.</li>
-        <li><div class="action-bullet">2</div>Run SMS-specific blast campaigns tied to returning car promotions.</li>
-        <li><div class="action-bullet">3</div>Use paid media to drive sign-ups. Competitors are at ~1% — close the gap.</li>
-        <li><div class="action-bullet">4</div>Tie opt-in growth to Return Rate (existing customers) as the downstream KPI to validate strategy.</li>
+        <li><div class="action-bullet">1</div>Deploy QR code opt-in at all ~300+ locations — point-of-service capture is the cheapest and most qualified source of new subscribers (they're already in a bay).</li>
+        <li><div class="action-bullet">2</div>Add SMS opt-in block to email sends and website — especially post-coupon-redemption pages where customer intent is high.</li>
+        <li><div class="action-bullet">3</div>Test coupon offer size and urgency language to lift redemption rate from 0.2% → 0.5% target. A/B test "expires in 7 days" vs "expires this weekend" framing.</li>
+        <li><div class="action-bullet">4</div>Run SMS-specific blast campaign tied to returning car promotion — "You haven't visited in 90 days" trigger messages historically drive high redemption in auto service.</li>
       </ul>
     </div>
   </div>
@@ -1356,49 +1889,132 @@
     </div>
   </div>
 
-  <div class="three-col">
-    <div class="card">
-      <div class="card-title">Primary KPI — Journey CTOR</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--fsa-red); letter-spacing:1px; font-weight:700;">1.54%</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Current (12m): 1.54%</span><span>Q1 Target: 2.1% · EoY: 4.0%</span></div>
-        <div class="progress-bar"><div class="progress-fill red" style="width:73%"></div></div>
+  <!-- PRIMARY KPI DEEP DIVE: DUAL KPI (Journey + Eblast CTOR) -->
+  <div class="kpi-deepdive">
+    <div class="kpi-deepdive-header">
+      <div>
+        <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
+        <div class="kpi-deepdive-name">Click-to-Open Rate (CTOR) — Journey &amp; Eblast</div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Below the 1.87% baseline from KPI doc — and below Q1 target of 2.1%. Adding CTAs to Journey emails is the primary lever. 9 Journey templates, 1.2M sends.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="heat-red">Journey: 1.54% vs 2.1% Q1 Target</span>
+        <span class="heat-amber">Eblast: 1.11% vs 1.25% Q1 Target</span>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:16px;">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:4px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Journey CTOR</div>
+        <div class="kpi-hero-number red" style="font-size:60px;">1.54%</div>
+        <div class="progress-wrap" style="margin-top:10px;">
+          <div class="progress-label"><span>Baseline: 1.87%</span><span>Q1: 2.1% · EoY: 4.0%</span></div>
+          <div class="progress-bar"><div class="progress-fill red" style="width:73%"></div></div>
+        </div>
+        <div style="font-size:11px; color:var(--muted); margin-top:6px;">73% to Q1 target. <strong>Below the 1.87% 2025 baseline</strong> — regression in performance. 9 journey templates · 1.2M sends.</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:4px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Eblast CTOR</div>
+        <div class="kpi-hero-number amber" style="font-size:60px;">1.11%</div>
+        <div class="progress-wrap" style="margin-top:10px;">
+          <div class="progress-label"><span>Baseline: 0.98%</span><span>Q1: 1.25% · EoY: 1.25%</span></div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:89%"></div></div>
+        </div>
+        <div style="font-size:11px; color:var(--muted); margin-top:6px;">89% to Q1 target. Above baseline — trending right direction. 169 eblast templates · 22.7M sends. Focus on pushing over the line.</div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+      <div class="kpi-insight insight-bad">
+        <strong>Journey Regression:</strong> CTOR dropped from 1.87% baseline to 1.54%. This means fewer people clicking through their opened emails. Root cause: likely lack of compelling CTA in journey templates. Single highest-leverage fix: add a strong, relevant CTA to each journey email.
+      </div>
+      <div class="kpi-insight insight-warn">
+        <strong>CTOR vs CTR:</strong> CTOR (clicks ÷ opens) is the correct metric for email quality — it removes deliverability noise. A high open rate with low CTOR signals the content isn't delivering on the subject line's promise.
+      </div>
+      <div class="kpi-insight insight-warn">
+        <strong>Suppressed Audience Risk:</strong> Cinch cannot report on which specific reason an email was suppressed. Monitor total suppressed vs subscribed ratio — if suppressed grows, it quietly shrinks your effective send base without appearing in CTOR.
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL FUNNEL -->
+  <div class="section-label">Email Funnel — Journey vs Eblast Comparison</div>
+  <div class="dual-kpi-split">
+    <div class="card">
+      <div class="card-title">Journey Emails (9 Templates)</div>
+      <div class="journey-strip">
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">1.2M</div><div class="journey-box-lbl">Sends</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">~22%</div><div class="journey-box-lbl">Open Rate</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box highlight"><div class="journey-box-val">1.54%</div><div class="journey-box-lbl">CTOR</div></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Automated trigger-based emails (e.g., post-visit, win-back, birthday). High relevance = higher open rate. CTOR gap indicates CTA weakness.</div>
+      <div class="kpi-insight insight-bad" style="margin-top:10px;">Target: 2.1% Q1 → 4.0% EoY. Gap: +0.56pp needed immediately.</div>
     </div>
     <div class="card">
-      <div class="card-title">Primary KPI — Eblast CTOR</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--amber); letter-spacing:1px; font-weight:700;">1.11%</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Current (12m): 1.11%</span><span>Q1 Target: 1.25%</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:89%"></div></div>
+      <div class="card-title">Eblast Emails (169 Templates)</div>
+      <div class="journey-strip">
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">22.7M</div><div class="journey-box-lbl">Sends</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box"><div class="journey-box-val">~18%</div><div class="journey-box-lbl">Open Rate</div></div></div>
+        <div class="journey-arrow">→</div>
+        <div class="journey-step"><div class="journey-box highlight"><div class="journey-box-val">1.11%</div><div class="journey-box-lbl">CTOR</div></div></div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Closer to target. 169 Eblast templates, 22.7M sends. Strong volume — focus on click engagement within opens.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Broadcast/promotional emails. 19× the send volume of journeys. Each 0.1% CTOR improvement on eblasts = ~22,700 additional clicks per 12-month cycle.</div>
+      <div class="kpi-insight insight-good" style="margin-top:10px;">Above 0.98% baseline — Eblast trending right direction toward 1.25% Q1 target.</div>
     </div>
-    <div class="card">
-      <div class="card-title">Overall Send Performance</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">23.9M</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Total sends across 178 templates (12m). Overall CTOR: 1.13%. No date dimension available — daily data pending from Cinch.</div>
+  </div>
+
+  <!-- SECONDARY + MONITORING -->
+  <div class="section-label">Secondary &amp; Monitoring KPIs</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">Conversion Rate (Secondary)</div>
+      <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+      <div class="monitor-card-sub">Email → in-store visit conversion. Requires linking Cinch email opens/clicks to store transaction data via CRM match.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Total Sends (12m)</div>
+      <div class="monitor-card-val">23.9M</div>
+      <div class="monitor-card-sub">178 templates combined. Strong volume — data freshness is the constraint, not reach.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Suppressed Audience</div>
+      <div class="monitor-card-val" style="color:var(--amber);">Monitor</div>
+      <div class="monitor-card-sub">Track subscribed vs suppressed ratio quarterly. Cinch cannot report suppression reason — this is a data blind spot.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Unsubscribe Rate</div>
+      <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+      <div class="monitor-card-sub">Industry benchmark: &lt;0.2% unsubscribe per send. Track monthly once daily data from Cinch is available.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Overall CTOR (Blended)</div>
+      <div class="monitor-card-val">1.13%</div>
+      <div class="monitor-card-sub">Blended across all 178 templates. Journey drags blended rate — fixing Journey has outsized impact.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Downstream KPI</div>
+      <div class="monitor-card-val" style="color:var(--fsa-red);">Return Rate</div>
+      <div class="monitor-card-sub">Email's primary rollup KPI is Return Rate (both new and existing). CTOR improvements should be validated against return-visit data.</div>
     </div>
   </div>
 
   <div class="two-col">
     <div class="card">
       <div class="card-title">Data Availability</div>
-      <div class="data-status warn"><div class="status-dot"></div>Current data: template-level aggregates (past 12 months total)</div>
-      <div class="data-status warn"><div class="status-dot"></div>No date dimension available — cannot trend over time yet</div>
-      <div class="data-status hold"><div class="status-dot"></div>Working with Cinch to obtain daily/weekly send-level data</div>
+      <div class="data-status warn"><div class="status-dot"></div>Current: template-level aggregates (12m total) — no date dimension</div>
+      <div class="data-status hold"><div class="status-dot"></div>Working with Cinch for daily/weekly send-level data export</div>
+      <div class="data-status hold"><div class="status-dot"></div>Suppression reason not available from Cinch — data gap to flag</div>
       <div style="font-size:12px; color:var(--muted); margin-top:14px; line-height:1.6;">
-        Once daily data is available, this tab will show: send volume trends, CTOR over time, journey vs eblast comparison, and suppressed audience sizing.
+        Once daily data is available, this tab will show: send volume trends over time, CTOR by journey vs eblast month-over-month, open rate vs CTOR correlation, and suppressed audience sizing trends.
       </div>
     </div>
     <div class="card">
       <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Add stronger CTA to Journey emails — this is the single highest-leverage action to move CTOR from 1.87% → 2.1%.</li>
-        <li><div class="action-bullet">2</div>Prioritize Cinch daily export — email is a High Impact channel but is currently data-blind for trending.</li>
-        <li><div class="action-bullet">3</div>Review suppressed audience sizing — ensure active database is maximized before adding opt-in volume.</li>
-        <li><div class="action-bullet">4</div>Tie email CTOR improvements to Return Rate as the downstream validation metric.</li>
+        <li><div class="action-bullet">1</div>Add a strong, clear CTA to every Journey email template — this is the single highest-leverage action to move CTOR from 1.54% toward the 2.1% Q1 target.</li>
+        <li><div class="action-bullet">2</div>Prioritize Cinch daily data export — Email is High Impact but currently data-blind for trending. This unlock makes the entire channel manageable.</li>
+        <li><div class="action-bullet">3</div>Audit suppressed audience size and composition — ensure active subscribable database is maximized before investing in more sends.</li>
+        <li><div class="action-bullet">4</div>Tie email CTOR improvements to Return Rate: validate that higher CTOR → higher return visits within 180 days. This is the ROI proof point.</li>
       </ul>
     </div>
   </div>
@@ -1434,49 +2050,114 @@
     </div>
   </div>
 
-  <div class="three-col">
-    <div class="card">
-      <div class="card-title">Primary KPI — Overall Household Response Rate</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--green); letter-spacing:1px; font-weight:700;">7.26%</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Overall: 206,615 HH responses / 2.85M cards</span><span>New HH Target: 2.75% EoY</span></div>
-        <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+  <div class="kpi-deepdive">
+    <div class="kpi-deepdive-header">
+      <div>
+        <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
+        <div class="kpi-deepdive-name">Household Response Rate (New Customers)</div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Overall rate well above the 2.75% target — but note: target is for <strong>new households only</strong>. Need new vs existing HH separation to measure accurately against goal.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="heat-green">Overall: 7.26% (all HH)</span>
+        <span class="heat-amber">New HH Baseline: 2.23%</span>
+        <span class="heat-green">EoY Target: 2.75%</span>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title">Cards Mailed & Responses</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">2.85M</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Cards mailed across 269 locations. 206,615 household responses. 2026 budget shifting to 90% new households.</div>
+    <div class="kpi-deepdive-body">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Overall Response Rate</div>
+        <div class="kpi-hero-number green">7.26%</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">206,615 responses<br>2.85M cards mailed</div>
+        <div style="margin-top:12px; padding:10px; background:var(--amber-bg); border-radius:4px; font-size:11px; color:var(--amber);">
+          <strong>⚠ Important:</strong> Overall rate includes existing customers. The <em>target is for new households only (2.23% → 2.75%)</em>. Segmentation must be separated before KPI can be accurately measured.
+        </div>
+      </div>
+      <div>
+        <div class="kpi-target-lbl" style="margin-bottom:10px;">Attribution Model — Maturity Window</div>
+        <div class="journey-strip" style="padding:8px 0;">
+          <div class="journey-step"><div class="journey-box"><div class="journey-box-val">Day 0</div><div class="journey-box-lbl">Drop Date</div></div></div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step"><div class="journey-box"><div class="journey-box-val">16 wks</div><div class="journey-box-lbl">Validity Window</div></div></div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step"><div class="journey-box highlight"><div class="journey-box-val">105d</div><div class="journey-box-lbl">Full Maturity</div></div></div>
+        </div>
+        <div style="font-size:11px; color:var(--muted); margin-top:6px;">A drop in October won't have complete response data until late January. Always measure at maturity — early reads undercount by 30–45%.</div>
+        <table class="trend-table" style="margin-top:10px;">
+          <thead><tr><th>Segment</th><th>Rate</th><th>Target</th></tr></thead>
+          <tbody>
+            <tr><td>All HH (reported)</td><td>7.26%</td><td>—</td></tr>
+            <tr><td>New HH Only</td><td>2.23%</td><td>2.75% EoY</td></tr>
+            <tr><td>New Mover</td><td>—</td><td>Test 2026</td></tr>
+            <tr><td>Competitor Conquest</td><td>—</td><td>Test 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="kpi-deepdive-insights">
+        <div class="kpi-insight insight-warn">
+          <strong>2026 Budget Shift:</strong> Moving to 90% new household targeting changes the denominator (population), not the rate. Track new vs. existing response separately — budget shift will grow new HH responses even if rate holds flat.
+        </div>
+        <div class="kpi-insight">
+          <strong>Location Variance (5.7–15%):</strong> Large spread across 269 locations. Urban vs rural composition is likely the primary driver. Radius segmentation study will isolate the cause.
+        </div>
+        <div class="kpi-insight insight-warn">
+          <strong>Drop Date Data Gap:</strong> Without drop-level data from DripDrop, true maturity-adjusted response rate cannot be calculated. This is the single most important data request to make to DripDrop.
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title">Location Range</div>
-      <div style="font-family:var(--font-display); font-size:36px; color:var(--fsa-red); letter-spacing:1px; font-weight:700;">5.7–15%</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Response rate range across locations. Significant variance — radius segmentation (urban vs rural) likely explains much of the spread.</div>
+  </div>
+
+  <div class="section-label">Secondary KPI — ROAS &amp; Monitoring KPIs</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">ROAS (Secondary)</div>
+      <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+      <div class="monitor-card-sub">Revenue ÷ Total Cost. Requires transaction data linked to mailer redemptions. Key FZ-side metric tracked by Jenn.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Cards Mailed</div>
+      <div class="monitor-card-val">2.85M</div>
+      <div class="monitor-card-sub">Across 269 locations · Jan–Oct 2025</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">HH Responses</div>
+      <div class="monitor-card-val">206,615</div>
+      <div class="monitor-card-sub">All HH combined. New HH subset is the actual KPI target.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Valid Addresses</div>
+      <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+      <div class="monitor-card-sub">Track % deliverable. Invalid addresses reduce reach without reducing cost.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Ticket Average</div>
+      <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+      <div class="monitor-card-sub">Revenue per responding HH. Required for ROAS — request from DripDrop.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Rollup KPI</div>
+      <div class="monitor-card-val" style="color:var(--fsa-red);">CAC</div>
+      <div class="monitor-card-sub">Customer Acquisition Cost is the upstream rollup for Direct Mail performance at FSA.</div>
     </div>
   </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Attribution Notes</div>
-      <div class="notes-box" style="margin-bottom:0;">
-        <strong>Maturity window:</strong> 105 days to full maturity. 16-week validity window. Remove outliers before calculating response rate.<br><br>
-        <strong>2026 budget shift:</strong> Moving toward 90% new household targeting — this changes the population, not the rate. Track new vs. existing response separately.<br><br>
-        <strong>Segmentation opportunity:</strong> Radius segmentation (urban vs rural) + New Mover + Competitor Conquest audiences to test.
-      </div>
+      <div class="card-title">Location Performance Range</div>
+      <div class="funnel-row"><span class="funnel-label">Top performers</span><div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:100%; background:var(--green);"></div></div><span class="funnel-val">~15%</span><span class="funnel-delta trend-delta-pos">High</span></div>
+      <div class="funnel-row"><span class="funnel-label">Mid-tier</span><div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:62%;"></div></div><span class="funnel-val">~9%</span><span class="funnel-delta trend-delta-neu">Avg</span></div>
+      <div class="funnel-row"><span class="funnel-label">Low performers</span><div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:38%; background:var(--amber);"></div></div><span class="funnel-val">5.7%</span><span class="funnel-delta trend-delta-neg">Low</span></div>
+      <div style="font-size:11px; color:var(--muted); margin-top:10px;">9.3% spread top-to-bottom. Urban density, competitor presence, and creative relevance all drive variance. Radius segmentation study will isolate the primary driver.</div>
     </div>
     <div class="card">
       <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Request drop-date level data from DripDrop — critical for measuring true maturity-adjusted response rate.</li>
-        <li><div class="action-bullet">2</div>Benchmark competitor response rates — put onus on DripDrop to provide industry comparisons.</li>
-        <li><div class="action-bullet">3</div>Test radius segmentation: urban vs rural performance likely differs significantly.</li>
-        <li><div class="action-bullet">4</div>Review templated creative approach — new creative may be needed to lift response rate toward 2.75%.</li>
+        <li><div class="action-bullet">1</div>Request drop-date level data from DripDrop — this unlocks maturity-adjusted response rate, which is the only accurate measure of the primary KPI.</li>
+        <li><div class="action-bullet">2</div>Separate new vs. existing HH response rate in reporting — the 2026 budget shift to 90% new HH makes this distinction critical for measuring progress.</li>
+        <li><div class="action-bullet">3</div>Test radius segmentation: urban vs rural response rates. High variance (5.7–15%) suggests geography drives performance more than creative.</li>
+        <li><div class="action-bullet">4</div>Benchmark competitor response rates through DripDrop — put accountability on the vendor to show FSA drops are competitive with industry norms.</li>
       </ul>
     </div>
   </div>
 </div>
-
 <!-- ════════════════════════════════════════════════
      PAGE: SEO / AI
 ════════════════════════════════════════════════ -->
@@ -1507,69 +2188,153 @@
     </div>
   </div>
 
+  <!-- DUAL PRIMARY KPIs: SEO CTR + AI Visibility -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+    <div class="kpi-deepdive" style="margin-bottom:0;">
+      <div class="kpi-deepdive-label">Primary KPI 1 (Lagging) — Deep Dive</div>
+      <div class="kpi-deepdive-name" style="margin-bottom:14px;">Organic CTR via Google Search Console</div>
+      <div style="display:flex; align-items:flex-start; gap:20px; flex-wrap:wrap;">
+        <div>
+          <div class="kpi-hero-number amber">2.7%</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:6px;">Baseline 2025</div>
+        </div>
+        <div style="flex:1; min-width:140px;">
+          <div class="progress-wrap">
+            <div class="progress-label"><span>Current: 2.7%</span><span>Q1: 3.0%</span></div>
+            <div class="progress-bar"><div class="progress-fill yellow" style="width:83%"></div></div>
+          </div>
+          <div class="progress-wrap" style="margin-top:8px;">
+            <div class="progress-label"><span>Q1: 3.0%</span><span>EoY: 3.25%</span></div>
+            <div class="progress-bar"><div class="progress-fill yellow" style="width:83%"></div></div>
+          </div>
+          <div class="kpi-insight insight-warn" style="margin-top:10px; font-size:11px;">
+            <strong>Brand vs Non-Brand split needed:</strong> Blended CTR is a lagging signal. Non-brand CTR is the acquisition indicator — brand CTR just reflects existing awareness.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kpi-deepdive" style="margin-bottom:0;">
+      <div class="kpi-deepdive-label">Primary KPI 2 (Leading) — Deep Dive</div>
+      <div class="kpi-deepdive-name" style="margin-bottom:14px;">AI Visibility Score (Scout / by Brand + Region)</div>
+      <div style="display:flex; align-items:flex-start; gap:20px; flex-wrap:wrap;">
+        <div>
+          <div class="kpi-hero-number green">91</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:6px;">ROP Baseline 2025</div>
+        </div>
+        <div style="flex:1; min-width:140px;">
+          <div class="progress-wrap">
+            <div class="progress-label"><span>Current: 91</span><span>Q1 Target: 95</span></div>
+            <div class="progress-bar"><div class="progress-fill green" style="width:95.8%"></div></div>
+          </div>
+          <div style="font-size:10px; color:var(--green); font-weight:600; margin-top:4px;">95.8% — Strong position, 4 points to target</div>
+          <div class="kpi-insight insight-good" style="margin-top:10px; font-size:11px;">
+            <strong>One-of-a-kind metric:</strong> AI Visibility Score is FSA's most forward-looking KPI. As AI search replaces traditional results, this score predicts future organic visibility.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO RANKING FUNNEL -->
+  <div class="section-label">SEO Leading Indicator — Ranking Funnel</div>
   <div class="three-col">
     <div class="card">
-      <div class="card-title">SEO Primary — CTR (GSC)</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--amber); letter-spacing:1px; font-weight:700;">2.7%</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Baseline: 2.7%</span><span>Target: 3.0% (Q1) → 3.25% (EoY)</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:83%"></div></div>
-      </div>
-      <div style="font-size:11px; color:var(--muted);">Click-through rate from Google Search Console. Brand vs Non-Brand breakout needed.</div>
+      <div class="card-title">Google Rankings (Scout/Yext)</div>
+      <div class="kpi-insight insight-warn" style="margin-bottom:12px; font-size:11px;">Data not yet captured historically. Define 3 priority terms with Bethany immediately — this is the leading indicator that predicts CTR improvement.</div>
+      <table class="trend-table">
+        <thead><tr><th>Rank Tier</th><th>Locations</th><th>% of Fleet</th></tr></thead>
+        <tbody>
+          <tr><td>Top Result (#1)</td><td>—</td><td><span class="heat-gray">TBD</span></td></tr>
+          <tr><td>Top 3</td><td>—</td><td><span class="heat-gray">TBD</span></td></tr>
+          <tr><td>Ranked 11+</td><td>—</td><td><span class="heat-gray">TBD</span></td></tr>
+          <tr><td>Unranked</td><td>—</td><td><span class="heat-gray">TBD</span></td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Priority terms: "oil change near me", "[brand] oil change", "[city] oil change" — confirm with Bethany.</div>
     </div>
     <div class="card">
-      <div class="card-title">SEO Secondary — Avg. Position</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--amber); letter-spacing:1px; font-weight:700;">19.1</div>
+      <div class="card-title">Average Position (GSC)</div>
+      <div style="font-family:var(--font-display); font-size:52px; font-weight:700; color:var(--amber); letter-spacing:0;">19.1</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Current: 19.1</span><span>Target: 15</span></div>
         <div class="progress-bar"><div class="progress-fill yellow" style="width:72%"></div></div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Lower is better. Content positioning on web is the primary lever to improve ranking.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Lower is better. Position 19 puts FSA deep in page 2 for many queries. Moving to position 15 or below is the threshold for meaningful CTR impact.</div>
+      <div class="kpi-insight" style="margin-top:10px; font-size:11px;">Content positioning on web (on-page optimization, structured data, local schema) is the primary lever.</div>
     </div>
     <div class="card">
-      <div class="card-title">AI Visibility Score</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--green); letter-spacing:1px; font-weight:700;">91</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Current: 91</span><span>Target: 95</span></div>
-        <div class="progress-bar"><div class="progress-fill green" style="width:91%"></div></div>
-      </div>
-      <div style="font-size:11px; color:var(--muted);">By Brand + Region + Platform (ROP focus). 96% to target — strong position.</div>
+      <div class="card-title">Zero-Click Impression Gap</div>
+      <div style="font-family:var(--font-display); font-size:52px; font-weight:700; color:var(--charcoal); letter-spacing:0;">~200K</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Estimated monthly gap: GSC shows ~1M impressions, GA4 shows ~800K sessions. The 200K difference = people who see FSA in search but don't click (knowledge panels, map packs, AI Overviews).</div>
+      <div class="kpi-insight insight-warn" style="margin-top:10px; font-size:11px;">This is a share-of-voice metric. Marry GSC + GA4 data to quantify precisely.</div>
+    </div>
+  </div>
+
+  <!-- AI SEARCH SECTION -->
+  <div class="section-label">AI Search Performance — Scout Metrics</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">AI Visibility Score</div>
+      <div class="monitor-card-val" style="color:var(--green);">91 / 95</div>
+      <div class="monitor-card-sub">Current / Q1 Target. By Brand + Region + Platform (ROP focus). Track by brand and AI platform separately.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">AI Brand Sentiment</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Track via Scout. Positive / Neutral / Negative split. Correlates with Reviews and Listings quality signals.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">AI Rank</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Position in AI-generated results (ChatGPT, Gemini, Perplexity, etc.). Track by platform — each has a different citation model.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">AI Citations — First Party</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Direct website citations by AI engines. Improve by updating structured data, FAQs, and content breadth on .com properties.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">AI Citations — Listings</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">GBP and directory accuracy feeds AI citation quality. Ties directly to the Listings channel — improving listings accuracy improves AI citations.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">AI Citations — Reputation</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Review volume and sentiment feeds AI reputation signals. Ties directly to Reviews channel — improving review response rate improves AI citation quality.</div>
     </div>
   </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title">SEO Leading Indicator — Rankings</div>
-      <div class="metric-row">
-        <div class="metric-name">Top 3 Terms Ranked</div>
-        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">3 priority terms TBD</span></div>
+      <div class="card-title">SEO Optimization Signals (Scout/Yext Scores)</div>
+      <div class="benchmark-compare">
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Reviews Score</span><span class="bench-val">—</span></div>
+          <div class="bench-track"><div class="bench-fill you" style="width:0%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Social Score</span><span class="bench-val">—</span></div>
+          <div class="bench-track"><div class="bench-fill you" style="width:0%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Listings Accuracy Score</span><span class="bench-val">—</span></div>
+          <div class="bench-track"><div class="bench-fill you" style="width:0%;"></div></div>
+        </div>
       </div>
-      <div class="metric-row">
-        <div class="metric-name">Brand CTR (GSC)</div>
-        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Breakout needed</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Non-Brand CTR (GSC)</div>
-        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Breakout needed</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Zero-Click Impressions</div>
-        <div class="metric-values"><span class="metric-current">~200K est.</span><span class="metric-target">Monitor via GSC+GA4</span></div>
-      </div>
-      <div style="font-size:11px; color:var(--muted); margin-top:12px;">Estimated: GSC shows ~1M impressions, GA4 shows ~800K sessions → ~200K zero-click gap.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:10px;">These three Scout scores are the operational levers that drive the AI Visibility Score. Reviews, social presence, and listing accuracy all directly feed AI search engines' confidence in FSA locations.</div>
     </div>
     <div class="card">
-      <div class="card-title">Key Actions</div>
+      <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Define the 3 priority search terms for ranking tracking — lock these with Bethany as the SEO leading indicator.</li>
-        <li><div class="action-bullet">2</div>Build Brand vs Non-Brand CTR breakout in GSC — non-brand CTR is the acquisition signal.</li>
-        <li><div class="action-bullet">3</div>Marry GSC + GA4 data to quantify zero-click impressions (~200K estimated gap).</li>
-        <li><div class="action-bullet">4</div>Establish historical data capture in Scout/Yext dashboard before metrics are lost.</li>
+        <li><div class="action-bullet">1</div>Define 3 priority search terms for ranking tracking — lock these with Bethany as the leading SEO indicator immediately before another quarter passes without baseline data.</li>
+        <li><div class="action-bullet">2</div>Build Brand vs Non-Brand CTR breakout in GSC — non-brand CTR is the acquisition signal and must be tracked separately from brand traffic.</li>
+        <li><div class="action-bullet">3</div>Marry GSC + GA4 data to quantify zero-click impression gap (~200K/month estimated). This is the "Share of Voice" metric noted in meeting notes as the one most important metric.</li>
+        <li><div class="action-bullet">4</div>Establish Scout/Yext historical data capture before more data is lost — reviews and listings scores are timestamped, but ranking history is not being preserved.</li>
       </ul>
     </div>
   </div>
 </div>
-
 <!-- ════════════════════════════════════════════════
      PAGE: LISTINGS
 ════════════════════════════════════════════════ -->
@@ -1600,57 +2365,154 @@
     </div>
   </div>
 
+  <div class="kpi-deepdive">
+    <div class="kpi-deepdive-header">
+      <div>
+        <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
+        <div class="kpi-deepdive-name">Action Rate (Actions / 1,000 Impressions) — Google Listings, ROP Only</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="heat-amber">Baseline: 2.39%</span>
+        <span class="heat-amber">Q1 Target: 2.7%</span>
+        <span class="heat-green">EoY Target: 3.0%</span>
+      </div>
+    </div>
+    <div class="kpi-deepdive-body">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Action Rate</div>
+        <div class="kpi-hero-number amber">2.39%</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">23.87 actions per<br>1,000 impressions</div>
+        <div style="margin-top:12px;">
+          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">Progress to Q1 Target (2.7%)</div>
+          <div class="progress-bar" style="margin-bottom:0;"><div class="progress-fill yellow" style="width:88%"></div></div>
+          <div style="font-size:10px; color:var(--amber); margin-top:4px; font-weight:600;">88.5% — Close but declining YoY context</div>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-target-lbl" style="margin-bottom:10px;">Top 10 GM Locations by Actions (2025)</div>
+        <table class="trend-table">
+          <thead><tr><th>Location</th><th>2025 Actions</th><th>YoY</th></tr></thead>
+          <tbody>
+            <tr><td>Atlanta (Ponce de Leon)</td><td>34,546</td><td><span class="heat-red">-10%</span></td></tr>
+            <tr><td>Seattle (15th Ave NW)</td><td>13,798</td><td><span class="heat-red">-34%</span></td></tr>
+            <tr><td>Atlanta (Howell Mill)</td><td>11,857</td><td><span class="heat-red">-14%</span></td></tr>
+            <tr><td>Dunwoody (Chamblee)</td><td>10,883</td><td><span class="heat-green">+3%</span></td></tr>
+            <tr><td>Lehi, UT</td><td>10,273</td><td><span class="heat-red">-5%</span></td></tr>
+            <tr><td>Total 2025 Actions</td><td>655,011</td><td><span class="heat-gray">All GM</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="kpi-deepdive-insights">
+        <div class="kpi-insight insight-bad">
+          <strong>Impression Decline:</strong> Total 2025 impressions: 27.4M. Significant YoY declines across most locations (American LubeFast showing -60% to -85%). Investigate if PMax/Demand Gen is absorbing search visibility previously coming through GBP.
+        </div>
+        <div class="kpi-insight insight-warn">
+          <strong>Action Separation Pending:</strong> Currently tracking "All Actions" — Click to Call, Click for Directions, and Website clicks are bundled. Yext is developing separate action reporting. Directions clicks typically drive highest in-store visit rate.
+        </div>
+        <div class="kpi-insight">
+          <strong>Scope:</strong> Google Listings only (for now). Apple, Bing, and others tracked via Yext but not yet included in primary KPI. ROP only — FZ and ADI excluded.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Impression Decline Analysis — By Brand</div>
   <div class="three-col">
     <div class="card">
-      <div class="card-title">Primary KPI — Action Rate (Actions/1K Impressions)</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--amber); letter-spacing:1px; font-weight:700;">—</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Target: 2.7% (Q1) → 3.0% (EoY)</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:0%"></div></div>
-      </div>
-      <div style="font-size:11px; color:var(--muted);">Google Listings only (ROP/GM). All Actions currently — action separation coming via Yext development.</div>
+      <div class="card-title">Total Impressions (2025 vs 2024)</div>
+      <div style="font-family:var(--font-display); font-size:44px; font-weight:700; color:var(--charcoal); letter-spacing:0;">27.4M</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:4px;">2025 All Brands Total Impressions</div>
+      <div class="kpi-insight insight-bad" style="margin-top:10px;">American LubeFast showing -60% to -85% YoY impression decline across all tracked stores — most severe decline in the fleet. Requires immediate investigation.</div>
     </div>
     <div class="card">
-      <div class="card-title">2025 Total Actions (GM)</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">—</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">2025 vs 2024 YoY data available in export. Upload Listings file to populate. Several locations showing -10% to -81% YoY changes.</div>
+      <div class="card-title">Sample: American LubeFast Impression Decline</div>
+      <table class="trend-table">
+        <thead><tr><th>Store ID</th><th>2025 Impr.</th><th>2024 Impr.</th><th>Change</th></tr></thead>
+        <tbody>
+          <tr><td>#8105</td><td>23,318</td><td>124,564</td><td><span class="heat-red">-81%</span></td></tr>
+          <tr><td>#8108</td><td>17,968</td><td>57,641</td><td><span class="heat-red">-69%</span></td></tr>
+          <tr><td>#8301</td><td>35,735</td><td>173,991</td><td><span class="heat-red">-79%</span></td></tr>
+          <tr><td>#8307</td><td>36,243</td><td>228,397</td><td><span class="heat-red">-84%</span></td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="card">
       <div class="card-title">Impression Threshold Watch</div>
-      <div style="font-family:var(--font-display); font-size:44px; color:var(--fsa-red); letter-spacing:1px; font-weight:700;">DECLINE</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Impressions declining YoY across multiple locations. Investigate whether PMax / Demand Gen is cannibalizing GBP impressions.</div>
+      <div style="font-family:var(--font-display); font-size:44px; font-weight:700; color:var(--fsa-red); letter-spacing:0;">DECLINE</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Goal: maintain steady impressions. Investigate root causes:</div>
+      <ul style="font-size:11px; color:var(--muted); margin-top:6px; padding-left:16px; line-height:1.8;">
+        <li>PMax/Demand Gen absorbing GBP search visibility?</li>
+        <li>Algorithm update penalizing listing quality?</li>
+        <li>Competitor profiles gaining ground?</li>
+        <li>Listing accuracy scores degrading?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Secondary &amp; Monitoring KPIs</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">Click to Call (Secondary)</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Pending Yext action separation. Call clicks = highest in-store visit intent signal.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Click for Directions (Secondary)</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Pending Yext action separation. Directions = 2nd highest in-store intent signal.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Impressions by Placement</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">% change in total impressions MoM by subchannel (Local Pack vs Search vs Maps). Track once Yext develops report.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Star Rating (Monitoring)</div>
+      <div class="monitor-card-val">4.8</div>
+      <div class="monitor-card-sub">Current. Target: 4.85. Accuracy and visibility scores are the operational levers that maintain listing ranking.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Accuracy Score</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Via Yext/Scout. NAP accuracy (Name, Address, Phone) across all directories is a foundational listing signal.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Rollup KPI</div>
+      <div class="monitor-card-val" style="color:var(--fsa-red);">Return Rate (New)</div>
+      <div class="monitor-card-sub">Listings drives new customer discovery — Return Rate (New, 180d) is the downstream business outcome.</div>
     </div>
   </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Location-Level YoY (Sample)</div>
-      <div class="metric-row">
-        <div class="metric-name">Atlanta (Ponce de Leon)</div>
-        <div class="metric-values"><span class="metric-current">34,546 actions</span><span class="metric-target">2024: 38,423</span><span class="kpi-delta delta-neg">-10%</span></div>
+      <div class="card-title">Action Type Priority (When Yext Separates)</div>
+      <div class="benchmark-compare" style="margin-top:8px;">
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Click for Directions</span><span class="bench-val">Highest Intent</span></div>
+          <div class="bench-track"><div class="bench-fill tgt" style="width:95%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Click to Call</span><span class="bench-val">High Intent</span></div>
+          <div class="bench-track"><div class="bench-fill you" style="width:80%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Click to Website</span><span class="bench-val">Medium Intent</span></div>
+          <div class="bench-track"><div class="bench-fill comp" style="width:50%;"></div></div>
+        </div>
       </div>
-      <div class="metric-row">
-        <div class="metric-name">Seattle (15th Ave NW)</div>
-        <div class="metric-values"><span class="metric-current">13,798 actions</span><span class="metric-target">2024: 20,836</span><span class="kpi-delta delta-neg">-34%</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Atlanta (Howell Mill)</div>
-        <div class="metric-values"><span class="metric-current">11,857 actions</span><span class="metric-target">2024: 13,765</span><span class="kpi-delta delta-neg">-14%</span></div>
-      </div>
-      <div style="font-size:11px; color:var(--muted); margin-top:12px;">Declining trend across locations is a priority concern. Upload latest Listings file for full picture.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:10px;">Once Yext separates action types, identify which generates the highest downstream CTR and optimize listing content to drive more of that specific action.</div>
     </div>
     <div class="card">
-      <div class="card-title">Key Actions</div>
+      <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Investigate root cause of impression decline — is PMax/Demand Gen absorbing traffic that previously came through GBP?</li>
-        <li><div class="action-bullet">2</div>Work with Yext to separate action types (Call, Directions, Website) once their report development is complete.</li>
-        <li><div class="action-bullet">3</div>Identify which action type drives highest CTR and prioritize tactics around that action.</li>
-        <li><div class="action-bullet">4</div>Maintain accuracy and visibility scores — these are the levers for Listings performance.</li>
+        <li><div class="action-bullet">1</div>Investigate root cause of impression decline — particularly American LubeFast (-60% to -85% YoY). Determine if PMax/Demand Gen is cannibalizing GBP impressions or if listing quality issues are the driver.</li>
+        <li><div class="action-bullet">2</div>Work with Yext to separate action types (Call, Directions, Website) — this enables optimization toward the highest-intent action rather than managing a blended metric.</li>
+        <li><div class="action-bullet">3</div>Audit listing accuracy for declining locations — NAP accuracy is the #1 lever for improving listing visibility in Google's local algorithm.</li>
+        <li><div class="action-bullet">4</div>Establish monthly impression tracking — current data is annual. Monthly cadence allows faster response to algorithm changes or competitive shifts.</li>
       </ul>
     </div>
   </div>
 </div>
-
 <!-- ════════════════════════════════════════════════
      PAGE: REVIEWS
 ════════════════════════════════════════════════ -->
@@ -1677,61 +2539,159 @@
       </div>
     </div>
     <div class="data-status warn" style="margin-bottom:0; align-self:flex-start;">
-      <div class="status-dot"></div>Quarterly cadence — reviews are timestamped but no historical capture
+      <div class="status-dot"></div>Quarterly cadence — no real-time feed yet
     </div>
   </div>
 
+  <!-- PRIMARY KPI: % Reviews Responded To -->
+  <div class="kpi-deepdive">
+    <div class="kpi-deepdive-header">
+      <div>
+        <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
+        <div class="kpi-deepdive-name">% of Reviews Responded To</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="heat-green">2025: 8.56% unreplied (down from 28% in 2024)</span>
+        <span class="heat-amber">Target: Continued improvement</span>
+      </div>
+    </div>
+    <div class="kpi-deepdive-body">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Unreplied Rate</div>
+        <div class="kpi-hero-number green">8.56%</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">Unreplied in 2025<br>Down from 28% in 2024</div>
+        <div style="margin-top:10px; padding:10px; background:var(--green-bg); border-radius:4px; font-size:11px; color:var(--green);">
+          <strong>↓ 70% YoY improvement</strong> in unreplied rate. From 28% → 8.56% is a dramatic improvement. Now in the next phase: reducing the remaining 8.56%.
+        </div>
+      </div>
+      <div>
+        <div class="kpi-target-lbl" style="margin-bottom:10px;">Reviews per Location per Quarter (2025)</div>
+        <table class="trend-table">
+          <thead><tr><th>Business Unit</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Target</th></tr></thead>
+          <tbody>
+            <tr><td>All Brand ROP</td><td>59.2</td><td>60.2</td><td>67.9</td><td>67.2</td><td><span class="heat-green">75</span></td></tr>
+            <tr><td>GM ROP</td><td>59.3</td><td>58.6</td><td>71.8</td><td><strong>75.5</strong></td><td><span class="heat-green">75 ✓</span></td></tr>
+            <tr><td>GM FZ</td><td>26.9</td><td>25.8</td><td>30.8</td><td>26.6</td><td><span class="heat-amber">30</span></td></tr>
+            <tr><td>SD FZ</td><td>25.9</td><td>33.5</td><td>30.3</td><td>24.2</td><td><span class="heat-amber">30</span></td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:11px; color:var(--muted); margin-top:6px;">GM ROP hit its 75 target in Q4 2025. FZ brands are managed differently — shorter goalpost (30) due to limited FSA influence over franchisee owner behavior.</div>
+      </div>
+      <div class="kpi-deepdive-insights">
+        <div class="kpi-insight insight-warn">
+          <strong>Hypothesis on Remaining 8.56%:</strong> Most unresponded reviews are likely 5-star, no-text reviews. A simple "Thank you for visiting!" auto-response would meaningfully reduce this number with near-zero effort.
+        </div>
+        <div class="kpi-insight">
+          <strong>FZ vs ROP Dynamic:</strong> FSA has limited control over FZ owner behavior. Target for FZ (30) is intentionally lower than ROP (75). Q3 FZ performance hit 30 — Q4 dropped. Investigate seasonality vs owner engagement.
+        </div>
+        <div class="kpi-insight insight-good">
+          <strong>GM ROP Achievement:</strong> GM ROP hit its 75 reviews/location/quarter target in Q4 2025. This is a milestone — document what worked and replicate across other brands and regions.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECONDARY: AI SENTIMENT -->
+  <div class="section-label">Secondary KPI — AI Brand Sentiment (Scout)</div>
   <div class="three-col">
     <div class="card">
-      <div class="card-title">Primary KPI — % Reviews Responded To</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--amber); letter-spacing:1px; font-weight:700;">—</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Current: from Reviews tab</span><span>Target: 20% improvement</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:0%"></div></div>
+      <div class="card-title">AI Sentiment Split</div>
+      <div style="font-family:var(--font-display); font-size:44px; font-weight:700; color:var(--charcoal); letter-spacing:0;">56 / 42 / 1</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:4px;">Positive / Neutral / Negative %</div>
+      <div class="benchmark-compare" style="margin-top:12px;">
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Positive (current)</span><span class="bench-val">56%</span></div>
+          <div class="bench-track"><div class="bench-fill you" style="width:56%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Positive (target)</span><span class="bench-val">65%</span></div>
+          <div class="bench-track"><div class="bench-fill tgt" style="width:65%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Neutral → Convert</span><span class="bench-val">42% → 35%</span></div>
+          <div class="bench-track"><div class="bench-fill comp" style="width:42%;"></div></div>
+        </div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Upload Reviews file to populate. Key hypothesis: unresponded reviews are 5-star/no-comment. A "Thank you" response can significantly move this metric.</div>
     </div>
     <div class="card">
       <div class="card-title">Star Rating</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--green); letter-spacing:1px; font-weight:700;">4.8</div>
+      <div style="font-family:var(--font-display); font-size:52px; font-weight:700; color:var(--green); letter-spacing:0;">4.8</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Current: 4.8</span><span>Target: 4.85</span></div>
-        <div class="progress-bar"><div class="progress-fill green" style="width:96%"></div></div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:99%"></div></div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Strong position. Small gap to target — focused response strategy should help.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Exceptional position. 0.05 gap to target — focused response strategy and driving review volume in lower-performing locations is the path to close.</div>
     </div>
     <div class="card">
-      <div class="card-title">AI Brand Sentiment (Scout)</div>
-      <div style="font-family:var(--font-display); font-size:44px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">56/42/1</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Positive / Neutral / Negative %. Target: 65/35/0. Neutral-to-Positive conversion is the key opportunity.</div>
-      <div class="progress-wrap" style="margin-top:8px;">
-        <div class="progress-label"><span>Positive: 56%</span><span>Target: 65%</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:86%"></div></div>
-      </div>
+      <div class="card-title">Review Volume Context</div>
+      <div style="font-family:var(--font-display); font-size:44px; font-weight:700; color:var(--charcoal); letter-spacing:0;">20,242</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:4px;">All Brand ROP · Q4 2025 · 301 locations</div>
+      <div class="kpi-insight" style="margin-top:10px; font-size:11px;">67.2 reviews per location per quarter. Average across 301 ROP locations. GM ROP leads at 75.5 — above the 75 target for the first time.</div>
+    </div>
+  </div>
+
+  <!-- MONITORING KPIs -->
+  <div class="section-label">Monitoring KPIs</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">GM ROP: Reviews/Loc/Qtr</div>
+      <div class="monitor-card-val" style="color:var(--green);">75.5 ✓</div>
+      <div class="monitor-card-sub">Q4 2025. Hit the 75 target for first time. Sustain in Q1 2026.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">GM FZ: Reviews/Loc/Qtr</div>
+      <div class="monitor-card-val" style="color:var(--amber);">26.6</div>
+      <div class="monitor-card-sub">Q4 2025. Target: 30. Down from Q3 (30.8). FZ seasonality or engagement drop?</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">SD FZ: Reviews/Loc/Qtr</div>
+      <div class="monitor-card-val" style="color:var(--amber);">24.2</div>
+      <div class="monitor-card-sub">Q4 2025. Target: 30. Lowest quarter of 2025 — investigate Q4 SD FZ engagement.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Unreplied Rate 2025</div>
+      <div class="monitor-card-val" style="color:var(--green);">8.56%</div>
+      <div class="monitor-card-sub">Down from 28% in 2024. Target: continue reduction toward &lt;5%.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Negative Sentiment</div>
+      <div class="monitor-card-val" style="color:var(--green);">1%</div>
+      <div class="monitor-card-sub">Target: 0%. Monitoring monthly via Scout. Respond to all negative reviews within 24 hours.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Rollup KPI</div>
+      <div class="monitor-card-val" style="color:var(--fsa-red);">Return Rate (New)</div>
+      <div class="monitor-card-sub">Reviews drive new customer trust and AI citation quality — Return Rate (New, 180d) is the downstream impact metric.</div>
     </div>
   </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Review Response Strategy</div>
-      <div class="notes-box" style="margin-bottom:0;">
-        <strong>Hypothesis:</strong> Most unresponded reviews are 5-star with no text comment. A templated "Thank You for leaving a review" response to these would significantly increase the % responded metric.<br><br>
-        <strong>Action:</strong> Work with Yext MRR to update response templates/tone. Establish structured rules for which review types trigger which response template.<br><br>
-        <strong>Cadence:</strong> Quarterly review cadence — reviews per location per quarter, broken out by business unit.
+      <div class="card-title">Response Strategy Playbook</div>
+      <div class="notes-box" style="margin-bottom:12px;">
+        <strong>Hypothesis:</strong> Most of the 8.56% unresponded reviews are 5-star, no-comment reviews. A simple auto-response template ("Thank you for visiting! We appreciate your support.") would meaningfully reduce this number.
       </div>
+      <table class="trend-table">
+        <thead><tr><th>Review Type</th><th>Response Priority</th><th>Tone</th></tr></thead>
+        <tbody>
+          <tr><td>5★ + Text</td><td><span class="heat-green">High</span></td><td>Personalized thanks</td></tr>
+          <tr><td>5★ No Text</td><td><span class="heat-amber">Medium</span></td><td>Short automated thanks</td></tr>
+          <tr><td>3–4★</td><td><span class="heat-green">High</span></td><td>Service recovery offer</td></tr>
+          <tr><td>1–2★</td><td><span class="heat-red">Urgent</span></td><td>Personal resolution</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="card">
-      <div class="card-title">Key Actions</div>
+      <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Implement automated "Thank You" responses for 5-star/no-comment reviews via Yext — fastest path to moving % Responded metric.</li>
-        <li><div class="action-bullet">2</div>Update Yext response template repository — refresh tone and content to drive Neutral → Positive sentiment shift.</li>
-        <li><div class="action-bullet">3</div>Establish historical data capture so review trends can be tracked over time (currently only "as of now").</li>
-        <li><div class="action-bullet">4</div>Investigate whether unresponded reviews correlate with lower Return Rate (new vs existing customer impact).</li>
+        <li><div class="action-bullet">1</div>Implement automated "Thank You" responses for 5-star/no-comment reviews via Yext — this is the fastest, lowest-effort path to reducing the 8.56% unreplied rate toward &lt;5%.</li>
+        <li><div class="action-bullet">2</div>Update Yext response template repository — refresh tone and content to drive Neutral → Positive AI sentiment shift (42% neutral today, target 35%).</li>
+        <li><div class="action-bullet">3</div>Investigate Q4 FZ decline (GM FZ: 30.8 → 26.6 · SD FZ: 30.3 → 24.2) — is this seasonal or a franchisee engagement signal requiring intervention?</li>
+        <li><div class="action-bullet">4</div>Document what drove GM ROP to 75 in Q4 — replicate across other brands. This is a genuine win that should be studied and scaled.</li>
       </ul>
     </div>
   </div>
 </div>
-
 <!-- ════════════════════════════════════════════════
      PAGE: ORGANIC SOCIAL
 ════════════════════════════════════════════════ -->
@@ -1762,64 +2722,175 @@
     </div>
   </div>
 
-  <div class="three-col">
-    <div class="card">
-      <div class="card-title">Primary KPI — Engagement Rate (Meta/GM Only)</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--amber); letter-spacing:1px; font-weight:700;">—</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>From Organic Social tab</span><span>Target: 5.0% (Q1) → 6.5% (EoY)</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:0%"></div></div>
+  <div class="kpi-deepdive">
+    <div class="kpi-deepdive-header">
+      <div>
+        <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
+        <div class="kpi-deepdive-name">Average Post Engagement Rate (Actions / Impressions) — Meta · GM Only</div>
       </div>
-      <div style="font-size:11px; color:var(--muted);">Actions / Impressions. GM Only (No ADI). Industry benchmark: 5%. Q1 goal: reach industry standard. EoY: surpass it.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="heat-red">Baseline: 3.18%</span>
+        <span class="heat-amber">Q1 Target: 5.0% (industry std)</span>
+        <span class="heat-green">EoY Target: 6.5%</span>
+      </div>
+    </div>
+    <div class="kpi-deepdive-body">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Engagement Rate</div>
+        <div class="kpi-hero-number red">3.18%</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">Q4 2025 · Meta/GM Only<br>Actions ÷ Impressions</div>
+        <div style="margin-top:12px;">
+          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">To Q1 Target (5.0%)</div>
+          <div class="progress-bar" style="margin-bottom:0;"><div class="progress-fill red" style="width:63.6%"></div></div>
+          <div style="font-size:10px; color:var(--fsa-red); margin-top:4px; font-weight:600;">63.6% — 1.82pp gap to reach industry standard</div>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-target-lbl" style="margin-bottom:10px;">Benchmark Context</div>
+        <div class="benchmark-compare">
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">FSA Current (Q4 2025)</span><span class="bench-val">3.18%</span></div>
+            <div class="bench-track"><div class="bench-fill you" style="width:49%;"></div></div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">Industry Benchmark</span><span class="bench-val">5.0%</span></div>
+            <div class="bench-track"><div class="bench-fill comp" style="width:77%;"></div></div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">Q1 2026 Target</span><span class="bench-val">5.0%</span></div>
+            <div class="bench-track"><div class="bench-fill tgt" style="width:77%;"></div></div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-label-row"><span class="bench-lbl">EoY 2026 Target</span><span class="bench-val">6.5%</span></div>
+            <div class="bench-track"><div class="bench-fill tgt" style="width:100%;"></div></div>
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--muted); margin-top:6px;">Industry benchmark for local service/auto brands on Meta is ~5%. Q1 goal is to reach this standard. EoY goal is to surpass it. 3.5% was considered potentially too low as the initial target — revised upward.</div>
+      </div>
+      <div class="kpi-deepdive-insights">
+        <div class="kpi-insight insight-warn">
+          <strong>Channel Scope:</strong> GM Only (No ADI). Engagement = Actions (Likes, Comments, Shares) ÷ Impressions. Instagram Follower Count is tracked as the IG-specific primary KPI — separate from Meta engagement rate.
+        </div>
+        <div class="kpi-insight">
+          <strong>New Audience Channel:</strong> Organic Social is classified as a "New" customer channel. Engagement → Visit conversion ratio is TBD and should be studied as the channel matures. Analogous to establishing Search's 3:1 store visit ratio.
+        </div>
+        <div class="kpi-insight insight-warn">
+          <strong>Rural vs Urban Composition:</strong> Audience composition likely differs significantly by market type. Rural market content performance may vary from urban — breakout recommended once volume supports it.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DUAL: META + INSTAGRAM -->
+  <div class="section-label">Meta vs Instagram — Channel Breakdown</div>
+  <div class="dual-kpi-split">
+    <div class="card">
+      <div class="card-title"><span style="color:#1877F2;">●</span> Meta (Facebook) — GM Only</div>
+      <div class="monitoring-grid" style="grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+        <div class="monitor-card">
+          <div class="monitor-card-label">Reach</div>
+          <div class="monitor-card-val">—</div>
+          <div class="monitor-card-sub">By brand breakout needed</div>
+        </div>
+        <div class="monitor-card">
+          <div class="monitor-card-label">Engagement Rate</div>
+          <div class="monitor-card-val" style="color:var(--fsa-red);">3.18%</div>
+          <div class="monitor-card-sub">Q4 2025. Target: 5.0%</div>
+        </div>
+        <div class="monitor-card">
+          <div class="monitor-card-label">Likes/Reactions</div>
+          <div class="monitor-card-val">—</div>
+          <div class="monitor-card-sub">Part of Actions metric</div>
+        </div>
+        <div class="monitor-card">
+          <div class="monitor-card-label">Shares</div>
+          <div class="monitor-card-val">—</div>
+          <div class="monitor-card-sub">Amplification signal — higher value than likes</div>
+        </div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Comments are a quality engagement signal — they indicate content that prompts conversation. Track separately from passive likes/reactions.</div>
     </div>
     <div class="card">
-      <div class="card-title">Instagram — Follower Count</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--muted); letter-spacing:1px; font-weight:700;">—</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Follower Count is the primary IG KPI. Upload Organic Social export to populate. Net Follower Growth is the trend metric to watch.</div>
+      <div class="card-title"><span style="color:#E1306C;">●</span> Instagram — Follower Growth</div>
+      <div style="font-family:var(--font-display); font-size:52px; font-weight:700; color:var(--muted); letter-spacing:0;">—</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:4px;">Follower Count is the primary IG KPI</div>
+      <div class="monitoring-grid" style="grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; margin-bottom:0;">
+        <div class="monitor-card">
+          <div class="monitor-card-label">Current Followers</div>
+          <div class="monitor-card-val">—</div>
+          <div class="monitor-card-sub">Upload IG data to populate</div>
+        </div>
+        <div class="monitor-card">
+          <div class="monitor-card-label">Net Follower Growth</div>
+          <div class="monitor-card-val">—</div>
+          <div class="monitor-card-sub">New Follows minus Unfollows per period</div>
+        </div>
+      </div>
+      <div class="kpi-insight" style="margin-top:10px; font-size:11px;">Instagram follower count = new audience accumulation. Net growth (not raw count) is the momentum metric to watch monthly.</div>
     </div>
-    <div class="card">
-      <div class="card-title">Downstream Impact</div>
-      <div style="font-family:var(--font-display); font-size:44px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">RETURN</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Primary rollup KPI: Return Rate (New, 180d). Hypothesis: engagement with content drives in-store visits. Engagement-to-visit ratio TBD — study as channel matures.</div>
+  </div>
+
+  <!-- MONITORING KPIs -->
+  <div class="section-label">Monitoring KPIs</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">Comments (Quality Signal)</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Comments require more intent than likes — track as a content quality proxy. High-comment posts signal resonant content.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Shares (Amplification)</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Shares extend organic reach beyond existing audience — highest-value engagement action available without paid boost.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Reach</div>
+      <div class="monitor-card-val">—</div>
+      <div class="monitor-card-sub">Unique accounts reached. Separate from impressions (one account can generate multiple impressions). By brand breakdown needed.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Engagement → Visit Ratio</div>
+      <div class="monitor-card-val" style="color:var(--amber);">Study Needed</div>
+      <div class="monitor-card-sub">Analogous to Paid Search's 3:1 store visit ratio. Establishing this ratio is the unlock for channel ROI reporting.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">ADI Expansion?</div>
+      <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+      <div class="monitor-card-sub">Currently GM Only. ADI brand expansion should be evaluated once GM baseline is established. Low impact today — resource allocation question.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Rollup KPI</div>
+      <div class="monitor-card-val" style="color:var(--fsa-red);">Return Rate (New)</div>
+      <div class="monitor-card-sub">Hypothesis: engagement with content drives new customer visits. Return Rate (New, 180d) is the downstream validation metric.</div>
     </div>
   </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Metrics to Track</div>
-      <div class="metric-row">
-        <div class="metric-name">Reach</div>
-        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">By brand breakout</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Engagement (Likes/Reactions)</div>
-        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Actions / Impressions</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Comments</div>
-        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Quality signal</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Shares</div>
-        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Amplification signal</span></div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-name">Net Follower Growth</div>
-        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">New audience growth</span></div>
-      </div>
+      <div class="card-title">Content Performance Framework</div>
+      <table class="trend-table">
+        <thead><tr><th>Content Type</th><th>Engagement Expectation</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td>Promotional offers</td><td>High reach, lower eng.</td><td><span class="heat-green">High</span></td></tr>
+          <tr><td>Behind-the-scenes</td><td>High engagement rate</td><td><span class="heat-green">High</span></td></tr>
+          <tr><td>Customer stories</td><td>High comments/shares</td><td><span class="heat-green">High</span></td></tr>
+          <tr><td>Educational tips</td><td>Medium engagement</td><td><span class="heat-amber">Medium</span></td></tr>
+          <tr><td>Brand/awareness</td><td>Lower engagement</td><td><span class="heat-gray">Low</span></td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Track performance by content type to identify which categories drive the engagement rate toward the 5.0% Q1 target. Service/auto brands typically see highest engagement on transparent, trust-building content.</div>
     </div>
     <div class="card">
-      <div class="card-title">Key Actions</div>
+      <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Establish engagement-to-store visit ratio baseline (analogous to Search's 3:1 Store Visit ratio). This unlocks the channel's ROI conversation with leadership.</li>
-        <li><div class="action-bullet">2</div>Build rural vs urban breakout for content performance — audience composition likely differs significantly by market type.</li>
-        <li><div class="action-bullet">3</div>Increase follower count as a new audience growth lever — define what "good" growth rate looks like vs industry.</li>
-        <li><div class="action-bullet">4</div>No ADI content currently — consider whether ADI expansion is appropriate given channel is Low Impact today.</li>
+        <li><div class="action-bullet">1</div>Identify content types driving the highest engagement rate — analyze top 10% performing posts and build a repeatable content formula around what works.</li>
+        <li><div class="action-bullet">2</div>Establish engagement-to-store visit ratio baseline (the social equivalent of Search's 3:1 ratio). This is the unlock for including Organic Social in ROI conversations with leadership.</li>
+        <li><div class="action-bullet">3</div>Build rural vs urban content performance breakout once volume supports it — audience composition differs and content resonance will vary by market type.</li>
+        <li><div class="action-bullet">4</div>Evaluate Instagram follower growth strategy — define a target growth rate and determine if ADI expansion is appropriate given current Low Impact classification.</li>
       </ul>
     </div>
   </div>
 </div>
-
 <!-- ════════════════════════════════════════════════
      PAGES: HOLD CHANNELS
 ════════════════════════════════════════════════ -->
@@ -1842,28 +2913,114 @@
         <span class="badge badge-vendor">Mountain</span>
         <span class="badge badge-owner">Owner: Bethany</span>
         <span class="badge badge-lag">Lagging Indicator</span>
+        <span class="badge badge-impact-low">Low Impact (current)</span>
       </div>
     </div>
     <div class="data-status hold" style="margin-bottom:0; align-self:flex-start;">
       <div class="status-dot"></div>Partial data — establishing baseline
     </div>
   </div>
+
+  <div class="kpi-deepdive">
+    <div class="kpi-deepdive-header">
+      <div>
+        <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
+        <div class="kpi-deepdive-name">CPM (Cost per 1,000 Impressions)</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="heat-amber">Baseline: $55</span>
+        <span class="heat-green">Q1 Target: $50 (lower is better)</span>
+        <span class="heat-gray">EoY Target: TBD</span>
+      </div>
+    </div>
+    <div class="kpi-deepdive-body">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Current CPM</div>
+        <div class="kpi-hero-number amber">$55</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">Per 1,000 Impressions<br>Mountain vendor</div>
+        <div style="margin-top:12px;">
+          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">To Q1 Target ($50)</div>
+          <div class="progress-bar" style="margin-bottom:0;"><div class="progress-fill yellow" style="width:80%"></div></div>
+          <div style="font-size:10px; color:var(--amber); margin-top:4px; font-weight:600;">Need $5 CPM reduction — 91% of target</div>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-target-lbl" style="margin-bottom:10px;">CTV Funnel (Awareness → Action)</div>
+        <div class="journey-strip" style="padding:8px 0;">
+          <div class="journey-step"><div class="journey-box"><div class="journey-box-val">Impr.</div><div class="journey-box-lbl">CPM: $55</div></div></div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step"><div class="journey-box"><div class="journey-box-val">Reach</div><div class="journey-box-lbl">Unique HH</div></div></div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step"><div class="journey-box"><div class="journey-box-val">URL Visit</div><div class="journey-box-lbl">Web Conversion</div></div></div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-step"><div class="journey-box highlight"><div class="journey-box-val">~$20</div><div class="journey-box-lbl">Offline Conv.</div></div></div>
+        </div>
+        <div style="font-size:11px; color:var(--muted); margin-top:6px;">CTV is a top-of-funnel awareness channel. Direct response measurement requires URL-specific web conversion tracking to tie TV exposure to web behavior and ultimately to in-store visits.</div>
+      </div>
+      <div class="kpi-deepdive-insights">
+        <div class="kpi-insight insight-warn">
+          <strong>Attribution Challenge:</strong> CTV is the hardest channel to attribute. The standard approach is URL-specific tracking (QR codes or vanity URLs in the spot) combined with geo-lift studies comparing markets running CTV vs control markets.
+        </div>
+        <div class="kpi-insight">
+          <strong>Offline Conversion Target:</strong> ~$20 average cost per conversion. This is the secondary KPI — needs URL-specific web conversion tracking to be measurable. Define "conversion" (coupon request, directions click, phone call) before setting target.
+        </div>
+        <div class="kpi-insight insight-warn">
+          <strong>Testing Appointments:</strong> Meeting notes flag "Testing Appointments: Offline Conversion" as a CTV measurement priority. Appointment bookings via CTV-specific landing pages would provide clean attribution.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Secondary &amp; Monitoring KPIs</div>
+  <div class="monitoring-grid">
+    <div class="monitor-card">
+      <div class="monitor-card-label">Offline Conv. Cost (Secondary)</div>
+      <div class="monitor-card-val" style="color:var(--muted);">~$20 est.</div>
+      <div class="monitor-card-sub">Target cost per conversion. Requires URL-specific web conversion tracking to measure. Define conversion event first.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Reach (Unique HH)</div>
+      <div class="monitor-card-val" style="color:var(--muted);">—</div>
+      <div class="monitor-card-sub">Unique household reach via Mountain. CPM alone without reach data doesn't tell the full story — are you reaching new HH or re-exposing same HH?</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">URL-Specific Web Conv.</div>
+      <div class="monitor-card-val" style="color:var(--amber);">Setup Needed</div>
+      <div class="monitor-card-sub">CTV-specific vanity URL or QR code in spot. Enables clean attribution from TV exposure to website action.</div>
+    </div>
+    <div class="monitor-card">
+      <div class="monitor-card-label">Frequency</div>
+      <div class="monitor-card-val" style="color:var(--muted);">—</div>
+      <div class="monitor-card-sub">Average impressions per household. CTV benchmark: 3–5x frequency for brand recall. Monitor to avoid oversaturation.</div>
+    </div>
+  </div>
+
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Primary KPI — CPM</div>
-      <div style="font-family:var(--font-display); font-size:52px; color:var(--charcoal); letter-spacing:1px; font-weight:700;">$55</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Current: $55</span><span>Target: $50 (lower is better)</span></div>
-        <div class="progress-bar"><div class="progress-fill yellow" style="width:80%"></div></div>
+      <div class="card-title">CPM Benchmark Context</div>
+      <div class="benchmark-compare" style="margin-top:8px;">
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">FSA Current CPM</span><span class="bench-val">$55</span></div>
+          <div class="bench-track"><div class="bench-fill you" style="width:75%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Q1 Target</span><span class="bench-val">$50</span></div>
+          <div class="bench-track"><div class="bench-fill tgt" style="width:68%;"></div></div>
+        </div>
+        <div class="bench-item">
+          <div class="bench-label-row"><span class="bench-lbl">Industry CTV Range</span><span class="bench-val">$25–65</span></div>
+          <div class="bench-track"><div class="bench-fill comp" style="width:60%;"></div></div>
+        </div>
       </div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Cost per 1,000 impressions. Secondary: Offline Conversion Metric (~$20 avg/conversion target). URL-specific web conversion tracking needed.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:10px;">$55 is within typical CTV range but at the higher end. Negotiate with Mountain for volume-based CPM reduction, or test additional CTV vendors for competitive pricing.</div>
     </div>
     <div class="card">
-      <div class="card-title">Key Actions</div>
+      <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Establish URL-specific web conversion tracking to measure CTV-driven traffic separately.</li>
-        <li><div class="action-bullet">2</div>Build offline conversion metric — target ~$20/conversion as the efficiency benchmark.</li>
-        <li><div class="action-bullet">3</div>Track Reach alongside CPM — impressions alone don't tell the story without unique reach data.</li>
+        <li><div class="action-bullet">1</div>Set up URL-specific web conversion tracking for CTV spots — this is the foundational data infrastructure that enables all other CTV measurement.</li>
+        <li><div class="action-bullet">2</div>Define "offline conversion" for this channel (coupon request? directions click? appointment booking?) — you can't target $20/conversion without a clear definition.</li>
+        <li><div class="action-bullet">3</div>Negotiate CPM reduction with Mountain below $50 — benchmark against alternative CTV vendors to create leverage in negotiation.</li>
+        <li><div class="action-bullet">4</div>Consider a geo-lift study: run CTV in select markets, hold out others, and compare store visit trends. This validates CTV's contribution to the business.</li>
       </ul>
     </div>
   </div>
@@ -1873,11 +3030,39 @@
   <div class="hold-overlay">
     <div class="hold-icon">⏸</div>
     <div class="hold-title">PAID SOCIAL — ON HOLD</div>
-    <div class="hold-desc">New agency onboarding in progress. This channel will be activated once agency relationship and data access are established. Primary KPI and targets TBD.</div>
+    <div class="hold-desc">New agency onboarding in progress. This channel will be activated once the agency relationship and data access are established.</div>
     <div class="channel-meta-row" style="justify-content:center; margin-top:8px;">
       <span class="badge badge-hold">HOLD — New Agency</span>
       <span class="badge badge-owner">Owner: Bethany</span>
-      <span class="badge badge-impact-low">Low Impact (current)</span>
+      <span class="badge badge-impact-low">CAC Rollup</span>
+    </div>
+  </div>
+  <div style="padding:0 32px 28px;">
+    <div class="section-label" style="margin-top:24px;">When Channel Activates — KPI Framework</div>
+    <div class="monitoring-grid">
+      <div class="monitor-card">
+        <div class="monitor-card-label">Primary KPI</div>
+        <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+        <div class="monitor-card-sub">New agency to define. Likely: CPVC (Cost per Video View), CTR, or Landing Page Views.</div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-card-label">Key Metrics to Track</div>
+        <div class="monitor-card-val" style="font-size:14px;">Spend, CPVC, CPLPV</div>
+        <div class="monitor-card-sub">Content Views · Cost per Video View · Landing Page Views · Cost per LPV · Impressions</div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-card-label">Secondary KPI</div>
+        <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+        <div class="monitor-card-sub">Per meeting notes: CPC and CTR are the Paid Media monitoring KPIs alongside CPVC</div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-card-label">Rollup KPI</div>
+        <div class="monitor-card-val" style="color:var(--fsa-red);">CAC</div>
+        <div class="monitor-card-sub">Customer Acquisition Cost is Paid Social's primary upstream impact metric. Track by brand once active.</div>
+      </div>
+    </div>
+    <div class="notes-box">
+      <strong>Agency Setup Checklist:</strong> When agency onboards — define Primary KPI, establish baseline tracking for Spend/CPVC/CTR, confirm data access method (API or dashboard export), and set Q1 targets. Baseline 2025 data is currently zero — first 30 days of data will become the baseline.
     </div>
   </div>
 </div>
@@ -1886,16 +3071,49 @@
   <div class="hold-overlay">
     <div class="hold-icon">⏸</div>
     <div class="hold-title">PROGRAMMATIC — ON HOLD</div>
-    <div class="hold-desc">New agency onboarding in progress. Preliminary target: CPC of $22.50 (down from $25 current). Secondary KPI: Cost per Click. Activate once agency and data access confirmed.</div>
+    <div class="hold-desc">New agency onboarding in progress. Preliminary targets are defined — activate once agency and data access are confirmed.</div>
     <div class="channel-meta-row" style="justify-content:center; margin-top:8px;">
       <span class="badge badge-hold">HOLD — New Agency</span>
       <span class="badge badge-owner">Owner: Bethany</span>
-      <span class="badge badge-impact-low">Low Impact (current)</span>
+      <span class="badge badge-impact-low">CAC Rollup</span>
     </div>
-    <div class="card" style="margin-top:20px; max-width:400px; text-align:left;">
-      <div class="card-title">When Ready</div>
-      <div class="metric-row"><div class="metric-name">Primary KPI</div><div class="metric-values"><span class="metric-current">CPC</span><span class="metric-target">Target: $22.50</span></div></div>
-      <div class="metric-row"><div class="metric-name">Current Baseline</div><div class="metric-values"><span class="metric-current">$25.00</span><span class="metric-target">-10% goal</span></div></div>
+  </div>
+  <div style="padding:0 32px 28px;">
+    <div class="section-label" style="margin-top:24px;">Pre-Defined KPI Framework — Ready to Activate</div>
+    <div class="monitoring-grid">
+      <div class="monitor-card">
+        <div class="monitor-card-label">Primary KPI</div>
+        <div class="monitor-card-val" style="color:var(--amber);">CPC</div>
+        <div class="monitor-card-sub">Current baseline: $25.00. Q1 Target: $22.50. EoY Target: $22.50 (TBD further reduction).</div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-card-label">Secondary KPI</div>
+        <div class="monitor-card-val" style="font-size:14px;">CPM + CTR</div>
+        <div class="monitor-card-sub">Cost per 1,000 Impressions and Click-Through Rate. Per meeting notes: DSP tracks CPM and CPC as primary metrics.</div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-card-label">Coupon Downloads</div>
+        <div class="monitor-card-val" style="color:var(--muted);">TBD</div>
+        <div class="monitor-card-sub">Cost per Coupon Download (CPCD) — track once agency provides performance data. High-intent action signal.</div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-card-label">Impressions</div>
+        <div class="monitor-card-val" style="color:var(--muted);">—</div>
+        <div class="monitor-card-sub">Track by brand breakout once active. Impressions × CTR → Clicks × Conversion = efficiency metric.</div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-card-label">Q1 CPC Target</div>
+        <div class="monitor-card-val" style="color:var(--green);">$22.50</div>
+        <div class="monitor-card-sub">10% reduction from $25.00 baseline. Monitor weekly once data pipeline is established.</div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-card-label">Rollup KPI</div>
+        <div class="monitor-card-val" style="color:var(--fsa-red);">CAC</div>
+        <div class="monitor-card-sub">Customer Acquisition Cost. Programmatic targets new customers — CPC is the efficiency proxy until direct attribution is available.</div>
+      </div>
+    </div>
+    <div class="notes-box">
+      <strong>Agency Setup Checklist:</strong> When agency onboards — confirm data access (Spend, Impressions, Clicks, CPM, CTR, Coupon Downloads), validate $25 CPC baseline with historical data, set Q1 target of $22.50, and establish brand-level breakout reporting. DSP-specific metrics: CPM + CPC per meeting notes (1.14.26).
     </div>
   </div>
 </div>
