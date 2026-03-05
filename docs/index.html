@@ -3689,26 +3689,6 @@
     </div>
   </div>
 
-  <div class="notes-box" style="margin-bottom:20px; border-color:var(--amber); background:var(--amber-bg);">
-    <strong>How it works:</strong> This monitor shares the same Google Ads datasource as the Paid Search tab (<code>data/google-ads.csv</code>).
-    It auto-populates when the dashboard fetches from GitHub, or you can upload a file manually below.
-    Store numbers are extracted from campaign names using the <code>#XXXX</code> pattern, then any store with
-    <strong>$0 spend on any single day</strong> is flagged. Previously alerted store+day combinations are preserved across refreshes.
-    Use "Alert Stakeholder" to draft and log an email notification.
-  </div>
-
-  <!-- Stakeholder config -->
-  <div class="gd-config-bar">
-    <span class="gd-config-label">Alert recipient</span>
-    <input type="email" class="gd-config-input" id="gd-stakeholder-email"
-           placeholder="Enter recipient email…" />
-    <button class="gd-config-save" onclick="gdSaveEmail()">Save</button>
-    <span class="gd-config-saved" id="gd-email-saved">✓ Saved</span>
-    <span class="gd-config-label" style="margin-left:8px;">CC</span>
-    <input type="text" class="gd-config-input" style="max-width:240px;" id="gd-cc-email"
-           placeholder="CC email (optional)" />
-  </div>
-
   <!-- Upload zone -->
   <div class="gd-drop-zone" id="gdDropZone"
        onclick="document.getElementById('gdFileInput').click()"
@@ -3799,6 +3779,26 @@
     <div class="gd-log-body" id="gdLogBody">
       <div class="gd-log-empty" id="gdLogEmpty">No alerts sent yet this session.</div>
     </div>
+  </div>
+
+  <!-- Stakeholder config -->
+  <div class="gd-config-bar" style="margin-top:20px;">
+    <span class="gd-config-label">Alert recipient</span>
+    <input type="email" class="gd-config-input" id="gd-stakeholder-email"
+           placeholder="Enter recipient email…" />
+    <button class="gd-config-save" onclick="gdSaveEmail()">Save</button>
+    <span class="gd-config-saved" id="gd-email-saved">✓ Saved</span>
+    <span class="gd-config-label" style="margin-left:8px;">CC</span>
+    <input type="text" class="gd-config-input" style="max-width:240px;" id="gd-cc-email"
+           placeholder="CC email (optional)" />
+  </div>
+
+  <div class="notes-box" style="margin-top:12px; border-color:var(--amber); background:var(--amber-bg);">
+    <strong>How it works:</strong> This monitor shares the same Google Ads datasource as the Paid Search tab (<code>data/google-ads.csv</code>).
+    It auto-populates when the dashboard fetches from GitHub, or you can upload a file manually below.
+    Store numbers are extracted from campaign names using the <code>#XXXX</code> pattern, then any store with
+    <strong>$0 spend on any single day</strong> is flagged. Previously alerted store+day combinations are preserved across refreshes.
+    Use "Alert Stakeholder" to draft and log an email notification.
   </div>
 
 </div><!-- end page-go-dark -->
