@@ -232,16 +232,16 @@
   .kpi-card.yellow:hover { box-shadow: 0 4px 14px rgba(180,83,9,0.12); }
   .kpi-card.red:hover    { box-shadow: 0 4px 14px rgba(196,18,48,0.14); }
 
-  /* ── Upload Panel ── */
+  /* ── GitHub Data Panel ── */
   .upload-panel {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
     overflow: hidden;
     max-height: 0;
-    transition: max-height 0.35s ease;
+    transition: max-height 0.45s ease;
     box-shadow: inset 0 -1px 0 var(--border);
   }
-  .upload-panel.open { max-height: 440px; }
+  .upload-panel.open { max-height: 520px; }
   .upload-panel-inner { padding: 20px 32px 24px; }
   .upload-panel-title {
     font-family: var(--font-semi);
@@ -262,6 +262,31 @@
     letter-spacing: 0;
     text-transform: none;
   }
+  /* GitHub config row */
+  .gh-config-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .gh-input-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; }
+  .gh-input-label { font-family: var(--font-semi); font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .gh-input {
+    background: var(--surface2);
+    border: 1px solid var(--border-dk);
+    border-radius: 4px;
+    padding: 7px 10px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .gh-input:focus { border-color: var(--fsa-red); }
+  .gh-input::placeholder { color: var(--muted); }
+
+  /* Channel file slots grid */
   .upload-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
@@ -269,20 +294,15 @@
     margin-bottom: 16px;
   }
   .upload-slot {
-    border: 1.5px dashed var(--border-dk);
+    border: 1.5px solid var(--border-dk);
     border-radius: 5px;
     padding: 11px 13px;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
     background: var(--surface2);
     position: relative;
   }
-  .upload-slot:hover  { border-color: var(--fsa-red); background: var(--red-bg); }
   .upload-slot.loaded { border-color: var(--green); border-style: solid; background: var(--green-bg); }
   .upload-slot.error  { border-color: var(--fsa-red); border-style: solid; background: var(--red-bg); }
-  .upload-slot input[type=file] {
-    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-  }
+  .upload-slot.fetching { border-color: var(--amber); border-style: solid; background: var(--amber-bg); }
   .upload-slot-name {
     font-family: var(--font-semi);
     font-size: 11px;
@@ -300,6 +320,8 @@
   }
   .upload-slot.loaded .upload-slot-status { color: var(--green); }
   .upload-slot.error  .upload-slot-status { color: var(--fsa-red); }
+  .upload-slot.fetching .upload-slot-status { color: var(--amber); }
+
   .upload-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   .btn-refresh {
     background: var(--fsa-red);
@@ -318,6 +340,24 @@
   .btn-refresh:hover    { background: var(--fsa-red-dk); }
   .btn-refresh:disabled { background: var(--muted); cursor: not-allowed; }
   .upload-note { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  /* GitHub source badge */
+  .gh-source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(36,41,47,0.08);
+    border: 1px solid rgba(36,41,47,0.18);
+    color: #24292F;
+    font-size: 10px;
+    font-family: var(--font-semi);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
   .upload-toggle {
     background: none;
     border: 1px solid rgba(255,255,255,0.22);
@@ -1160,7 +1200,7 @@
       <span class="last-updated" id="lastUpdated">Updated: —</span>
       <span class="data-period-badge" id="dataPeriod">2026 Data</span>
       <button class="upload-toggle" id="uploadToggleBtn" onclick="toggleUploadPanel()">
-        <span class="upload-toggle-label" id="uploadToggleLabel">↑ Refresh Data</span>
+        <span class="upload-toggle-label" id="uploadToggleLabel">⬡ Data Source</span>
         <span class="refresh-indicators" id="refreshIndicators" aria-label="Channel data freshness indicators"></span>
 </button>
     </div>
@@ -1168,49 +1208,74 @@
 </header>
 
 <!-- ════════════════════════════════════════════════
-     UPLOAD PANEL
+     GITHUB DATA PANEL
 ════════════════════════════════════════════════ -->
 <div class="upload-panel" id="uploadPanel">
   <div class="upload-panel-inner">
     <div class="upload-panel-title">
-      Refresh Dashboard Data
-      <span>Drop in new exports — dashboard recalculates instantly. Partial uploads OK.</span>
+      <span class="gh-source-badge">⬡ GitHub</span>
+      Refresh from Repository
+      <span>All users fetch the same files from your GitHub repo — one push updates everyone's dashboard.</span>
     </div>
+
+    <!-- Repo config -->
+    <div class="gh-config-row">
+      <div class="gh-input-group" style="flex:2; min-width:260px;">
+        <div class="gh-input-label">Repository (owner/repo)</div>
+        <input class="gh-input" id="ghRepo" type="text" placeholder="e.g. fullspeed-auto/cmo-dashboard-data" value=""/>
+      </div>
+      <div class="gh-input-group" style="flex:1;">
+        <div class="gh-input-label">Branch</div>
+        <input class="gh-input" id="ghBranch" type="text" placeholder="main" value="main"/>
+      </div>
+      <div class="gh-input-group" style="flex:1;">
+        <div class="gh-input-label">Data Folder</div>
+        <input class="gh-input" id="ghFolder" type="text" placeholder="data" value="data"/>
+      </div>
+    </div>
+
+    <!-- Channel file slots (read-only status display) -->
     <div class="upload-grid">
       <div class="upload-slot" id="slot-google-ads">
-        <input type="file" accept=".csv" onchange="handleFile('google-ads', this)"/>
         <div class="upload-slot-name">Google Ads</div>
-        <div class="upload-slot-desc">CSV export · Campaign performance by day</div>
-        <div class="upload-slot-status">↑ Click to upload</div>
+        <div class="upload-slot-desc">google-ads.csv · Campaign perf by day</div>
+        <div class="upload-slot-status" id="slot-status-google-ads">⬡ Awaiting fetch</div>
       </div>
       <div class="upload-slot" id="slot-cinch-sms">
-        <input type="file" accept=".xlsx,.xls" onchange="handleFile('cinch-sms', this)"/>
         <div class="upload-slot-name">SMS (Cinch)</div>
-        <div class="upload-slot-desc">Excel · Monthly send & delivery data</div>
-        <div class="upload-slot-status">↑ Click to upload</div>
+        <div class="upload-slot-desc">cinch-sms.xlsx · Monthly send & delivery</div>
+        <div class="upload-slot-status" id="slot-status-cinch-sms">⬡ Awaiting fetch</div>
       </div>
       <div class="upload-slot" id="slot-cinch-email">
-        <input type="file" accept=".xlsx,.xls" onchange="handleFile('cinch-email', this)"/>
         <div class="upload-slot-name">Email (Cinch)</div>
-        <div class="upload-slot-desc">Excel · Template-level send & click data</div>
-        <div class="upload-slot-status">↑ Click to upload</div>
+        <div class="upload-slot-desc">cinch-email.xlsx · Template send & click</div>
+        <div class="upload-slot-status" id="slot-status-cinch-email">⬡ Awaiting fetch</div>
       </div>
       <div class="upload-slot" id="slot-dripdrop">
-        <input type="file" accept=".xlsx,.xls" onchange="handleFile('dripdrop', this)"/>
         <div class="upload-slot-name">Direct Mail (DripDrop)</div>
-        <div class="upload-slot-desc">Excel · Location response rate data</div>
-        <div class="upload-slot-status">↑ Click to upload</div>
+        <div class="upload-slot-desc">dripdrop.xlsx · Location response rates</div>
+        <div class="upload-slot-status" id="slot-status-dripdrop">⬡ Awaiting fetch</div>
       </div>
       <div class="upload-slot" id="slot-web-ga4">
-        <input type="file" accept=".csv" onchange="handleFile('web-ga4', this)"/>
         <div class="upload-slot-name">Web (GA4)</div>
-        <div class="upload-slot-desc">CSV · Sessions by channel group</div>
-        <div class="upload-slot-status">↑ Click to upload</div>
+        <div class="upload-slot-desc">web-ga4.csv · Sessions by channel group</div>
+        <div class="upload-slot-status" id="slot-status-web-ga4">⬡ Awaiting fetch</div>
       </div>
     </div>
+
     <div class="upload-actions">
-      <button class="btn-refresh" id="refreshBtn" onclick="applyUploads()" disabled>Apply & Refresh Dashboard</button>
-      <div class="upload-note" id="uploadNote">Upload at least one file to refresh. Channels without new files keep their current values.</div>
+      <button class="btn-refresh" id="refreshBtn" onclick="fetchFromGitHub()">↓ Fetch &amp; Refresh from GitHub</button>
+      <div class="upload-note" id="uploadNote">Enter your repo above and click Fetch. Files are pulled from <code>raw.githubusercontent.com</code> — every user sees identical data.</div>
+    </div>
+
+    <div style="margin-top:14px; padding:10px 14px; background:#EBF3FB; border:1px dashed #90C0E8; border-radius:5px; font-size:11px; color:#1E5C9E; line-height:1.6;">
+      <strong>📁 Repo structure required:</strong> &nbsp;
+      <code>data/google-ads.csv</code> &nbsp;·&nbsp;
+      <code>data/cinch-sms.xlsx</code> &nbsp;·&nbsp;
+      <code>data/cinch-email.xlsx</code> &nbsp;·&nbsp;
+      <code>data/dripdrop.xlsx</code> &nbsp;·&nbsp;
+      <code>data/web-ga4.csv</code>
+      &nbsp;— Push updated files to trigger a refresh for all users.
     </div>
   </div>
 </div>
@@ -1324,6 +1389,128 @@
       <div class="data-status warn"><div class="status-dot"></div>Listings / Reviews — Annual/quarterly aggregates only</div>
       <div class="data-status warn"><div class="status-dot"></div>SEO/AI — No historical capture yet</div>
       <div class="data-status hold"><div class="status-dot"></div>Paid Social / Programmatic — HOLD (new agency)</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       EXECUTIVE ROADMAP
+  ══════════════════════════════════════════════════ -->
+  <div class="section-label" style="margin-top:32px;">Dashboard Evolution Roadmap</div>
+  <div id="execRoadmap" style="
+    background: var(--charcoal);
+    border-radius: 8px;
+    padding: 28px 32px 32px;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+  ">
+    <!-- Red accent bar -->
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--fsa-red) 0%,#9B0E26 100%);"></div>
+
+    <!-- Header -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:28px;">
+      <div>
+        <div style="font-family:var(--font-semi);font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--fsa-red);margin-bottom:6px;">Executive Roadmap</div>
+        <div style="font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fff;line-height:1;">CMO Dashboard Evolution Plan</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:6px;">2026 · FullSpeed Automotive · Marketing Intelligence Program</div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+        <div style="display:flex;align-items:center;gap:6px;font-family:var(--font-semi);font-size:10px;font-weight:600;letter-spacing:0.5px;color:rgba(255,255,255,0.5);">
+          <div style="width:10px;height:10px;border-radius:2px;background:#1A7A3C;"></div>NOW / IN PROGRESS
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-family:var(--font-semi);font-size:10px;font-weight:600;letter-spacing:0.5px;color:rgba(255,255,255,0.5);">
+          <div style="width:10px;height:10px;border-radius:2px;background:#B45309;"></div>NEAR-TERM
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-family:var(--font-semi);font-size:10px;font-weight:600;letter-spacing:0.5px;color:rgba(255,255,255,0.5);">
+          <div style="width:10px;height:10px;border-radius:2px;background:#1E5C9E;"></div>STRATEGIC
+        </div>
+      </div>
+    </div>
+
+    <!-- Roadmap Phases -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+
+      <!-- PHASE 1 -->
+      <div style="background:rgba(26,122,60,0.12);border:1px solid rgba(26,122,60,0.3);border-radius:6px;padding:18px 20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#1A7A3C;"></div>
+        <div style="font-family:var(--font-semi);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4ADE80;margin-bottom:4px;">Phase 1 · Now</div>
+        <div style="font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:12px;line-height:1.1;">Data Infrastructure<br>&amp; Foundation</div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:rgba(255,255,255,0.06);border-radius:4px;padding:10px 12px;">
+            <div style="font-family:var(--font-semi);font-size:10px;font-weight:700;color:#4ADE80;letter-spacing:0.5px;margin-bottom:4px;">✓ GitHub-Hosted Data Files</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5;">Channel data files live in the repo — one push updates all users simultaneously. Eliminates per-user upload fragmentation.</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.06);border-radius:4px;padding:10px 12px;">
+            <div style="font-family:var(--font-semi);font-size:10px;font-weight:700;color:#4ADE80;letter-spacing:0.5px;margin-bottom:4px;">✓ EoQ &amp; EoY Target Tracking</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5;">Add end-of-quarter and end-of-year targets per channel. Track and visualize pacing progress against both horizons.</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.06);border-radius:4px;padding:10px 12px;">
+            <div style="font-family:var(--font-semi);font-size:10px;font-weight:700;color:#A3E635;letter-spacing:0.5px;margin-bottom:4px;">◷ Remaining Channel Data</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5;">Populate SEO/AI, Organic Social, Listings, and Reviews channels with live data exports from Scout, Yext, Meta.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 2 -->
+      <div style="background:rgba(180,83,9,0.12);border:1px solid rgba(180,83,9,0.3);border-radius:6px;padding:18px 20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#B45309;"></div>
+        <div style="font-family:var(--font-semi);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FB923C;margin-bottom:4px;">Phase 2 · Near-Term</div>
+        <div style="font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:12px;line-height:1.1;">Automation &amp;<br>Intelligence Layer</div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:rgba(255,255,255,0.06);border-radius:4px;padding:10px 12px;">
+            <div style="font-family:var(--font-semi);font-size:10px;font-weight:700;color:#FB923C;letter-spacing:0.5px;margin-bottom:4px;">⬡ Automated File Uploads to GitHub</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5;">Scheduled scripts push updated data files to the repo per channel cadence — daily for Google Ads, monthly for Email/SMS, weekly for Listings.</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.06);border-radius:4px;padding:10px 12px;">
+            <div style="font-family:var(--font-semi);font-size:10px;font-weight:700;color:#FB923C;letter-spacing:0.5px;margin-bottom:4px;">⬡ Deeper Per-Channel Analysis</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5;">AI analysis specificity tuned per channel — SVR attribution for Paid Search, CTOR segmentation for Email, impression decay for Listings.</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.06);border-radius:4px;padding:10px 12px;">
+            <div style="font-family:var(--font-semi);font-size:10px;font-weight:700;color:#FB923C;letter-spacing:0.5px;margin-bottom:4px;">⬡ Date Range Filter</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5;">Add date range selectors to applicable channel tabs (Paid Search, Web, Email, SMS) to enable period-over-period comparison.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 3 -->
+      <div style="background:rgba(30,92,158,0.12);border:1px solid rgba(30,92,158,0.3);border-radius:6px;padding:18px 20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#1E5C9E;"></div>
+        <div style="font-family:var(--font-semi);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#60A5FA;margin-bottom:4px;">Phase 3 · Strategic</div>
+        <div style="font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:12px;line-height:1.1;">Alerting &amp;<br>Stakeholder Comms</div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:rgba(255,255,255,0.06);border-radius:4px;padding:10px 12px;">
+            <div style="font-family:var(--font-semi);font-size:10px;font-weight:700;color:#60A5FA;letter-spacing:0.5px;margin-bottom:4px;">⬡ Power Automate Stakeholder Digest</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5;">Automated read of dashboard → AI-generated takeaways + CTAs → distributed to channel stakeholders on set cadence. Differentiated per owner.</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.06);border-radius:4px;padding:10px 12px;">
+            <div style="font-family:var(--font-semi);font-size:10px;font-weight:700;color:#60A5FA;letter-spacing:0.5px;margin-bottom:4px;">⬡ Google Ads Spend Tracker</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5;">
+              <span style="color:#F87171;font-weight:600;">Go Dark Alert</span> — fires if any store location (#XXXX in campaign string) records $0 spend on a single day.<br>
+              <span style="color:#FB923C;font-weight:600;">Pacing Tracker</span> — compares accrued spend vs uploaded pacing plan; alerts if outside predetermined threshold.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Timeline bar -->
+    <div style="margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);">
+      <div style="font-family:var(--font-semi);font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:10px;">2026 Delivery Timeline</div>
+      <div style="position:relative;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:25%;background:linear-gradient(90deg,#1A7A3C,#22C55E);border-radius:4px;"></div>
+        <div style="position:absolute;left:25%;top:0;bottom:0;width:40%;background:linear-gradient(90deg,#B45309,#F97316);border-radius:4px;opacity:0.8;"></div>
+        <div style="position:absolute;left:65%;top:0;bottom:0;width:35%;background:linear-gradient(90deg,#1E5C9E,#3B82F6);border-radius:4px;opacity:0.7;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:7px;font-family:var(--font-semi);font-size:10px;color:rgba(255,255,255,0.35);">
+        <span>Q1 2026</span>
+        <span>Q2 2026</span>
+        <span>Q3 2026</span>
+        <span>Q4 2026</span>
+      </div>
     </div>
   </div>
 </div>
@@ -3255,10 +3442,91 @@ const CHANNELS = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════
-// UPLOAD PANEL
+// GITHUB DATA FETCHING
+// Fetches files from raw.githubusercontent.com so every user
+// loads the same data. Repo config is entered in the panel UI.
+// File map: slotId → filename in the /data/ folder of the repo.
 // ═══════════════════════════════════════════════════════════════════
-const pendingFiles = {};
-const FILE_SLOTS = ['google-ads','cinch-sms','cinch-email','dripdrop','web-ga4'];
+const GH_FILE_MAP = {
+  'google-ads':  { file: 'google-ads.csv',   type: 'csv'  },
+  'cinch-sms':   { file: 'cinch-sms.xlsx',   type: 'xlsx' },
+  'cinch-email': { file: 'cinch-email.xlsx', type: 'xlsx' },
+  'dripdrop':    { file: 'dripdrop.xlsx',     type: 'xlsx' },
+  'web-ga4':     { file: 'web-ga4.csv',       type: 'csv'  },
+};
+
+function ghRawUrl(repo, branch, folder, filename) {
+  const f = folder.replace(/^\/|\/$/g, '');
+  return `https://raw.githubusercontent.com/${repo}/${branch}/${f}/${filename}`;
+}
+
+function setSlotState(slotId, state, msg) {
+  const slot   = document.getElementById('slot-' + slotId);
+  const status = document.getElementById('slot-status-' + slotId);
+  if (!slot || !status) return;
+  slot.className = 'upload-slot' + (state ? ' ' + state : '');
+  status.textContent = msg;
+}
+
+async function fetchFromGitHub() {
+  const repo   = (document.getElementById('ghRepo').value   || '').trim();
+  const branch = (document.getElementById('ghBranch').value || 'main').trim();
+  const folder = (document.getElementById('ghFolder').value || 'data').trim();
+
+  if (!repo) {
+    document.getElementById('uploadNote').textContent = '⚠ Please enter your repository (owner/repo) above.';
+    return;
+  }
+
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  btn.textContent = 'Fetching from GitHub…';
+  document.getElementById('uploadNote').textContent = 'Connecting to repository…';
+
+  // Reset all slots
+  Object.keys(GH_FILE_MAP).forEach(id => setSlotState(id, 'fetching', '⟳ Fetching…'));
+
+  const fetched = {};
+  const errors  = [];
+
+  await Promise.all(Object.entries(GH_FILE_MAP).map(async ([slotId, meta]) => {
+    const url = ghRawUrl(repo, branch, folder, meta.file);
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const buf = await res.arrayBuffer();
+      const wb  = XLSX.read(new Uint8Array(buf), { type: 'array' });
+      fetched[slotId] = { wb };
+      setSlotState(slotId, 'loaded', `✓ Loaded (${meta.file})`);
+    } catch(e) {
+      errors.push(slotId);
+      setSlotState(slotId, 'error', `✗ Not found — ${meta.file}`);
+    }
+  }));
+
+  if (Object.keys(fetched).length === 0) {
+    document.getElementById('uploadNote').textContent =
+      `✗ No files found. Check repo "${repo}", branch "${branch}", folder "${folder}". Files must be publicly accessible.`;
+    btn.disabled = false;
+    btn.textContent = '↓ Fetch & Refresh from GitHub';
+    return;
+  }
+
+  // Run parsers against fetched workbooks
+  applyParsedFiles(fetched);
+
+  const ok  = Object.keys(fetched).length;
+  const err = errors.length;
+  document.getElementById('uploadNote').textContent =
+    `✓ ${ok} file${ok>1?'s':''} loaded from github.com/${repo}${err ? ` · ${err} file${err>1?'s':''} missing (skipped)` : ''}. All users see this same data.`;
+
+  btn.disabled = false;
+  btn.textContent = '✓ Dashboard Refreshed — Fetch Again';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// UPLOAD PANEL TOGGLE
+// ═══════════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════════
 // DATA FRESHNESS — per-channel "days since refresh" indicators
@@ -3326,7 +3594,7 @@ function renderRefreshIndicators() {
 
 function setUploadToggleLabel(isOpen) {
   const lbl = document.getElementById('uploadToggleLabel');
-  if (lbl) lbl.textContent = isOpen ? '✕ Close' : '↑ Refresh Data';
+  if (lbl) lbl.textContent = isOpen ? '✕ Close' : '⬡ Data Source';
 }
 
 
@@ -3336,48 +3604,6 @@ function toggleUploadPanel() {
   const open  = panel.classList.toggle('open');
   btn.classList.toggle('active', open);
   setUploadToggleLabel(open);
-}
-
-function handleFile(slotId, input) {
-  const file = input.files[0];
-  if (!file) return;
-  const slot = document.getElementById('slot-' + slotId);
-  slot.querySelector('.upload-slot-status').textContent = '⏳ Reading…';
-  slot.className = 'upload-slot';
-
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = new Uint8Array(e.target.result);
-      const wb   = XLSX.read(data, { type: 'array' });
-      pendingFiles[slotId] = { wb, name: file.name };
-      slot.classList.add('loaded');
-      slot.querySelector('.upload-slot-status').textContent = '✓ ' + file.name;
-    } catch(err) {
-      // Try as plain text (CSV)
-      try {
-        const text = new TextDecoder().decode(data);
-        pendingFiles[slotId] = { text, name: file.name };
-        slot.classList.add('loaded');
-        slot.querySelector('.upload-slot-status').textContent = '✓ ' + file.name;
-      } catch(err2) {
-        slot.classList.add('error');
-        slot.querySelector('.upload-slot-status').textContent = '✗ Could not read file';
-      }
-    }
-    updateRefreshBtn();
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-function updateRefreshBtn() {
-  const hasAny = Object.keys(pendingFiles).length > 0;
-  document.getElementById('refreshBtn').disabled = !hasAny;
-  const count = Object.keys(pendingFiles).length;
-  document.getElementById('uploadNote').textContent =
-    hasAny
-      ? `${count} file${count>1?'s':''} ready. Channels without new files keep current values.`
-      : 'Upload at least one file to refresh. Partial uploads OK.';
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -3490,119 +3716,93 @@ function parseWebGA4(wb) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// APPLY UPLOADS — run parsers, update CHANNELS, re-render
+// APPLY PARSED FILES — run parsers, update CHANNELS, re-render
+// Accepts a map: { slotId: { wb } } from either GitHub fetch
 // ═══════════════════════════════════════════════════════════════════
-function applyUploads() {
-  const btn = document.getElementById('refreshBtn');
-  btn.disabled = true;
-  btn.textContent = 'Processing…';
+function applyParsedFiles(files) {
+  const ch  = id => CHANNELS.find(c => c.id === id);
+  const fmt = n  => n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ? Math.round(n/1e3)+'K' : String(Math.round(n));
+  const now = Date.now();
 
-  setTimeout(() => { // allow UI to update
-    const ch = id => CHANNELS.find(c => c.id === id);
-    const fmt = n => n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ? Math.round(n/1e3)+'K' : String(Math.round(n));
-
-    try {
-      // ── Google Ads ──
-      if (pendingFiles['google-ads']) {
-        refreshState['google-ads'] = Date.now();
-        saveRefreshState();
-        renderRefreshIndicators();
-        const f = pendingFiles['google-ads'];
-        const wb = f.wb || XLSX.read(f.text, { type:'string' });
-        const r = parseGoogleAds(wb);
-        const c = ch('paid-search');
-        if (r.svr !== null) {
-          const svrNum = parseFloat(r.svr);
-          c.current = r.svr + '%';
-          c.pct     = Math.min(100, Math.round(svrNum / 20 * 100));
-          c.status  = svrNum >= 20 ? 'green' : svrNum >= 10 ? 'yellow' : 'red';
-          c.note    = `Search SVR ${r.svr}% on $${Number(r.totalSpend).toLocaleString()} total spend. CPC $${r.cpc}.`;
-        }
+  try {
+    // ── Google Ads ──
+    if (files['google-ads']) {
+      refreshState['google-ads'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseGoogleAds(files['google-ads'].wb);
+      const c = ch('paid-search');
+      if (r.svr !== null) {
+        const svrNum = parseFloat(r.svr);
+        c.current = r.svr + '%';
+        c.pct     = Math.min(100, Math.round(svrNum / 20 * 100));
+        c.status  = svrNum >= 20 ? 'green' : svrNum >= 10 ? 'yellow' : 'red';
+        c.note    = `Search SVR ${r.svr}% on $${Number(r.totalSpend).toLocaleString()} total spend. CPC $${r.cpc}.`;
       }
-
-      // ── SMS ──
-      if (pendingFiles['cinch-sms']) {
-        refreshState['cinch-sms'] = Date.now();
-        saveRefreshState();
-        renderRefreshIndicators();
-        const r = parseSMS(pendingFiles['cinch-sms'].wb);
-        const c = ch('sms');
-        if (r.outgoing) {
-          c.note = `${fmt(r.outgoing)} outgoing messages (${r.latestMonth}). Delivery rate: ${r.deliveryRate}%.`;
-        }
-        // opt-in rate stays manual — no opt-in column in export
-      }
-
-      // ── Email ──
-      if (pendingFiles['cinch-email']) {
-        refreshState['cinch-email'] = Date.now();
-        saveRefreshState();
-        renderRefreshIndicators();
-        const r = parseEmail(pendingFiles['cinch-email'].wb);
-        const c = ch('email');
-        if (r.journeyCTOR && r.eblastCTOR) {
-          const jNum = parseFloat(r.journeyCTOR), eNum = parseFloat(r.eblastCTOR);
-          c.current = `${r.journeyCTOR}% / ${r.eblastCTOR}%`;
-          const jPct = Math.min(100, Math.round(jNum / 2.1 * 100));
-          const ePct = Math.min(100, Math.round(eNum / 1.25 * 100));
-          c.pct    = Math.round((jPct + ePct) / 2);
-          c.status = c.pct >= 90 ? 'green' : c.pct >= 60 ? 'yellow' : 'red';
-          c.note   = `Journey CTOR ${r.journeyCTOR}% (target 2.1%). Eblast ${r.eblastCTOR}% (target 1.25%). ${fmt(r.totalSent)} total sends.`;
-        }
-      }
-
-      // ── Direct Mail ──
-      if (pendingFiles['dripdrop']) {
-        refreshState['dripdrop'] = Date.now();
-        saveRefreshState();
-        renderRefreshIndicators();
-        const r = parseDripDrop(pendingFiles['dripdrop'].wb);
-        const c = ch('direct-mail');
-        if (r.hhRR !== null) {
-          const rrNum = parseFloat(r.hhRR);
-          c.current = r.hhRR + '%';
-          c.pct     = Math.min(100, Math.round(rrNum / 2.75 * 100));
-          c.status  = rrNum >= 2.75 ? 'green' : rrNum >= 2.0 ? 'yellow' : 'red';
-          c.note    = `${Number(r.totalResponses).toLocaleString()} HH responses on ${Number(r.totalCards).toLocaleString()} cards mailed (${r.hhRR}% overall). Separate new vs existing HH for target comparison.`;
-        }
-      }
-
-      // ── Web GA4 ──
-      if (pendingFiles['web-ga4']) {
-        refreshState['web-ga4'] = Date.now();
-        saveRefreshState();
-        renderRefreshIndicators();
-        const r = parseWebGA4(pendingFiles['web-ga4'].wb);
-        const c = ch('web');
-        if (r.total > 0) {
-          c.current = fmt(r.total);
-          c.note    = `Organic Search ${fmt(r.organic)} (${Math.round(r.organic/r.total*100)}%). Paid Search ${fmt(r.paid)} (${Math.round(r.paid/r.total*100)}%).`;
-        }
-      }
-
-    } catch(err) {
-      console.error('Parse error:', err);
     }
 
-    // Re-render
-    renderKpiCards();
-    renderOverviewRows();
-    setMeta();
+    // ── SMS ──
+    if (files['cinch-sms']) {
+      refreshState['cinch-sms'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseSMS(files['cinch-sms'].wb);
+      const c = ch('sms');
+      if (r.outgoing) {
+        c.note = `${fmt(r.outgoing)} outgoing messages (${r.latestMonth}). Delivery rate: ${r.deliveryRate}%.`;
+      }
+    }
 
-    // Update button and close panel
-    btn.textContent = '✓ Dashboard Refreshed';
-    btn.style.background = 'var(--green)';
-    document.getElementById('uploadNote').textContent =
-      'Dashboard updated from uploaded files. Upload new files any time.';
+    // ── Email ──
+    if (files['cinch-email']) {
+      refreshState['cinch-email'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseEmail(files['cinch-email'].wb);
+      const c = ch('email');
+      if (r.journeyCTOR && r.eblastCTOR) {
+        const jNum = parseFloat(r.journeyCTOR), eNum = parseFloat(r.eblastCTOR);
+        c.current = `${r.journeyCTOR}% / ${r.eblastCTOR}%`;
+        const jPct = Math.min(100, Math.round(jNum / 2.1 * 100));
+        const ePct = Math.min(100, Math.round(eNum / 1.25 * 100));
+        c.pct    = Math.round((jPct + ePct) / 2);
+        c.status = c.pct >= 90 ? 'green' : c.pct >= 60 ? 'yellow' : 'red';
+        c.note   = `Journey CTOR ${r.journeyCTOR}% (target 2.1%). Eblast ${r.eblastCTOR}% (target 1.25%). ${fmt(r.totalSent)} total sends.`;
+      }
+    }
 
-    // Reset slots visually after 3s, keep panel open
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.textContent = 'Apply & Refresh Dashboard';
-      btn.style.background = '';
-    }, 3000);
+    // ── Direct Mail ──
+    if (files['dripdrop']) {
+      refreshState['dripdrop'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseDripDrop(files['dripdrop'].wb);
+      const c = ch('direct-mail');
+      if (r.hhRR !== null) {
+        const rrNum = parseFloat(r.hhRR);
+        c.current = r.hhRR + '%';
+        c.pct     = Math.min(100, Math.round(rrNum / 2.75 * 100));
+        c.status  = rrNum >= 2.75 ? 'green' : rrNum >= 2.0 ? 'yellow' : 'red';
+        c.note    = `${Number(r.totalResponses).toLocaleString()} HH responses on ${Number(r.totalCards).toLocaleString()} cards mailed (${r.hhRR}% overall).`;
+      }
+    }
 
-  }, 50);
+    // ── Web GA4 ──
+    if (files['web-ga4']) {
+      refreshState['web-ga4'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseWebGA4(files['web-ga4'].wb);
+      const c = ch('web');
+      if (r.total > 0) {
+        c.current = fmt(r.total);
+        c.note    = `Organic Search ${fmt(r.organic)} (${Math.round(r.organic/r.total*100)}%). Paid Search ${fmt(r.paid)} (${Math.round(r.paid/r.total*100)}%).`;
+      }
+    }
+
+  } catch(err) {
+    console.error('Parse error:', err);
+  }
+
+  // Re-render everything
+  renderKpiCards();
+  renderOverviewRows();
+  setMeta();
 }
 
 // ═══════════════════════════════════════════════════════════════════
