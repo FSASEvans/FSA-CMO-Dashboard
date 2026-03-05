@@ -1213,69 +1213,85 @@
 <div class="upload-panel" id="uploadPanel">
   <div class="upload-panel-inner">
     <div class="upload-panel-title">
-      <span class="gh-source-badge">⬡ GitHub</span>
-      Refresh from Repository
-      <span>All users fetch the same files from your GitHub repo — one push updates everyone's dashboard.</span>
+      <span class="gh-source-badge">⬡ GitHub · FSA-CMO-Dashboard/data</span>
+      Data Source Status
+      <span>Auto-fetched on load from the repository. Push updated files to refresh all users.</span>
     </div>
 
-    <!-- Repo config -->
-    <div class="gh-config-row">
-      <div class="gh-input-group" style="flex:2; min-width:260px;">
-        <div class="gh-input-label">Repository (owner/repo)</div>
-        <input class="gh-input" id="ghRepo" type="text" placeholder="e.g. fullspeed-auto/cmo-dashboard-data" value=""/>
-      </div>
-      <div class="gh-input-group" style="flex:1;">
-        <div class="gh-input-label">Branch</div>
-        <input class="gh-input" id="ghBranch" type="text" placeholder="main" value="main"/>
-      </div>
-      <div class="gh-input-group" style="flex:1;">
-        <div class="gh-input-label">Data Folder</div>
-        <input class="gh-input" id="ghFolder" type="text" placeholder="data" value="data"/>
-      </div>
-    </div>
-
-    <!-- Channel file slots (read-only status display) -->
+    <!-- Channel file slots (status display only — no inputs needed) -->
     <div class="upload-grid">
       <div class="upload-slot" id="slot-google-ads">
-        <div class="upload-slot-name">Google Ads</div>
-        <div class="upload-slot-desc">google-ads.csv · Campaign perf by day</div>
-        <div class="upload-slot-status" id="slot-status-google-ads">⬡ Awaiting fetch</div>
-      </div>
-      <div class="upload-slot" id="slot-cinch-sms">
-        <div class="upload-slot-name">SMS (Cinch)</div>
-        <div class="upload-slot-desc">cinch-sms.xlsx · Monthly send & delivery</div>
-        <div class="upload-slot-status" id="slot-status-cinch-sms">⬡ Awaiting fetch</div>
-      </div>
-      <div class="upload-slot" id="slot-cinch-email">
-        <div class="upload-slot-name">Email (Cinch)</div>
-        <div class="upload-slot-desc">cinch-email.xlsx · Template send & click</div>
-        <div class="upload-slot-status" id="slot-status-cinch-email">⬡ Awaiting fetch</div>
-      </div>
-      <div class="upload-slot" id="slot-dripdrop">
-        <div class="upload-slot-name">Direct Mail (DripDrop)</div>
-        <div class="upload-slot-desc">dripdrop.xlsx · Location response rates</div>
-        <div class="upload-slot-status" id="slot-status-dripdrop">⬡ Awaiting fetch</div>
+        <div class="upload-slot-name">Paid Search</div>
+        <div class="upload-slot-desc">google-ads.csv</div>
+        <div class="upload-slot-status" id="slot-status-google-ads">⟳ Loading…</div>
       </div>
       <div class="upload-slot" id="slot-web-ga4">
         <div class="upload-slot-name">Web (GA4)</div>
-        <div class="upload-slot-desc">web-ga4.csv · Sessions by channel group</div>
-        <div class="upload-slot-status" id="slot-status-web-ga4">⬡ Awaiting fetch</div>
+        <div class="upload-slot-desc">web-ga4.csv</div>
+        <div class="upload-slot-status" id="slot-status-web-ga4">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-cinch-sms">
+        <div class="upload-slot-name">SMS (Cinch)</div>
+        <div class="upload-slot-desc">cinch-sms.xlsx</div>
+        <div class="upload-slot-status" id="slot-status-cinch-sms">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-cinch-email">
+        <div class="upload-slot-name">Email (Cinch)</div>
+        <div class="upload-slot-desc">cinch-email.xlsx</div>
+        <div class="upload-slot-status" id="slot-status-cinch-email">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-dripdrop">
+        <div class="upload-slot-name">Direct Mail</div>
+        <div class="upload-slot-desc">dripdrop.xlsx</div>
+        <div class="upload-slot-status" id="slot-status-dripdrop">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-seo">
+        <div class="upload-slot-name">SEO / AI</div>
+        <div class="upload-slot-desc">seo-ai.csv</div>
+        <div class="upload-slot-status" id="slot-status-seo">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-listings">
+        <div class="upload-slot-name">Listings</div>
+        <div class="upload-slot-desc">listings.xlsx</div>
+        <div class="upload-slot-status" id="slot-status-listings">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-reviews">
+        <div class="upload-slot-name">Reviews</div>
+        <div class="upload-slot-desc">reviews.xlsx</div>
+        <div class="upload-slot-status" id="slot-status-reviews">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-organic-social">
+        <div class="upload-slot-name">Organic Social</div>
+        <div class="upload-slot-desc">organic-social.csv</div>
+        <div class="upload-slot-status" id="slot-status-organic-social">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-ctv">
+        <div class="upload-slot-name">CTV (Mountain)</div>
+        <div class="upload-slot-desc">ctv.xlsx</div>
+        <div class="upload-slot-status" id="slot-status-ctv">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-paid-social">
+        <div class="upload-slot-name">Paid Social</div>
+        <div class="upload-slot-desc">paid-social.csv</div>
+        <div class="upload-slot-status" id="slot-status-paid-social">⟳ Loading…</div>
+      </div>
+      <div class="upload-slot" id="slot-programmatic">
+        <div class="upload-slot-name">Programmatic</div>
+        <div class="upload-slot-desc">programmatic.csv</div>
+        <div class="upload-slot-status" id="slot-status-programmatic">⟳ Loading…</div>
       </div>
     </div>
 
     <div class="upload-actions">
-      <button class="btn-refresh" id="refreshBtn" onclick="fetchFromGitHub()">↓ Fetch &amp; Refresh from GitHub</button>
-      <div class="upload-note" id="uploadNote">Enter your repo above and click Fetch. Files are pulled from <code>raw.githubusercontent.com</code> — every user sees identical data.</div>
+      <button class="btn-refresh" id="refreshBtn" onclick="fetchFromGitHub()">↓ Force Re-fetch from GitHub</button>
+      <div class="upload-note" id="uploadNote">Fetching latest data files from FSA-CMO-Dashboard/data…</div>
     </div>
 
     <div style="margin-top:14px; padding:10px 14px; background:#EBF3FB; border:1px dashed #90C0E8; border-radius:5px; font-size:11px; color:#1E5C9E; line-height:1.6;">
-      <strong>📁 Repo structure required:</strong> &nbsp;
-      <code>data/google-ads.csv</code> &nbsp;·&nbsp;
-      <code>data/cinch-sms.xlsx</code> &nbsp;·&nbsp;
-      <code>data/cinch-email.xlsx</code> &nbsp;·&nbsp;
-      <code>data/dripdrop.xlsx</code> &nbsp;·&nbsp;
-      <code>data/web-ga4.csv</code>
-      &nbsp;— Push updated files to trigger a refresh for all users.
+      <strong>📁 Expected files in <code>FSA-CMO-Dashboard/data/</code>:</strong> &nbsp;
+      google-ads.csv · web-ga4.csv · cinch-sms.xlsx · cinch-email.xlsx · dripdrop.xlsx ·
+      seo-ai.csv · listings.xlsx · reviews.xlsx · organic-social.csv · ctv.xlsx · paid-social.csv · programmatic.csv
+      — Missing files are skipped; channel keeps last known values.
     </div>
   </div>
 </div>
@@ -3443,21 +3459,34 @@ const CHANNELS = [
 
 // ═══════════════════════════════════════════════════════════════════
 // GITHUB DATA FETCHING
-// Fetches files from raw.githubusercontent.com so every user
-// loads the same data. Repo config is entered in the panel UI.
-// File map: slotId → filename in the /data/ folder of the repo.
+// Repo is hardcoded — no user input needed.
+// Dashboard auto-fetches on page load; panel shows status only.
+// All 12 channel files are attempted; missing files are skipped
+// gracefully and the channel keeps its last known values.
 // ═══════════════════════════════════════════════════════════════════
+const GH_REPO   = 'YOUR_ORG/FSA-CMO-Dashboard';  // ← set your org/username here
+const GH_BRANCH = 'main';
+const GH_FOLDER = 'data';
+
 const GH_FILE_MAP = {
-  'google-ads':  { file: 'google-ads.csv',   type: 'csv'  },
-  'cinch-sms':   { file: 'cinch-sms.xlsx',   type: 'xlsx' },
-  'cinch-email': { file: 'cinch-email.xlsx', type: 'xlsx' },
-  'dripdrop':    { file: 'dripdrop.xlsx',     type: 'xlsx' },
-  'web-ga4':     { file: 'web-ga4.csv',       type: 'csv'  },
+  // ── Active channels (files exist in /data/) ──
+  'google-ads':     { file: 'google-ads.csv',      type: 'csv'  },
+  'web-ga4':        { file: 'web-ga4.csv',          type: 'csv'  },
+  'cinch-sms':      { file: 'cinch-sms.xlsx',       type: 'xlsx' },
+  'cinch-email':    { file: 'cinch-email.xlsx',     type: 'xlsx' },
+  'dripdrop':       { file: 'dripdrop.xlsx',         type: 'xlsx' },
+  // ── New channels (stubs — add files to /data/ when ready) ──
+  'seo':            { file: 'seo-ai.csv',            type: 'csv'  },
+  'listings':       { file: 'listings.xlsx',         type: 'xlsx' },
+  'reviews':        { file: 'reviews.xlsx',          type: 'xlsx' },
+  'organic-social': { file: 'organic-social.csv',   type: 'csv'  },
+  'ctv':            { file: 'ctv.xlsx',              type: 'xlsx' },
+  'paid-social':    { file: 'paid-social.csv',       type: 'csv'  },
+  'programmatic':   { file: 'programmatic.csv',      type: 'csv'  },
 };
 
-function ghRawUrl(repo, branch, folder, filename) {
-  const f = folder.replace(/^\/|\/$/g, '');
-  return `https://raw.githubusercontent.com/${repo}/${branch}/${f}/${filename}`;
+function ghRawUrl(filename) {
+  return `https://raw.githubusercontent.com/${GH_REPO}/${GH_BRANCH}/${GH_FOLDER}/${filename}`;
 }
 
 function setSlotState(slotId, state, msg) {
@@ -3469,59 +3498,44 @@ function setSlotState(slotId, state, msg) {
 }
 
 async function fetchFromGitHub() {
-  const repo   = (document.getElementById('ghRepo').value   || '').trim();
-  const branch = (document.getElementById('ghBranch').value || 'main').trim();
-  const folder = (document.getElementById('ghFolder').value || 'data').trim();
-
-  if (!repo) {
-    document.getElementById('uploadNote').textContent = '⚠ Please enter your repository (owner/repo) above.';
-    return;
-  }
-
   const btn = document.getElementById('refreshBtn');
   btn.disabled = true;
-  btn.textContent = 'Fetching from GitHub…';
-  document.getElementById('uploadNote').textContent = 'Connecting to repository…';
+  btn.textContent = 'Fetching…';
+  document.getElementById('uploadNote').textContent = 'Connecting to FSA-CMO-Dashboard/data…';
 
-  // Reset all slots
+  // Set all slots to fetching state
   Object.keys(GH_FILE_MAP).forEach(id => setSlotState(id, 'fetching', '⟳ Fetching…'));
 
   const fetched = {};
   const errors  = [];
 
   await Promise.all(Object.entries(GH_FILE_MAP).map(async ([slotId, meta]) => {
-    const url = ghRawUrl(repo, branch, folder, meta.file);
+    const url = ghRawUrl(meta.file);
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const buf = await res.arrayBuffer();
       const wb  = XLSX.read(new Uint8Array(buf), { type: 'array' });
       fetched[slotId] = { wb };
-      setSlotState(slotId, 'loaded', `✓ Loaded (${meta.file})`);
+      setSlotState(slotId, 'loaded', `✓ ${meta.file}`);
     } catch(e) {
       errors.push(slotId);
-      setSlotState(slotId, 'error', `✗ Not found — ${meta.file}`);
+      // Not an error UI — missing new-channel files are expected while stubs are pending
+      const isNewChannel = ['seo','listings','reviews','organic-social','ctv','paid-social','programmatic'].includes(slotId);
+      setSlotState(slotId, isNewChannel ? '' : 'error',
+        isNewChannel ? '○ File not yet in repo' : `✗ Not found — ${meta.file}`);
     }
   }));
 
-  if (Object.keys(fetched).length === 0) {
-    document.getElementById('uploadNote').textContent =
-      `✗ No files found. Check repo "${repo}", branch "${branch}", folder "${folder}". Files must be publicly accessible.`;
-    btn.disabled = false;
-    btn.textContent = '↓ Fetch & Refresh from GitHub';
-    return;
-  }
-
-  // Run parsers against fetched workbooks
   applyParsedFiles(fetched);
 
-  const ok  = Object.keys(fetched).length;
-  const err = errors.length;
+  const active  = Object.keys(fetched).length;
+  const missing = errors.filter(id => !['seo','listings','reviews','organic-social','ctv','paid-social','programmatic'].includes(id)).length;
   document.getElementById('uploadNote').textContent =
-    `✓ ${ok} file${ok>1?'s':''} loaded from github.com/${repo}${err ? ` · ${err} file${err>1?'s':''} missing (skipped)` : ''}. All users see this same data.`;
+    `✓ ${active} file${active !== 1 ? 's' : ''} loaded · Last fetch: ${new Date().toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'})}${missing ? ` · ${missing} core file${missing>1?'s':''} missing` : ''}`;
 
   btn.disabled = false;
-  btn.textContent = '✓ Dashboard Refreshed — Fetch Again';
+  btn.textContent = '↓ Force Re-fetch from GitHub';
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -3533,13 +3547,20 @@ async function fetchFromGitHub() {
 // 0–2 days = green · 3–7 days = yellow · 8+ days = red · missing = gray
 // Persists in localStorage so indicators survive reloads.
 // ═══════════════════════════════════════════════════════════════════
-const REFRESH_STATE_KEY = 'fsa_cmo_dashboard_refresh_state_v1';
+const REFRESH_STATE_KEY = 'fsa_cmo_dashboard_refresh_state_v2';
 const CHANNEL_SLOT_META = [
-  { slotId: 'google-ads',  short: 'Ads'  },
-  { slotId: 'web-ga4',     short: 'Web'  },
-  { slotId: 'cinch-sms',   short: 'SMS'  },
-  { slotId: 'cinch-email', short: 'Email'},
-  { slotId: 'dripdrop',    short: 'Mail' }
+  { slotId: 'google-ads',     short: 'Ads'    },
+  { slotId: 'web-ga4',        short: 'Web'    },
+  { slotId: 'cinch-sms',      short: 'SMS'    },
+  { slotId: 'cinch-email',    short: 'Email'  },
+  { slotId: 'dripdrop',       short: 'DM'     },
+  { slotId: 'seo',            short: 'SEO'    },
+  { slotId: 'listings',       short: 'List.'  },
+  { slotId: 'reviews',        short: 'Rev.'   },
+  { slotId: 'organic-social', short: 'Social' },
+  { slotId: 'ctv',            short: 'CTV'    },
+  { slotId: 'paid-social',    short: 'PdSoc'  },
+  { slotId: 'programmatic',   short: 'Prog.'  },
 ];
 
 let refreshState = loadRefreshState();
@@ -3715,6 +3736,144 @@ function parseWebGA4(wb) {
   return { total, organic, paid, byChannel };
 }
 
+// ─────────────────────────────────────────────────────────────────
+// NEW CHANNEL PARSERS
+// Each parser receives a workbook (XLSX.read result) and returns
+// a plain object with the KPI fields the channel needs.
+// Column names below match the expected export format for each
+// vendor — update if your export headers differ.
+// ─────────────────────────────────────────────────────────────────
+
+// SEO / AI  (Scout / GSC / Yext AI export)
+// Expected columns: Date, Clicks, Impressions, CTR, AI_Score
+function parseSEO(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  let totalClicks = 0, totalImpressions = 0, aiScore = null;
+  rows.forEach(r => {
+    totalClicks      += parseFloat(r['Clicks'])      || 0;
+    totalImpressions += parseFloat(r['Impressions']) || 0;
+    // AI Score — take the last non-zero value (most recent row)
+    const s = parseFloat(r['AI_Score'] || r['AI Score'] || 0);
+    if (s > 0) aiScore = s;
+  });
+  const ctr = totalImpressions > 0 ? (totalClicks / totalImpressions * 100).toFixed(2) : null;
+  return { ctr, aiScore, totalClicks, totalImpressions };
+}
+
+// Listings  (Yext / GBP export)
+// Expected columns: Location, Impressions, Actions, Period
+function parseListings(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  let totalImpressions = 0, totalActions = 0;
+  rows.forEach(r => {
+    totalImpressions += parseFloat(r['Impressions']) || 0;
+    totalActions     += parseFloat(r['Actions'])     || 0;
+  });
+  // Action Rate = Actions / (Impressions / 1000)
+  const actionRate = totalImpressions > 0
+    ? (totalActions / (totalImpressions / 1000)).toFixed(2) : null;
+  return { actionRate, totalImpressions, totalActions };
+}
+
+// Reviews  (GBP / Yext / Scout export)
+// Expected columns: Location, Total_Reviews, Replied, Star_Rating, Period
+function parseReviews(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  let totalReviews = 0, totalReplied = 0, ratingSum = 0, ratingCount = 0;
+  rows.forEach(r => {
+    totalReviews += parseFloat(r['Total_Reviews'] || r['Total Reviews']) || 0;
+    totalReplied += parseFloat(r['Replied'])                              || 0;
+    const rat     = parseFloat(r['Star_Rating']   || r['Star Rating'])   || 0;
+    if (rat > 0) { ratingSum += rat; ratingCount++; }
+  });
+  const responseRate = totalReviews > 0
+    ? (totalReplied / totalReviews * 100).toFixed(1) : null;
+  const avgRating = ratingCount > 0
+    ? (ratingSum / ratingCount).toFixed(2) : null;
+  return { responseRate, avgRating, totalReviews, totalReplied };
+}
+
+// Organic Social  (Meta Business Suite CSV export)
+// Expected columns: Date, Post_Reach, Impressions, Reactions, Comments, Shares, Saves
+function parseOrganicSocial(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  let totalReach = 0, totalEngagements = 0, postCount = 0;
+  rows.forEach(r => {
+    const reach  = parseFloat(r['Post_Reach']  || r['Reach'])        || 0;
+    const react  = parseFloat(r['Reactions'])                         || 0;
+    const comm   = parseFloat(r['Comments'])                          || 0;
+    const shares = parseFloat(r['Shares'])                            || 0;
+    const saves  = parseFloat(r['Saves'])                             || 0;
+    const eng    = react + comm + shares + saves;
+    if (reach > 0) { totalReach += reach; totalEngagements += eng; postCount++; }
+  });
+  const engRate = totalReach > 0
+    ? (totalEngagements / totalReach * 100).toFixed(2) : null;
+  return { engRate, totalReach, totalEngagements, postCount };
+}
+
+// CTV  (Mountain / vendor export)
+// Expected columns: Date, Impressions, Spend, Unique_HH, URL_Conversions
+function parseCTV(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  let totalImpressions = 0, totalSpend = 0, totalHH = 0, totalConv = 0;
+  rows.forEach(r => {
+    totalImpressions += parseFloat(r['Impressions'])                           || 0;
+    totalSpend       += parseFloat(String(r['Spend'] || '').replace(/[$,]/g,'')) || 0;
+    totalHH          += parseFloat(r['Unique_HH']    || r['Unique HH'])       || 0;
+    totalConv        += parseFloat(r['URL_Conversions'] || r['Conversions'])  || 0;
+  });
+  const cpm = totalImpressions > 0
+    ? (totalSpend / (totalImpressions / 1000)).toFixed(2) : null;
+  const costPerConv = totalConv > 0
+    ? (totalSpend / totalConv).toFixed(2) : null;
+  return { cpm, costPerConv, totalSpend, totalImpressions, totalHH, totalConv };
+}
+
+// Paid Social  (Meta Ads / agency export)
+// Expected columns: Date, Spend, Impressions, Clicks, Video_Views, Landing_Page_Views
+function parsePaidSocial(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  let totalSpend = 0, totalImpressions = 0, totalClicks = 0,
+      totalViews = 0, totalLPV = 0;
+  rows.forEach(r => {
+    totalSpend       += parseFloat(String(r['Spend'] || '').replace(/[$,]/g,''))     || 0;
+    totalImpressions += parseFloat(r['Impressions'])                                  || 0;
+    totalClicks      += parseFloat(r['Clicks'])                                       || 0;
+    totalViews       += parseFloat(r['Video_Views']       || r['Video Views'])        || 0;
+    totalLPV         += parseFloat(r['Landing_Page_Views']|| r['Landing Page Views']) || 0;
+  });
+  const ctr    = totalImpressions > 0 ? (totalClicks / totalImpressions * 100).toFixed(2) : null;
+  const cpvc   = totalViews > 0       ? (totalSpend  / totalViews).toFixed(2)             : null;
+  const cplpv  = totalLPV   > 0       ? (totalSpend  / totalLPV).toFixed(2)               : null;
+  return { ctr, cpvc, cplpv, totalSpend, totalImpressions, totalClicks, totalViews, totalLPV };
+}
+
+// Programmatic  (DSP / agency export)
+// Expected columns: Date, Spend, Impressions, Clicks, Coupon_Downloads
+function parseProgrammatic(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  let totalSpend = 0, totalImpressions = 0, totalClicks = 0, totalCoupons = 0;
+  rows.forEach(r => {
+    totalSpend       += parseFloat(String(r['Spend'] || '').replace(/[$,]/g,'')) || 0;
+    totalImpressions += parseFloat(r['Impressions'])                              || 0;
+    totalClicks      += parseFloat(r['Clicks'])                                   || 0;
+    totalCoupons     += parseFloat(r['Coupon_Downloads'] || r['Coupon Downloads'])|| 0;
+  });
+  const cpc  = totalClicks      > 0 ? (totalSpend / totalClicks).toFixed(2)      : null;
+  const cpm  = totalImpressions > 0 ? (totalSpend / (totalImpressions/1000)).toFixed(2) : null;
+  const ctr  = totalImpressions > 0 ? (totalClicks / totalImpressions * 100).toFixed(2) : null;
+  const cpcd = totalCoupons     > 0 ? (totalSpend  / totalCoupons).toFixed(2)    : null;
+  return { cpc, cpm, ctr, cpcd, totalSpend, totalImpressions, totalClicks, totalCoupons };
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // APPLY PARSED FILES — run parsers, update CHANNELS, re-render
 // Accepts a map: { slotId: { wb } } from either GitHub fetch
@@ -3792,6 +3951,115 @@ function applyParsedFiles(files) {
       if (r.total > 0) {
         c.current = fmt(r.total);
         c.note    = `Organic Search ${fmt(r.organic)} (${Math.round(r.organic/r.total*100)}%). Paid Search ${fmt(r.paid)} (${Math.round(r.paid/r.total*100)}%).`;
+      }
+    }
+
+    // ── SEO / AI ──
+    if (files['seo']) {
+      refreshState['seo'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseSEO(files['seo'].wb);
+      const c = ch('seo');
+      if (r.ctr !== null) {
+        const ctrNum = parseFloat(r.ctr);
+        const aiNum  = r.aiScore || 0;
+        c.current = `${r.ctr}% CTR${aiNum ? ` / ${aiNum} AI` : ''}`;
+        // Progress = avg of CTR progress (target 3.0%) and AI Score progress (target 95)
+        const ctrPct = Math.min(100, Math.round(ctrNum / 3.0 * 100));
+        const aiPct  = aiNum ? Math.min(100, Math.round(aiNum / 95 * 100)) : ctrPct;
+        c.pct    = Math.round((ctrPct + aiPct) / 2);
+        c.status = c.pct >= 90 ? 'green' : c.pct >= 60 ? 'yellow' : 'red';
+        c.note   = `GSC CTR ${r.ctr}% (target 3.0%) · ${fmt(r.totalClicks)} clicks on ${fmt(r.totalImpressions)} impressions.${aiNum ? ` AI Visibility Score: ${aiNum} (target 95).` : ''}`;
+      }
+    }
+
+    // ── Listings ──
+    if (files['listings']) {
+      refreshState['listings'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseListings(files['listings'].wb);
+      const c = ch('listings');
+      if (r.actionRate !== null) {
+        const arNum = parseFloat(r.actionRate);
+        c.current = `${r.actionRate}%`;
+        c.pct     = Math.min(100, Math.round(arNum / 2.7 * 100));
+        c.status  = arNum >= 3.0 ? 'green' : arNum >= 2.7 ? 'yellow' : 'red';
+        c.note    = `${Number(r.totalActions).toLocaleString()} actions on ${fmt(r.totalImpressions)} impressions. Action Rate: ${r.actionRate}% (Q1 target: 2.7%).`;
+      }
+    }
+
+    // ── Reviews ──
+    if (files['reviews']) {
+      refreshState['reviews'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseReviews(files['reviews'].wb);
+      const c = ch('reviews');
+      if (r.responseRate !== null || r.avgRating !== null) {
+        const rrNum  = parseFloat(r.responseRate || 0);
+        const ratNum = parseFloat(r.avgRating    || 0);
+        c.current = `${ratNum > 0 ? ratNum + '★' : '—'}${rrNum > 0 ? ` / ${r.responseRate}% replied` : ''}`;
+        c.pct     = ratNum > 0 ? Math.min(100, Math.round(ratNum / 4.85 * 100)) : 0;
+        c.status  = ratNum >= 4.85 ? 'green' : ratNum >= 4.7 ? 'yellow' : ratNum > 0 ? 'red' : 'gray';
+        c.note    = `${r.totalReplied} of ${r.totalReviews} reviews replied (${r.responseRate}%). Avg rating: ${r.avgRating}★ (target: 4.85★).`;
+      }
+    }
+
+    // ── Organic Social ──
+    if (files['organic-social']) {
+      refreshState['organic-social'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseOrganicSocial(files['organic-social'].wb);
+      const c = ch('organic-social');
+      if (r.engRate !== null) {
+        const erNum = parseFloat(r.engRate);
+        c.current = `${r.engRate}%`;
+        c.pct     = Math.min(100, Math.round(erNum / 5.0 * 100));
+        c.status  = erNum >= 6.5 ? 'green' : erNum >= 5.0 ? 'yellow' : 'red';
+        c.note    = `${r.engRate}% avg engagement rate across ${r.postCount} posts. ${fmt(r.totalEngagements)} total engagements on ${fmt(r.totalReach)} reach. Q1 target: 5.0%.`;
+      }
+    }
+
+    // ── CTV ──
+    if (files['ctv']) {
+      refreshState['ctv'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseCTV(files['ctv'].wb);
+      const c = ch('ctv');
+      if (r.cpm !== null) {
+        const cpmNum = parseFloat(r.cpm);
+        c.current = `$${r.cpm}`;
+        c.pct     = Math.min(100, Math.round(50 / cpmNum * 100)); // target $50 CPM
+        c.status  = cpmNum <= 50 ? 'green' : cpmNum <= 55 ? 'yellow' : 'red';
+        c.note    = `CPM $${r.cpm} (target $50). ${fmt(r.totalImpressions)} impressions · $${Number(r.totalSpend).toLocaleString(undefined,{maximumFractionDigits:0})} total spend.${r.totalConv > 0 ? ` Cost/conv: $${r.costPerConv}.` : ''}`;
+      }
+    }
+
+    // ── Paid Social ──
+    if (files['paid-social']) {
+      refreshState['paid-social'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parsePaidSocial(files['paid-social'].wb);
+      const c = ch('paid-social');
+      if (r.cpvc !== null || r.ctr !== null) {
+        c.current = r.cpvc ? `$${r.cpvc} CPVC` : `${r.ctr}% CTR`;
+        c.pct     = 0; // targets TBD — agency onboarding
+        c.status  = 'yellow';
+        c.note    = `${r.ctr}% CTR · CPVC $${r.cpvc} · CPLPV $${r.cplpv} · $${Number(r.totalSpend).toLocaleString(undefined,{maximumFractionDigits:0})} spend. ${fmt(r.totalViews)} video views · ${fmt(r.totalLPV)} LPVs.`;
+      }
+    }
+
+    // ── Programmatic ──
+    if (files['programmatic']) {
+      refreshState['programmatic'] = now;
+      saveRefreshState(); renderRefreshIndicators();
+      const r = parseProgrammatic(files['programmatic'].wb);
+      const c = ch('programmatic');
+      if (r.cpc !== null) {
+        const cpcNum = parseFloat(r.cpc);
+        c.current = `$${r.cpc}`;
+        c.pct     = Math.min(100, Math.round(22.50 / cpcNum * 100)); // target $22.50
+        c.status  = cpcNum <= 22.50 ? 'green' : cpcNum <= 25.00 ? 'yellow' : 'red';
+        c.note    = `CPC $${r.cpc} (baseline $25.00 · target $22.50). CPM $${r.cpm} · CTR ${r.ctr}%.${r.totalCoupons > 0 ? ` ${Number(r.totalCoupons).toLocaleString()} coupon downloads at $${r.cpcd} each.` : ''}`;
       }
     }
 
@@ -3960,11 +4228,15 @@ function renderAnalysis(channelId, data) {
     </div>`;
 }
 
-// ── Init ──
+// ── Init — render with baseline values, then auto-fetch from GitHub ──
 renderKpiCards();
 renderOverviewRows();
 setMeta();
 renderRefreshIndicators();
+
+// Auto-fetch on load — no manual trigger required.
+// Fires immediately so data is live within seconds of page open.
+fetchFromGitHub();
 
 </script>
 </body>
