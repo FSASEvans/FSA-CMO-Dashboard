@@ -4002,7 +4002,31 @@
            onchange="gdHandleFile(this.files[0])"/>
   </div>
 
-  <!-- Summary stats -->
+  <!-- Filter controls — above rollup so they visibly drive both summary and table -->
+  <div class="gd-controls" id="gdControls" style="display:none">
+    <button class="gd-filter-pill active" id="gdFilterAll"  onclick="gdSetFilter('all')">All</button>
+    <button class="gd-filter-pill red"    id="gdFilterDark" onclick="gdSetFilter('dark')">🔴 Gone Dark</button>
+    <button class="gd-filter-pill green"  id="gdFilterOk"   onclick="gdSetFilter('ok')">🟢 Active</button>
+    <select id="gdFilterCompany" onchange="gdRefreshView()" style="padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-semi);font-size:11px;font-weight:600;color:var(--text);background:var(--surface);cursor:pointer;outline:none;">
+      <option value="">All Companies</option>
+    </select>
+    <select id="gdFilterType" onchange="gdRefreshView()" style="padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-semi);font-size:11px;font-weight:600;color:var(--text);background:var(--surface);cursor:pointer;outline:none;">
+      <option value="">All Campaign Types</option>
+    </select>
+    <select id="gdSortBy" onchange="gdRefreshView()" style="padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-semi);font-size:11px;font-weight:600;color:var(--text);background:var(--surface);cursor:pointer;outline:none;">
+      <option value="date-desc">Sort: Newest Dark Day</option>
+      <option value="date-asc">Sort: Oldest Dark Day</option>
+      <option value="store-asc">Sort: Store # ↑</option>
+      <option value="store-desc">Sort: Store # ↓</option>
+      <option value="company-asc">Sort: Company A–Z</option>
+    </select>
+    <input  type="search" class="gd-filter-search" id="gdSearch"
+            placeholder="Search store #, company, city…" oninput="gdRefreshView()"/>
+    <button class="gd-alert-all-btn" id="gdAlertAllBtn" onclick="gdAlertAll()"
+            disabled>⚡ Alert All Dark Stores</button>
+  </div>
+
+  <!-- Summary stats rollup — reflects active filters -->
   <div class="gd-summary" id="gdSummary" style="display:none">
     <div class="gd-stat danger">
       <div class="gd-stat-val" id="gdStatDark">—</div>
@@ -4010,7 +4034,7 @@
     </div>
     <div class="gd-stat info">
       <div class="gd-stat-val" id="gdStatTotal">—</div>
-      <div class="gd-stat-lbl">Total Stores Found</div>
+      <div class="gd-stat-lbl">Total Stores</div>
     </div>
     <div class="gd-stat info">
       <div class="gd-stat-val" id="gdStatDays">—</div>
@@ -4026,30 +4050,6 @@
   <div class="gd-banner empty" id="gdBanner">
     <span class="gd-banner-icon">⏳</span>
     <span class="gd-banner-text">Loading data/google-ads.csv… visit this tab to trigger auto-fetch, or drop a file below.</span>
-  </div>
-
-  <!-- Filter controls -->
-  <div class="gd-controls" id="gdControls" style="display:none">
-    <button class="gd-filter-pill active" id="gdFilterAll"  onclick="gdSetFilter('all')">All</button>
-    <button class="gd-filter-pill red"    id="gdFilterDark" onclick="gdSetFilter('dark')">🔴 Gone Dark</button>
-    <button class="gd-filter-pill green"  id="gdFilterOk"   onclick="gdSetFilter('ok')">🟢 Active</button>
-    <select id="gdFilterCompany" onchange="gdRenderTable()" style="padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-semi);font-size:11px;font-weight:600;color:var(--text);background:var(--surface);cursor:pointer;outline:none;">
-      <option value="">All Companies</option>
-    </select>
-    <select id="gdFilterType" onchange="gdRenderTable()" style="padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-semi);font-size:11px;font-weight:600;color:var(--text);background:var(--surface);cursor:pointer;outline:none;">
-      <option value="">All Campaign Types</option>
-    </select>
-    <select id="gdSortBy" onchange="gdRenderTable()" style="padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-semi);font-size:11px;font-weight:600;color:var(--text);background:var(--surface);cursor:pointer;outline:none;">
-      <option value="date-desc">Sort: Newest Dark Day</option>
-      <option value="date-asc">Sort: Oldest Dark Day</option>
-      <option value="store-asc">Sort: Store # ↑</option>
-      <option value="store-desc">Sort: Store # ↓</option>
-      <option value="company-asc">Sort: Company A–Z</option>
-    </select>
-    <input  type="search" class="gd-filter-search" id="gdSearch"
-            placeholder="Search store #, company, city…" oninput="gdRenderTable()"/>
-    <button class="gd-alert-all-btn" id="gdAlertAllBtn" onclick="gdAlertAll()"
-            disabled>⚡ Alert All Dark Stores</button>
   </div>
 
   <!-- Results table -->
@@ -5283,8 +5283,7 @@ function gdRunOnWorkbook(wb, sourceName, range) {
         types.map(t => `<option value="${t}"${t===prev?' selected':''}>${t}</option>`).join('');
     }
 
-    gdUpdateSummary(allDates.size);
-    gdRenderTable();
+    gdUpdateSummary(allDates.size);  // gdRefreshView called inside gdUpdateSummary
     gdUpdateTabBadge();
 
     const show = id => { const el = document.getElementById(id); if (el) el.style.display = ''; };
@@ -5310,35 +5309,75 @@ function gdHandleFile(file) {
 }
 
 // ── Summary stats ───────────────────────────────────────────────────
-function gdUpdateSummary(numDays) {
-  const stores    = Object.values(gdStoreMap);
-  const darkCount = stores.filter(s => s.isDark).length;
-  const okCount   = stores.length - darkCount;
+// ── Shared filter helper — used by both summary and table ───────────
+function gdGetFilteredEntries() {
+  const search     = (document.getElementById('gdSearch')?.value || '').toLowerCase();
+  const filterComp = document.getElementById('gdFilterCompany')?.value || '';
+  const filterType = document.getElementById('gdFilterType')?.value || '';
 
+  let entries = Object.entries(gdStoreMap).map(([sn, s]) => ({ sn, ...s }));
+
+  if (gdFilter === 'dark') entries = entries.filter(e => e.isDark);
+  if (gdFilter === 'ok')   entries = entries.filter(e => !e.isDark);
+  if (filterComp) entries = entries.filter(e => e.company === filterComp);
+  if (filterType) entries = entries.filter(e => e.latestType === filterType);
+  if (search) entries = entries.filter(e =>
+    e.sn.includes(search) ||
+    (e.company || '').toLowerCase().includes(search) ||
+    (e.city    || '').toLowerCase().includes(search) ||
+    (e.state   || '').toLowerCase().includes(search) ||
+    (e.tactic  || '').toLowerCase().includes(search) ||
+    e.latestCamp.toLowerCase().includes(search)
+  );
+  return entries;
+}
+
+// ── Single entry-point: refresh both summary boxes AND table ────────
+function gdRefreshView() {
+  const entries   = gdGetFilteredEntries();
+  const darkCount = entries.filter(e => e.isDark).length;
+  const okCount   = entries.filter(e => !e.isDark).length;
+  const total     = entries.length;
+
+  // Update stat boxes to reflect filtered set
   document.getElementById('gdStatDark').textContent  = darkCount;
-  document.getElementById('gdStatTotal').textContent = stores.length;
-  document.getElementById('gdStatDays').textContent  = numDays;
+  document.getElementById('gdStatTotal').textContent = total;
   document.getElementById('gdStatClean').textContent = okCount;
+  // Days stat stays as total days in export (not filter-dependent)
+  document.querySelector('#gdSummary .gd-stat:nth-child(1)').className =
+    `gd-stat ${darkCount > 0 ? 'danger' : 'ok'}`;
 
-  // Update classes
-  document.querySelector('#gdSummary .gd-stat:nth-child(1)').className = `gd-stat ${darkCount > 0 ? 'danger' : 'ok'}`;
-
-  // Banner
+  // Update banner
   const banner = document.getElementById('gdBanner');
+  const filterComp = document.getElementById('gdFilterCompany')?.value || '';
+  const filterType = document.getElementById('gdFilterType')?.value   || '';
+  const isFiltered = gdFilter !== 'all' || filterComp || filterType ||
+    (document.getElementById('gdSearch')?.value || '');
+  const filterNote = isFiltered ? ' <span style="font-size:11px;opacity:.7;">(filtered view)</span>' : '';
+
   if (darkCount > 0) {
     banner.className = 'gd-banner has-alerts';
     banner.innerHTML = `
       <span class="gd-banner-icon">🔴</span>
-      <span class="gd-banner-text">${darkCount} store${darkCount > 1 ? 's' : ''} recorded $0 spend on at least one day — review and alert below.</span>
+      <span class="gd-banner-text">${darkCount} store${darkCount > 1 ? 's' : ''} recorded $0 spend on at least one day — review and alert below.${filterNote}</span>
       <span class="gd-banner-pill">${darkCount} ALERT${darkCount > 1 ? 'S' : ''}</span>`;
     document.getElementById('gdAlertAllBtn').disabled = false;
   } else {
     banner.className = 'gd-banner no-alerts';
     banner.innerHTML = `
       <span class="gd-banner-icon">✅</span>
-      <span class="gd-banner-text">All stores recorded spend on every day in the export. No Go Dark events detected.</span>`;
+      <span class="gd-banner-text">${isFiltered ? 'No dark stores in this filtered view.' : 'All stores recorded spend on every day in the export. No Go Dark events detected.'}</span>`;
     document.getElementById('gdAlertAllBtn').disabled = true;
   }
+
+  // Render table with the same filtered + sorted entries
+  gdRenderTable(entries);
+}
+
+// ── gdUpdateSummary: called on initial load (no filters active yet) ─
+function gdUpdateSummary(numDays) {
+  document.getElementById('gdStatDays').textContent = numDays;
+  gdRefreshView(); // will compute dark/total/clean from current (empty) filters
 }
 
 // ── Tab badge ───────────────────────────────────────────────────────
@@ -5349,7 +5388,6 @@ function gdUpdateTabBadge() {
   if (darkCount > 0) {
     badge.style.display = '';
     badge.textContent   = darkCount;
-    // Make tab red to catch attention
     const tab = document.getElementById('tab-go-dark');
     if (tab) tab.classList.replace('status-gray', 'status-red');
   } else {
@@ -5359,25 +5397,23 @@ function gdUpdateTabBadge() {
   }
 }
 
-// ── Filter ──────────────────────────────────────────────────────────
+// ── Filter pill toggle ──────────────────────────────────────────────
 function gdSetFilter(f) {
   gdFilter = f;
   ['All','Dark','Ok'].forEach(x => {
     const btn = document.getElementById('gdFilter' + x);
     if (btn) btn.classList.toggle('active', f === x.toLowerCase());
   });
-  gdRenderTable();
+  gdRefreshView();
 }
 
-// ── Table render ────────────────────────────────────────────────────
-function gdRenderTable() {
-  const tbody      = document.getElementById('gdTbody');
-  const search     = (document.getElementById('gdSearch')?.value || '').toLowerCase();
-  const filterComp = document.getElementById('gdFilterCompany')?.value || '';
-  const filterType = document.getElementById('gdFilterType')?.value || '';
-  const sortBy     = document.getElementById('gdSortBy')?.value || 'date-desc';
+// ── Table render — accepts pre-filtered entries or computes them ────
+function gdRenderTable(entries) {
+  const tbody  = document.getElementById('gdTbody');
+  const sortBy = document.getElementById('gdSortBy')?.value || 'date-desc';
 
-  let entries = Object.entries(gdStoreMap).map(([sn, s]) => ({ sn, ...s }));
+  // Resolve entries — passed in from gdRefreshView, or compute fresh if called standalone
+  if (!entries) entries = gdGetFilteredEntries();
 
   // ── Sort ──────────────────────────────────────────────────────────
   const toSortable = s => { const p = s.split('/'); return p.length===3 ? `${p[2]}-${p[0]}-${p[1]}` : s; };
@@ -5403,26 +5439,16 @@ function gdRenderTable() {
     }
   });
 
-  // ── Filters ───────────────────────────────────────────────────────
-  if (gdFilter === 'dark') entries = entries.filter(e => e.isDark);
-  if (gdFilter === 'ok')   entries = entries.filter(e => !e.isDark);
-  if (filterComp) entries = entries.filter(e => e.company === filterComp);
-  if (filterType) entries = entries.filter(e => e.latestType === filterType);
-  if (search) entries = entries.filter(e =>
-    e.sn.includes(search) ||
-    (e.company || '').toLowerCase().includes(search) ||
-    (e.city    || '').toLowerCase().includes(search) ||
-    (e.state   || '').toLowerCase().includes(search) ||
-    (e.tactic  || '').toLowerCase().includes(search) ||
-    e.latestCamp.toLowerCase().includes(search)
-  );
-
   if (entries.length === 0) {
+    const isFiltered = gdFilter !== 'all' ||
+      (document.getElementById('gdFilterCompany')?.value || '') ||
+      (document.getElementById('gdFilterType')?.value || '') ||
+      (document.getElementById('gdSearch')?.value || '');
     tbody.innerHTML = `
       <div class="gd-empty">
         <div class="gd-empty-icon">${gdFilter === 'dark' ? '✅' : '📊'}</div>
         <div class="gd-empty-title">${gdFilter === 'dark' ? 'No stores gone dark' : 'No results'}</div>
-        <div class="gd-empty-sub">${gdFilter === 'dark' ? 'All stores have spend recorded on every day.' : 'Try adjusting the search or filter.'}</div>
+        <div class="gd-empty-sub">${isFiltered ? 'No stores match the current filters.' : 'Try adjusting the search or filter.'}</div>
       </div>`;
     return;
   }
@@ -5682,7 +5708,7 @@ function gdSendAlert() {
   const s2 = gdStoreMap[gdModalStore];
   if (s2) s2.darkDays.forEach(d => { gdSentAlerts[`${gdModalStore}|${d}`] = true; });
   gdCloseModal();
-  gdRenderTable();
+  gdRefreshView();
 
   // Log it
   const ts = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
@@ -5730,7 +5756,7 @@ function gdAlertAll() {
   storeNums.forEach(sn => {
     gdStoreMap[sn].darkDays.forEach(d => { gdSentAlerts[`${sn}|${d}`] = true; });
   });
-  gdRenderTable();
+  gdRefreshView();
 
   const ts = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   gdAlertLog.unshift({
