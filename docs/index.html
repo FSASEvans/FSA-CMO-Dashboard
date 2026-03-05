@@ -53,73 +53,74 @@
 
   /* ── Header ── */
   .header {
-    background: var(--charcoal);
-    border-bottom: 3px solid var(--fsa-red);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    border-left: 4px solid var(--fsa-red);
     padding: 0 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 60px;
+    height: 64px;
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
   }
   .header-brand {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 0;
   }
-  .header-logo {
-    width: 38px; height: 38px;
-    background: var(--fsa-red);
-    border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display);
-    font-size: 17px;
+  .header-logo { display: none; }
+  .header-divider { display: none; }
+  .header-wordmark {
+    font-family: var(--font-body);
+    font-size: 15px;
     font-weight: 700;
-    color: #fff;
-    letter-spacing: 0.5px;
-    flex-shrink: 0;
+    color: var(--charcoal);
+    letter-spacing: 0;
+    white-space: nowrap;
   }
-  .header-divider {
-    width: 1px; height: 28px;
-    background: rgba(255,255,255,0.15);
+  .header-wordmark .red { color: var(--fsa-red); }
+  .header-sep {
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 400;
+    margin: 0 10px;
   }
   .header-title {
-    font-family: var(--font-display);
-    font-size: 20px;
+    font-family: var(--font-body);
+    font-size: 15px;
     font-weight: 700;
-    letter-spacing: 2.5px;
-    color: #ffffff;
-    text-transform: uppercase;
+    color: var(--charcoal);
+    letter-spacing: 0;
   }
   .header-subtitle {
-    font-size: 10px;
-    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    color: var(--muted);
     font-weight: 400;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+    letter-spacing: 0;
     margin-top: 1px;
   }
   .header-meta {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
   }
   .last-updated {
     font-size: 11px;
-    color: rgba(255,255,255,0.45);
+    color: var(--muted);
     font-family: var(--font-body);
-    font-weight: 300;
+    font-weight: 400;
   }
   .data-period-badge {
-    background: rgba(196,18,48,0.25);
-    border: 1px solid rgba(196,18,48,0.5);
-    color: #ff8fa3;
+    background: var(--red-bg);
+    border: 1px solid rgba(196,18,48,0.2);
+    color: var(--fsa-red);
     font-size: 11px;
-    padding: 4px 10px;
+    padding: 3px 10px;
     border-radius: 3px;
-    font-family: var(--font-body);
+    font-family: var(--font-semi);
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
@@ -318,9 +319,9 @@
   .upload-note { font-size: 11px; color: var(--muted); line-height: 1.5; }
   .upload-toggle {
     background: none;
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid var(--border-dk);
     border-radius: 4px;
-    color: rgba(255,255,255,0.7);
+    color: var(--text-sec);
     font-family: var(--font-semi);
     font-size: 11px;
     font-weight: 600;
@@ -334,7 +335,7 @@
     gap: 6px;
     white-space: nowrap;
   }
-  .upload-toggle:hover  { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); color: #fff; }
+  .upload-toggle:hover  { background: var(--surface2); border-color: var(--fsa-red); color: var(--fsa-red); }
   .upload-toggle.active { background: var(--fsa-red); border-color: var(--fsa-red); color: #fff; }
 
   .kpi-channel {
@@ -758,6 +759,94 @@
     align-items: center;
     gap: 10px;
   }
+  /* ── AI Analysis Panel ── */
+  .ai-analysis {
+    background: var(--charcoal);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-analysis::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    background: var(--fsa-red);
+  }
+  .ai-analysis-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .ai-badge {
+    background: var(--fsa-red);
+    color: #fff;
+    font-family: var(--font-semi);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .ai-analysis-title {
+    font-family: var(--font-semi);
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .ai-loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.4);
+    font-size: 13px;
+    font-style: italic;
+  }
+  .ai-spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-top-color: var(--fsa-red);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ai-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 900px) { .ai-body { grid-template-columns: 1fr; } }
+  .ai-section-label {
+    font-family: var(--font-semi);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .ai-section-label.performance { color: rgba(255,255,255,0.4); }
+  .ai-section-label.causes      { color: #F0C878; }
+  .ai-section-label.actions     { color: #A8D8BC; }
+  .ai-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.65;
+  }
+  .ai-text p { margin-bottom: 6px; }
+  .ai-text p:last-child { margin-bottom: 0; }
+  .ai-error {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -765,11 +854,13 @@
 <!-- HEADER -->
 <header class="header">
   <div class="header-brand">
-    <div class="header-logo">FSA</div>
-    <div class="header-divider"></div>
     <div>
-      <div class="header-title">CMO Dashboard</div>
-      <div class="header-subtitle">FullSpeed Automotive · Marketing Intelligence</div>
+      <div style="display:flex; align-items:baseline; gap:0;">
+        <span class="header-wordmark">FullSpeed <span class="red">Automotive</span></span>
+        <span class="header-sep">·</span>
+        <span class="header-title">CMO Marketing Dashboard</span>
+      </div>
+      <div class="header-subtitle">Marketing Intelligence · FullSpeed Automotive Leadership</div>
     </div>
   </div>
   <div class="header-meta">
@@ -895,7 +986,6 @@
       <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); font-family:var(--font-semi); font-weight:600; letter-spacing:0.5px;">
         <div style="width:8px;height:8px;border-radius:50%;background:var(--muted)"></div>PENDING DATA
       </div>
-      </div>
     </div>
   </div>
 
@@ -947,6 +1037,17 @@
      PAGE: PAID SEARCH
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-paid-search">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-paid-search">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-paid-search">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">PAID SEARCH</div>
@@ -1045,6 +1146,17 @@
      PAGE: WEB
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-web">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-web">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-web">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">WEB</div>
@@ -1131,6 +1243,17 @@
      PAGE: SMS
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-sms">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-sms">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-sms">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">SMS</div>
@@ -1209,6 +1332,17 @@
      PAGE: EMAIL
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-email">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-email">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-email">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">EMAIL</div>
@@ -1276,6 +1410,17 @@
      PAGE: DIRECT MAIL
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-direct-mail">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-direct-mail">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-direct-mail">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">DIRECT MAIL</div>
@@ -1338,6 +1483,17 @@
      PAGE: SEO / AI
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-seo">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-seo">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-seo">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">SEO / AI VISIBILITY</div>
@@ -1420,6 +1576,17 @@
      PAGE: LISTINGS
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-listings">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-listings">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-listings">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">LISTINGS</div>
@@ -1490,6 +1657,17 @@
      PAGE: REVIEWS
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-reviews">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-reviews">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-reviews">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">REVIEWS</div>
@@ -1560,6 +1738,17 @@
      PAGE: ORGANIC SOCIAL
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-organic-social">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-organic-social">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-organic-social">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">ORGANIC SOCIAL</div>
@@ -1637,6 +1826,17 @@
      PAGES: HOLD CHANNELS
 ════════════════════════════════════════════════ -->
 <div class="page" id="page-ctv">
+  <!-- AI Analysis -->
+  <div class="ai-analysis" id="ai-ctv">
+    <div class="ai-analysis-header">
+      <span class="ai-badge">AI Analysis</span>
+      <span class="ai-analysis-title">Inferential Performance Summary</span>
+    </div>
+    <div id="ai-content-ctv">
+      <div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>
+    </div>
+  </div>
+
   <div class="channel-header">
     <div>
       <div class="channel-title">CTV</div>
@@ -2108,6 +2308,8 @@ function renderOverviewRows() {
 // ═══════════════════════════════════════════════════════════════════
 // NAV + META
 // ═══════════════════════════════════════════════════════════════════
+const aiCache = {}; // cache so we don't re-call on every tab revisit
+
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -2116,12 +2318,104 @@ function showPage(id) {
   if (page) page.classList.add('active');
   if (tab)  tab.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Trigger AI analysis for channel pages (not overview or hold pages)
+  const holdPages = ['paid-social', 'programmatic'];
+  if (id !== 'overview' && !holdPages.includes(id)) {
+    generateAnalysis(id);
+  }
 }
 
 function setMeta() {
   const now = new Date();
   document.getElementById('lastUpdated').textContent =
     'Updated: ' + now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AI ANALYSIS — calls Anthropic API, renders 3-column summary
+// ═══════════════════════════════════════════════════════════════════
+async function generateAnalysis(channelId) {
+  // Don't re-fetch if already cached
+  if (aiCache[channelId]) {
+    renderAnalysis(channelId, aiCache[channelId]);
+    return;
+  }
+
+  const el = document.getElementById('ai-content-' + channelId);
+  if (!el) return;
+
+  // Show spinner
+  el.innerHTML = '<div class="ai-loading"><div class="ai-spinner"></div>Generating analysis…</div>';
+
+  const ch = CHANNELS.find(c => c.id === channelId);
+  if (!ch) return;
+
+  const prompt = `You are a senior marketing analyst for FullSpeed Automotive, a national quick-lube and auto service franchisor (Grease Monkey, SpeeDee, Kwik Kar). You are writing a concise executive-facing analysis for the CMO dashboard.
+
+Channel: ${ch.name}
+Vendor: ${ch.vendor}
+Primary KPI: ${ch.primaryKpi}
+Current Value: ${ch.current}
+Target: ${ch.target}
+Progress to Target: ${ch.pct}%
+Status: ${ch.status === 'green' ? 'On/Ahead of target' : ch.status === 'yellow' ? 'Needs attention' : ch.status === 'red' ? 'Below target' : 'Pending data'}
+Context: ${ch.note}
+Owner: ${ch.owner}
+
+Write a 3-part analysis. Be specific, direct, and actionable. No fluff. Write in tight paragraphs, not bullet points.
+
+Respond ONLY with a valid JSON object in this exact format (no markdown, no code fences):
+{
+  "performance": "2-3 sentences assessing where the KPI stands, what the number means in business terms, and whether the trend is directionally positive or negative.",
+  "causes": "2-3 sentences on the most likely root causes behind this result. Be analytically specific — reference the data context, channel mechanics, and what FSA can and cannot control.",
+  "actions": "2-3 sentences with the highest-leverage concrete actions FSA should take to move this KPI. Specific, ownable, sequenced."
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw  = data.content?.map(b => b.text || '').join('') || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    aiCache[channelId] = parsed;
+    renderAnalysis(channelId, parsed);
+
+  } catch(err) {
+    if (el) {
+      el.innerHTML = '<div class="ai-error">Analysis unavailable — check API connectivity.</div>';
+    }
+  }
+}
+
+function renderAnalysis(channelId, data) {
+  const el = document.getElementById('ai-content-' + channelId);
+  if (!el) return;
+  el.innerHTML = `
+    <div class="ai-body">
+      <div>
+        <div class="ai-section-label performance">Performance</div>
+        <div class="ai-text">${data.performance}</div>
+      </div>
+      <div>
+        <div class="ai-section-label causes">Likely Causes</div>
+        <div class="ai-text">${data.causes}</div>
+      </div>
+      <div>
+        <div class="ai-section-label actions">Recommended Actions</div>
+        <div class="ai-text">${data.actions}</div>
+      </div>
+    </div>`;
 }
 
 // ── Init ──
