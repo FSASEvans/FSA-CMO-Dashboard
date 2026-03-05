@@ -3742,8 +3742,8 @@
 
   <!-- Alert banner -->
   <div class="gd-banner empty" id="gdBanner">
-    <span class="gd-banner-icon">📊</span>
-    <span class="gd-banner-text">Upload a Google Ads export to run the Go Dark check.</span>
+    <span class="gd-banner-icon">⏳</span>
+    <span class="gd-banner-text">Loading data/google-ads.csv… visit this tab to trigger auto-fetch, or drop a file below.</span>
   </div>
 
   <!-- Filter controls -->
@@ -3751,8 +3751,21 @@
     <button class="gd-filter-pill active" id="gdFilterAll"  onclick="gdSetFilter('all')">All</button>
     <button class="gd-filter-pill red"    id="gdFilterDark" onclick="gdSetFilter('dark')">🔴 Gone Dark</button>
     <button class="gd-filter-pill green"  id="gdFilterOk"   onclick="gdSetFilter('ok')">🟢 Active</button>
+    <select id="gdFilterCompany" onchange="gdRenderTable()" style="padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-semi);font-size:11px;font-weight:600;color:var(--text);background:var(--surface);cursor:pointer;outline:none;">
+      <option value="">All Companies</option>
+    </select>
+    <select id="gdFilterType" onchange="gdRenderTable()" style="padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-semi);font-size:11px;font-weight:600;color:var(--text);background:var(--surface);cursor:pointer;outline:none;">
+      <option value="">All Campaign Types</option>
+    </select>
+    <select id="gdSortBy" onchange="gdRenderTable()" style="padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-semi);font-size:11px;font-weight:600;color:var(--text);background:var(--surface);cursor:pointer;outline:none;">
+      <option value="date-desc">Sort: Newest Dark Day</option>
+      <option value="date-asc">Sort: Oldest Dark Day</option>
+      <option value="store-asc">Sort: Store # ↑</option>
+      <option value="store-desc">Sort: Store # ↓</option>
+      <option value="company-asc">Sort: Company A–Z</option>
+    </select>
     <input  type="search" class="gd-filter-search" id="gdSearch"
-            placeholder="Search store # or campaign…" oninput="gdRenderTable()"/>
+            placeholder="Search store #, company, city…" oninput="gdRenderTable()"/>
     <button class="gd-alert-all-btn" id="gdAlertAllBtn" onclick="gdAlertAll()"
             disabled>⚡ Alert All Dark Stores</button>
   </div>
@@ -4112,12 +4125,30 @@ function parseGoogleAds(wb) {
   const num = v => parseFloat(String(v).replace(/[$,%]/g,'').replace(/,/g,'')) || 0;
 
   let totals = { Search:{cost:0,clicks:0,sv:0}, 'Performance Max':{cost:0,clicks:0,sv:0}, 'Demand Gen':{cost:0,clicks:0,sv:0} };
+  // Per-company breakdown using gdParseCampaign
+  const byCompany = {};
   data.forEach(row => {
-    const type = String(row[idx('Campaign type')]||'').trim();
-    if (!totals[type]) return;
-    totals[type].cost   += num(row[idx('Cost')]);
-    totals[type].clicks += num(row[idx('Clicks')]);
-    totals[type].sv     += num(row[idx('Store Visits')]);
+    const type     = String(row[idx('Campaign type')]||'').trim();
+    const campRaw  = String(row[idx('Campaign')]||'').trim();
+    const cost     = num(row[idx('Cost')]);
+    const clicks   = num(row[idx('Clicks')]);
+    const sv       = num(row[idx('Store Visits')]);
+
+    if (totals[type]) {
+      totals[type].cost   += cost;
+      totals[type].clicks += clicks;
+      totals[type].sv     += sv;
+    }
+
+    // Parse company from campaign name
+    if (campRaw && typeof gdParseCampaign === 'function') {
+      const parsed = gdParseCampaign(campRaw);
+      const co = parsed.company || 'Unknown';
+      if (!byCompany[co]) byCompany[co] = { cost:0, clicks:0, sv:0 };
+      byCompany[co].cost   += cost;
+      byCompany[co].clicks += clicks;
+      byCompany[co].sv     += sv;
+    }
   });
 
   const s = totals['Search'];
@@ -4125,7 +4156,7 @@ function parseGoogleAds(wb) {
   const cpc = s.clicks > 0 ? (s.cost / s.clicks).toFixed(2) : null;
   const totalSpend = Object.values(totals).reduce((a,b) => a + b.cost, 0);
 
-  return { svr, cpc, totalSpend: totalSpend.toFixed(0), totals };
+  return { svr, cpc, totalSpend: totalSpend.toFixed(0), totals, byCompany };
 }
 
 function parseSMS(wb) {
@@ -4362,7 +4393,12 @@ function applyParsedFiles(files) {
         c.current = r.svr + '%';
         c.pct     = Math.min(100, Math.round(svrNum / 20 * 100));
         c.status  = svrNum >= 20 ? 'green' : svrNum >= 10 ? 'yellow' : 'red';
-        c.note    = `Search SVR ${r.svr}% on $${Number(r.totalSpend).toLocaleString()} total spend. CPC $${r.cpc}.`;
+        // Build company spend breakdown string using parsed campaign data
+        const coBreakdown = Object.entries(r.byCompany||{})
+          .sort((a,b) => b[1].cost - a[1].cost)
+          .map(([co, v]) => `${co} $${Math.round(v.cost/1000)}K`)
+          .join(' · ');
+        c.note = `Search SVR ${r.svr}% on $${Number(r.totalSpend).toLocaleString()} total spend. CPC $${r.cpc}.${coBreakdown ? ' By brand: ' + coBreakdown + '.' : ''}`;
       }
       // ── Also feed Go Dark Monitor from the same workbook ──
       gdRunOnWorkbook(files['google-ads'].wb, 'data/google-ads.csv');
@@ -4603,6 +4639,10 @@ function showPage(id) {
   if (id !== 'overview' && !holdPages.includes(id)) {
     generateAnalysis(id);
   }
+  // Auto-load Go Dark data when tab is first visited
+  if (id === 'go-dark') {
+    gdAutoFetch();
+  }
 }
 
 function setMeta() {
@@ -4719,10 +4759,11 @@ function gdDrop(e) {
   if (file) gdHandleFile(file);
 }
 
-// ── Date normaliser: handles Excel serials, YYYY-MM-DD, MM/DD/YYYY, etc. ──
+// ── Date normaliser: all dates output as MM/DD/YYYY ──────────────────
 function gdNormaliseDate(raw) {
   const s = String(raw).trim();
   if (!s) return s;
+  // Excel serial number (e.g. 46077)
   const serial = Number(s);
   if (!isNaN(serial) && serial > 40000 && serial < 60000) {
     const ms   = (serial - 25569) * 86400000;
@@ -4730,12 +4771,12 @@ function gdNormaliseDate(raw) {
     const dd   = String(d.getUTCDate()).padStart(2,'0');
     const mm   = String(d.getUTCMonth()+1).padStart(2,'0');
     const yyyy = d.getUTCFullYear();
-    return `${dd}/${mm}/${yyyy}`;
+    return `${mm}/${dd}/${yyyy}`;
   }
+  // YYYY-MM-DD → MM/DD/YYYY
   const isoMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (isoMatch) return `${isoMatch[3]}/${isoMatch[2]}/${isoMatch[1]}`;
-  const usMatch = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if (usMatch) return `${String(usMatch[2]).padStart(2,'0')}/${String(usMatch[1]).padStart(2,'0')}/${usMatch[3]}`;
+  if (isoMatch) return `${isoMatch[2]}/${isoMatch[3]}/${isoMatch[1]}`;
+  // Already MM/DD/YYYY or similar — return as-is
   return s;
 }
 
@@ -4854,7 +4895,7 @@ function gdRunOnWorkbook(wb, sourceName) {
       }
       storeMap[storeNum].costByDate[dateRaw] += cost;
 
-      const toSortable = s => { const p = s.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : s; };
+      const toSortable = s => { const p = s.split('/'); return p.length===3 ? `${p[2]}-${p[0]}-${p[1]}` : s; };
       if (!storeMap[storeNum].latestDate || toSortable(dateRaw) > toSortable(storeMap[storeNum].latestDate)) {
         storeMap[storeNum].latestDate = dateRaw;
         storeMap[storeNum].latestCamp = campRaw;
@@ -4871,7 +4912,7 @@ function gdRunOnWorkbook(wb, sourceName) {
     Object.keys(storeMap).forEach(sn => {
       const s = storeMap[sn];
       s.campaigns = [...s.campaigns];
-      const toSortable = d => { const p = d.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : d; };
+      const toSortable = d => { const p = d.split('/'); return p.length===3 ? `${p[2]}-${p[0]}-${p[1]}` : d; };
       s.darkDays  = Object.entries(s.costByDate)
         .filter(([, c]) => c === 0)
         .map(([d]) => d)
@@ -4904,6 +4945,22 @@ function gdRunOnWorkbook(wb, sourceName) {
 
     const statusEl = document.getElementById('gd-data-status');
     if (statusEl) statusEl.textContent = `${label} · ${Object.keys(storeMap).length} stores · ${allDates.size} days`;
+
+    // Populate Company and Campaign Type filter dropdowns from parsed data
+    const companies = [...new Set(Object.values(storeMap).map(s => s.company).filter(Boolean))].sort();
+    const types     = [...new Set(Object.values(storeMap).map(s => s.latestType).filter(t => t && t !== '—'))].sort();
+    const compSel = document.getElementById('gdFilterCompany');
+    const typeSel = document.getElementById('gdFilterType');
+    if (compSel) {
+      const prev = compSel.value;
+      compSel.innerHTML = '<option value="">All Companies</option>' +
+        companies.map(c => `<option value="${c}"${c===prev?' selected':''}>${c}</option>`).join('');
+    }
+    if (typeSel) {
+      const prev = typeSel.value;
+      typeSel.innerHTML = '<option value="">All Campaign Types</option>' +
+        types.map(t => `<option value="${t}"${t===prev?' selected':''}>${t}</option>`).join('');
+    }
 
     gdUpdateSummary(allDates.size);
     gdRenderTable();
@@ -4993,33 +5050,50 @@ function gdSetFilter(f) {
 
 // ── Table render ────────────────────────────────────────────────────
 function gdRenderTable() {
-  const tbody  = document.getElementById('gdTbody');
-  const search = (document.getElementById('gdSearch')?.value || '').toLowerCase();
+  const tbody      = document.getElementById('gdTbody');
+  const search     = (document.getElementById('gdSearch')?.value || '').toLowerCase();
+  const filterComp = document.getElementById('gdFilterCompany')?.value || '';
+  const filterType = document.getElementById('gdFilterType')?.value || '';
+  const sortBy     = document.getElementById('gdSortBy')?.value || 'date-desc';
 
   let entries = Object.entries(gdStoreMap).map(([sn, s]) => ({ sn, ...s }));
 
-  // Sort: dark stores first by most recent dark day (newest first), then active stores by store num
+  // ── Sort ──────────────────────────────────────────────────────────
+  const toSortable = s => { const p = s.split('/'); return p.length===3 ? `${p[2]}-${p[0]}-${p[1]}` : s; };
   entries.sort((a, b) => {
+    // Dark stores always float above active stores regardless of sort
     if (a.isDark && !b.isDark) return -1;
     if (!a.isDark && b.isDark) return 1;
-    if (a.isDark && b.isDark) {
-      // Compare most recent dark day descending
-      const aMax = a.darkDays[a.darkDays.length - 1] || '';
-      const bMax = b.darkDays[b.darkDays.length - 1] || '';
-      // DD/MM/YYYY → sort as YYYY-MM-DD for correct comparison
-      const toSortable = s => { const p = s.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : s; };
-      return toSortable(bMax).localeCompare(toSortable(aMax));
+
+    switch (sortBy) {
+      case 'date-asc': {
+        const aMin = a.darkDays[0] || a.latestDate || '';
+        const bMin = b.darkDays[0] || b.latestDate || '';
+        return toSortable(aMin).localeCompare(toSortable(bMin));
+      }
+      case 'store-asc':  return a.sn.localeCompare(b.sn, undefined, { numeric: true });
+      case 'store-desc': return b.sn.localeCompare(a.sn, undefined, { numeric: true });
+      case 'company-asc': return (a.company||'').localeCompare(b.company||'');
+      default: { // date-desc
+        const aMax = a.darkDays[a.darkDays.length - 1] || a.latestDate || '';
+        const bMax = b.darkDays[b.darkDays.length - 1] || b.latestDate || '';
+        return toSortable(bMax).localeCompare(toSortable(aMax));
+      }
     }
-    return a.sn.localeCompare(b.sn);
   });
 
-  // Filter by tab
-  if (gdFilter === 'dark')  entries = entries.filter(e => e.isDark);
-  if (gdFilter === 'ok')    entries = entries.filter(e => !e.isDark);
-
-  // Search filter
+  // ── Filters ───────────────────────────────────────────────────────
+  if (gdFilter === 'dark') entries = entries.filter(e => e.isDark);
+  if (gdFilter === 'ok')   entries = entries.filter(e => !e.isDark);
+  if (filterComp) entries = entries.filter(e => e.company === filterComp);
+  if (filterType) entries = entries.filter(e => e.latestType === filterType);
   if (search) entries = entries.filter(e =>
-    e.sn.includes(search) || e.latestCamp.toLowerCase().includes(search)
+    e.sn.includes(search) ||
+    (e.company || '').toLowerCase().includes(search) ||
+    (e.city    || '').toLowerCase().includes(search) ||
+    (e.state   || '').toLowerCase().includes(search) ||
+    (e.tactic  || '').toLowerCase().includes(search) ||
+    e.latestCamp.toLowerCase().includes(search)
   );
 
   if (entries.length === 0) {
@@ -5279,6 +5353,30 @@ function gdToast(title, msg, success = false) {
     }
   } catch(e) {}
 })();
+
+// ── Auto-fetch google-ads.csv on Go Dark page visit (if not yet loaded) ──
+async function gdAutoFetch() {
+  if (Object.keys(gdStoreMap).length > 0) return; // already loaded via GitHub fetch
+  const url = ghRawUrl(GH_FILE_MAP['google-ads'].file);
+  const zone = document.getElementById('gdDropZone');
+  if (zone) {
+    document.getElementById('gdDropIcon').textContent  = '⏳';
+    document.getElementById('gdDropTitle').textContent = 'Loading data/google-ads.csv from GitHub…';
+  }
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const buf = await res.arrayBuffer();
+    const wb  = XLSX.read(new Uint8Array(buf), { type: 'array' });
+    gdRunOnWorkbook(wb, 'data/google-ads.csv');
+  } catch(e) {
+    if (zone) {
+      document.getElementById('gdDropIcon').textContent  = '📂';
+      document.getElementById('gdDropTitle').textContent = 'Auto-load failed — drop a Google Ads CSV / XLSX to override';
+      document.getElementById('gdDropSub').textContent   = `Could not reach ${url} · Check GH_REPO setting`;
+    }
+  }
+}
 
 // ── Init — render with baseline values, then auto-fetch from GitHub ──
 renderKpiCards();
