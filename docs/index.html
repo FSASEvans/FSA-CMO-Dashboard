@@ -1487,6 +1487,102 @@
     .gd-row > *:nth-child(n+4):nth-child(-n+5) { display:none; }
   }
 
+
+  /* ════════════════════════════════════════════════
+     DATE RANGE FILTER BAR
+  ════════════════════════════════════════════════ */
+  .dr-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    margin-bottom: 20px;
+  }
+  .dr-label {
+    font-family: var(--font-semi);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .dr-input {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--text);
+    background: var(--surface2);
+    outline: none;
+    transition: border-color .12s;
+    cursor: pointer;
+  }
+  .dr-input:focus { border-color: var(--fsa-red); background: var(--surface); }
+  .dr-sep { font-size: 12px; color: var(--muted); flex-shrink: 0; }
+  .dr-quick { display: flex; gap: 6px; flex-wrap: wrap; }
+  .dr-quick-btn {
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    font-family: var(--font-semi);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .12s;
+    white-space: nowrap;
+  }
+  .dr-quick-btn:hover { border-color: var(--fsa-red); color: var(--fsa-red); background: var(--red-bg); }
+  .dr-quick-btn.active { background: var(--charcoal); color: #fff; border-color: var(--charcoal); }
+  .dr-apply {
+    padding: 6px 16px;
+    background: var(--fsa-red);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-semi);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .12s;
+    white-space: nowrap;
+  }
+  .dr-apply:hover { background: var(--fsa-red-dk); }
+  .dr-reset {
+    padding: 6px 12px;
+    background: none;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--font-semi);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .12s;
+    white-space: nowrap;
+  }
+  .dr-reset:hover { color: var(--fsa-red); border-color: var(--fsa-red); }
+  .dr-range-display {
+    font-family: var(--font-semi);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--green);
+    white-space: nowrap;
+    margin-left: auto;
+  }
+  .dr-range-display.full { color: var(--muted); }
+  .dr-disabled { opacity: .45; pointer-events: none; }
+
 </style>
 </head>
 <body>
@@ -1868,6 +1964,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar" id="dr-bar-paid-search">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-paid-search" onchange="drApply('paid-search')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-paid-search"   onchange="drApply('paid-search')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('paid-search','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('paid-search','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('paid-search','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('paid-search','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('paid-search','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('paid-search','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('paid-search')">Apply</button>
+    <button class="dr-reset" onclick="drReset('paid-search')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-paid-search">Full dataset</span>
+  </div>
   <!-- PRIMARY KPI DEEP DIVE -->
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
@@ -2080,6 +2194,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar" id="dr-bar-web">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-web" onchange="drApply('web')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-web"   onchange="drApply('web')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('web','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('web','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('web','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('web','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('web','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('web','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('web')">Apply</button>
+    <button class="dr-reset" onclick="drReset('web')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-web">Full dataset</span>
+  </div>
   <!-- PRIMARY KPI DEEP DIVE -->
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
@@ -2265,6 +2397,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar" id="dr-bar-sms">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-sms" onchange="drApply('sms')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-sms"   onchange="drApply('sms')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('sms','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('sms','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('sms','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('sms','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('sms','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('sms','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('sms')">Apply</button>
+    <button class="dr-reset" onclick="drReset('sms')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-sms">Full dataset</span>
+  </div>
   <!-- PRIMARY KPI DEEP DIVE -->
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
@@ -2440,6 +2590,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar dr-disabled" title="Date filtering not available — data is aggregated without a date column" id="dr-bar-email">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-email" onchange="drApply('email')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-email"   onchange="drApply('email')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('email','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('email','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('email','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('email','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('email','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('email','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('email')">Apply</button>
+    <button class="dr-reset" onclick="drReset('email')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-email">Full dataset</span>
+  </div>
   <!-- PRIMARY KPI DEEP DIVE: DUAL KPI (Journey + Eblast CTOR) -->
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
@@ -2601,6 +2769,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar dr-disabled" title="Date filtering not available — data is aggregated without a date column" id="dr-bar-direct-mail">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-direct-mail" onchange="drApply('direct-mail')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-direct-mail"   onchange="drApply('direct-mail')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('direct-mail','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('direct-mail','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('direct-mail','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('direct-mail','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('direct-mail','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('direct-mail','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('direct-mail')">Apply</button>
+    <button class="dr-reset" onclick="drReset('direct-mail')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-direct-mail">Full dataset</span>
+  </div>
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
       <div>
@@ -2739,6 +2925,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar" id="dr-bar-seo">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-seo" onchange="drApply('seo')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-seo"   onchange="drApply('seo')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('seo','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('seo','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('seo','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('seo','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('seo','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('seo','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('seo')">Apply</button>
+    <button class="dr-reset" onclick="drReset('seo')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-seo">Full dataset</span>
+  </div>
   <!-- DUAL PRIMARY KPIs: SEO CTR + AI Visibility -->
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
     <div class="kpi-deepdive" style="margin-bottom:0;">
@@ -2916,6 +3120,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar" id="dr-bar-listings">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-listings" onchange="drApply('listings')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-listings"   onchange="drApply('listings')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('listings','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('listings','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('listings','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('listings','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('listings','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('listings','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('listings')">Apply</button>
+    <button class="dr-reset" onclick="drReset('listings')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-listings">Full dataset</span>
+  </div>
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
       <div>
@@ -3094,6 +3316,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar" id="dr-bar-reviews">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-reviews" onchange="drApply('reviews')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-reviews"   onchange="drApply('reviews')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('reviews','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('reviews','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('reviews','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('reviews','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('reviews','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('reviews','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('reviews')">Apply</button>
+    <button class="dr-reset" onclick="drReset('reviews')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-reviews">Full dataset</span>
+  </div>
   <!-- PRIMARY KPI: % Reviews Responded To -->
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
@@ -3273,6 +3513,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar" id="dr-bar-organic-social">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-organic-social" onchange="drApply('organic-social')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-organic-social"   onchange="drApply('organic-social')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('organic-social','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('organic-social','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('organic-social','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('organic-social','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('organic-social','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('organic-social','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('organic-social')">Apply</button>
+    <button class="dr-reset" onclick="drReset('organic-social')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-organic-social">Full dataset</span>
+  </div>
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
       <div>
@@ -3472,6 +3730,24 @@
     </div>
   </div>
 
+  <!-- Date Range Filter -->
+  <div class="dr-bar" id="dr-bar-ctv">
+    <span class="dr-label">Date Range</span>
+    <input type="date" class="dr-input" id="dr-from-ctv" onchange="drApply('ctv')"/>
+    <span class="dr-sep">→</span>
+    <input type="date" class="dr-input" id="dr-to-ctv"   onchange="drApply('ctv')"/>
+    <div class="dr-quick">
+      <button class="dr-quick-btn active" onclick="drQuick('ctv','all')">All</button>
+      <button class="dr-quick-btn" onclick="drQuick('ctv','7d')">7d</button>
+      <button class="dr-quick-btn" onclick="drQuick('ctv','30d')">30d</button>
+      <button class="dr-quick-btn" onclick="drQuick('ctv','90d')">90d</button>
+      <button class="dr-quick-btn" onclick="drQuick('ctv','mtd')">MTD</button>
+      <button class="dr-quick-btn" onclick="drQuick('ctv','ytd')">YTD</button>
+    </div>
+    <button class="dr-apply" onclick="drApply('ctv')">Apply</button>
+    <button class="dr-reset" onclick="drReset('ctv')">Reset</button>
+    <span class="dr-range-display full" id="dr-display-ctv">Full dataset</span>
+  </div>
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
       <div>
@@ -4111,73 +4387,68 @@ function toggleUploadPanel() {
 // PARSERS  — mirror the Python logic used to initially calculate KPIs
 // ═══════════════════════════════════════════════════════════════════
 
-function parseGoogleAds(wb) {
-  // CSV comes in as single-sheet workbook via XLSX; skip first 2 rows (title + date range)
+// ── Parser helper: cache wb and filter rows by active date range ───
+function _drRows(wb, channelId, dateCol) {
+  DR_WB[channelId] = wb; // cache for re-filter on date change
   const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
-  // Find header row (contains 'Day')
-  let hdrIdx = rows.findIndex(r => r.some(c => String(c).trim() === 'Day'));
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+  return dateCol ? drFilterRows(rows, dateCol, channelId) : rows;
+}
+
+function parseGoogleAds(wb) {
+  DR_WB['paid-search'] = wb;
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rawRows = XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
+  let hdrIdx = rawRows.findIndex(r => r.some(c => String(c).trim() === 'Day'));
   if (hdrIdx < 0) hdrIdx = 1;
-  const hdrs = rows[hdrIdx].map(c => String(c).trim());
-  const data = rows.slice(hdrIdx+1).filter(r => r.some(c => c !== ''));
+  const hdrs = rawRows[hdrIdx].map(c => String(c).trim());
+  const allData = rawRows.slice(hdrIdx+1).filter(r => r.some(c => c !== ''));
+
+  // Apply date range filter on the 'Day' column (index-based)
+  const dayIdx = hdrs.indexOf('Day');
+  const data   = drFilterRawRows(allData, dayIdx, 'paid-search');
 
   const idx = n => hdrs.indexOf(n);
   const num = v => parseFloat(String(v).replace(/[$,%]/g,'').replace(/,/g,'')) || 0;
 
   let totals = { Search:{cost:0,clicks:0,sv:0}, 'Performance Max':{cost:0,clicks:0,sv:0}, 'Demand Gen':{cost:0,clicks:0,sv:0} };
-  // Per-company breakdown using gdParseCampaign
   const byCompany = {};
   data.forEach(row => {
-    const type     = String(row[idx('Campaign type')]||'').trim();
-    const campRaw  = String(row[idx('Campaign')]||'').trim();
-    const cost     = num(row[idx('Cost')]);
-    const clicks   = num(row[idx('Clicks')]);
-    const sv       = num(row[idx('Store Visits')]);
-
-    if (totals[type]) {
-      totals[type].cost   += cost;
-      totals[type].clicks += clicks;
-      totals[type].sv     += sv;
-    }
-
-    // Parse company from campaign name
+    const type    = String(row[idx('Campaign type')]||'').trim();
+    const campRaw = String(row[idx('Campaign')]||'').trim();
+    const cost    = num(row[idx('Cost')]);
+    const clicks  = num(row[idx('Clicks')]);
+    const sv      = num(row[idx('Store Visits')]);
+    if (totals[type]) { totals[type].cost += cost; totals[type].clicks += clicks; totals[type].sv += sv; }
     if (campRaw && typeof gdParseCampaign === 'function') {
       const parsed = gdParseCampaign(campRaw);
       const co = parsed.company || 'Unknown';
       if (!byCompany[co]) byCompany[co] = { cost:0, clicks:0, sv:0 };
-      byCompany[co].cost   += cost;
-      byCompany[co].clicks += clicks;
-      byCompany[co].sv     += sv;
+      byCompany[co].cost += cost; byCompany[co].clicks += clicks; byCompany[co].sv += sv;
     }
   });
-
   const s = totals['Search'];
   const svr = s.clicks > 0 ? (s.sv / s.clicks * 100).toFixed(1) : null;
   const cpc = s.clicks > 0 ? (s.cost / s.clicks).toFixed(2) : null;
   const totalSpend = Object.values(totals).reduce((a,b) => a + b.cost, 0);
-
   return { svr, cpc, totalSpend: totalSpend.toFixed(0), totals, byCompany };
 }
 
 function parseSMS(wb) {
-  const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval:'' });
+  const rows = _drRows(wb, 'sms', 'Month - Year');
   // Forward-fill Month-Year
   let lastMonth = '';
   rows.forEach(r => {
     if (r['Month - Year'] && String(r['Month - Year']).trim()) lastMonth = String(r['Month - Year']).trim();
     else r['Month - Year'] = lastMonth;
   });
-  // Group by month
   const monthly = {};
   rows.forEach(r => {
-    const m = r['Month - Year'];
-    if (!m) return;
+    const m = r['Month - Year']; if (!m) return;
     if (!monthly[m]) monthly[m] = { out:0, del:0 };
     monthly[m].out += parseFloat(r['Outgoing Messages'])||0;
     monthly[m].del += parseFloat(r['Delivered Messages'])||0;
   });
-  // Sort months and get latest non-partial
   const sortable = Object.entries(monthly).map(([k,v]) => {
     const d = new Date(k); return { label:k, out:v.out, del:v.del, date:isNaN(d)?0:d };
   }).filter(x => x.out > 10000).sort((a,b) => b.date - a.date);
@@ -4187,6 +4458,8 @@ function parseSMS(wb) {
 }
 
 function parseEmail(wb) {
+  // Email has no date column in current export — no filter applied
+  DR_WB['email'] = wb;
   const ws   = wb.Sheets[wb.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(ws, { defval:0 });
   const journeyKw = ['welcome','thank you','survey','lof','recommend','birthday','service'];
@@ -4194,21 +4467,18 @@ function parseEmail(wb) {
   let eblast  = { opened:0, clicked:0, sent:0 };
   rows.forEach(r => {
     const tmpl = String(r['Template']||'').toLowerCase();
-    const isJourney = journeyKw.some(k => tmpl.includes(k));
-    const bucket = isJourney ? journey : eblast;
+    const bucket = journeyKw.some(k => tmpl.includes(k)) ? journey : eblast;
     bucket.opened  += parseFloat(r['Opened'])||0;
     bucket.clicked += parseFloat(r['Clicked'])||0;
     bucket.sent    += parseFloat(r['Sent'])||0;
   });
   const ctor = b => b.opened > 0 ? (b.clicked/b.opened*100).toFixed(2) : null;
-  return {
-    journeyCTOR: ctor(journey),
-    eblastCTOR:  ctor(eblast),
-    totalSent:   (journey.sent + eblast.sent)
-  };
+  return { journeyCTOR: ctor(journey), eblastCTOR: ctor(eblast), totalSent: (journey.sent + eblast.sent) };
 }
 
 function parseDripDrop(wb) {
+  // Direct Mail has no date column in current export — no filter applied
+  DR_WB['direct-mail'] = wb;
   const ws   = wb.Sheets[wb.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(ws, { defval:0 });
   let totalCards = 0, totalResponses = 0;
@@ -4221,37 +4491,26 @@ function parseDripDrop(wb) {
 }
 
 function parseWebGA4(wb) {
-  const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval:0 });
+  const rows = _drRows(wb, 'web', 'Date');
   const byChannel = {};
   rows.forEach(r => {
     const ch = String(r['Default channel group']||r[Object.keys(r)[0]]||'Unknown').trim();
     byChannel[ch] = (byChannel[ch]||0) + (parseFloat(r['Sessions'])||0);
   });
   const total = Object.values(byChannel).reduce((a,b) => a+b, 0);
-  const organic = byChannel['Organic Search']||0;
-  const paid    = byChannel['Paid Search']||0;
-  return { total, organic, paid, byChannel };
+  return { total, organic: byChannel['Organic Search']||0, paid: byChannel['Paid Search']||0, byChannel };
 }
 
 // ─────────────────────────────────────────────────────────────────
-// NEW CHANNEL PARSERS
-// Each parser receives a workbook (XLSX.read result) and returns
-// a plain object with the KPI fields the channel needs.
-// Column names below match the expected export format for each
-// vendor — update if your export headers differ.
+// NEW CHANNEL PARSERS — all date-range-aware via _drRows()
 // ─────────────────────────────────────────────────────────────────
 
-// SEO / AI  (Scout / GSC / Yext AI export)
-// Expected columns: Date, Clicks, Impressions, CTR, AI_Score
 function parseSEO(wb) {
-  const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  const rows = _drRows(wb, 'seo', 'Date');
   let totalClicks = 0, totalImpressions = 0, aiScore = null;
   rows.forEach(r => {
     totalClicks      += parseFloat(r['Clicks'])      || 0;
     totalImpressions += parseFloat(r['Impressions']) || 0;
-    // AI Score — take the last non-zero value (most recent row)
     const s = parseFloat(r['AI_Score'] || r['AI Score'] || 0);
     if (s > 0) aiScore = s;
   });
@@ -4259,27 +4518,20 @@ function parseSEO(wb) {
   return { ctr, aiScore, totalClicks, totalImpressions };
 }
 
-// Listings  (Yext / GBP export)
-// Expected columns: Location, Impressions, Actions, Period
 function parseListings(wb) {
-  const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  const rows = _drRows(wb, 'listings', 'Period');
   let totalImpressions = 0, totalActions = 0;
   rows.forEach(r => {
     totalImpressions += parseFloat(r['Impressions']) || 0;
     totalActions     += parseFloat(r['Actions'])     || 0;
   });
-  // Action Rate = Actions / (Impressions / 1000)
   const actionRate = totalImpressions > 0
     ? (totalActions / (totalImpressions / 1000)).toFixed(2) : null;
   return { actionRate, totalImpressions, totalActions };
 }
 
-// Reviews  (GBP / Yext / Scout export)
-// Expected columns: Location, Total_Reviews, Replied, Star_Rating, Period
 function parseReviews(wb) {
-  const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  const rows = _drRows(wb, 'reviews', 'Period');
   let totalReviews = 0, totalReplied = 0, ratingSum = 0, ratingCount = 0;
   rows.forEach(r => {
     totalReviews += parseFloat(r['Total_Reviews'] || r['Total Reviews']) || 0;
@@ -4287,88 +4539,67 @@ function parseReviews(wb) {
     const rat     = parseFloat(r['Star_Rating']   || r['Star Rating'])   || 0;
     if (rat > 0) { ratingSum += rat; ratingCount++; }
   });
-  const responseRate = totalReviews > 0
-    ? (totalReplied / totalReviews * 100).toFixed(1) : null;
-  const avgRating = ratingCount > 0
-    ? (ratingSum / ratingCount).toFixed(2) : null;
+  const responseRate = totalReviews > 0 ? (totalReplied / totalReviews * 100).toFixed(1) : null;
+  const avgRating    = ratingCount   > 0 ? (ratingSum / ratingCount).toFixed(2)           : null;
   return { responseRate, avgRating, totalReviews, totalReplied };
 }
 
-// Organic Social  (Meta Business Suite CSV export)
-// Expected columns: Date, Post_Reach, Impressions, Reactions, Comments, Shares, Saves
 function parseOrganicSocial(wb) {
-  const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  const rows = _drRows(wb, 'organic-social', 'Date');
   let totalReach = 0, totalEngagements = 0, postCount = 0;
   rows.forEach(r => {
-    const reach  = parseFloat(r['Post_Reach']  || r['Reach'])        || 0;
-    const react  = parseFloat(r['Reactions'])                         || 0;
-    const comm   = parseFloat(r['Comments'])                          || 0;
-    const shares = parseFloat(r['Shares'])                            || 0;
-    const saves  = parseFloat(r['Saves'])                             || 0;
-    const eng    = react + comm + shares + saves;
+    const reach  = parseFloat(r['Post_Reach'] || r['Reach']) || 0;
+    const eng    = (parseFloat(r['Reactions'])||0) + (parseFloat(r['Comments'])||0)
+                 + (parseFloat(r['Shares'])||0)    + (parseFloat(r['Saves'])||0);
     if (reach > 0) { totalReach += reach; totalEngagements += eng; postCount++; }
   });
-  const engRate = totalReach > 0
-    ? (totalEngagements / totalReach * 100).toFixed(2) : null;
+  const engRate = totalReach > 0 ? (totalEngagements / totalReach * 100).toFixed(2) : null;
   return { engRate, totalReach, totalEngagements, postCount };
 }
 
-// CTV  (Mountain / vendor export)
-// Expected columns: Date, Impressions, Spend, Unique_HH, URL_Conversions
 function parseCTV(wb) {
-  const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  const rows = _drRows(wb, 'ctv', 'Date');
   let totalImpressions = 0, totalSpend = 0, totalHH = 0, totalConv = 0;
   rows.forEach(r => {
-    totalImpressions += parseFloat(r['Impressions'])                           || 0;
-    totalSpend       += parseFloat(String(r['Spend'] || '').replace(/[$,]/g,'')) || 0;
-    totalHH          += parseFloat(r['Unique_HH']    || r['Unique HH'])       || 0;
-    totalConv        += parseFloat(r['URL_Conversions'] || r['Conversions'])  || 0;
+    totalImpressions += parseFloat(r['Impressions'])                              || 0;
+    totalSpend       += parseFloat(String(r['Spend']||'').replace(/[$,]/g,''))   || 0;
+    totalHH          += parseFloat(r['Unique_HH']    || r['Unique HH'])          || 0;
+    totalConv        += parseFloat(r['URL_Conversions'] || r['Conversions'])     || 0;
   });
-  const cpm = totalImpressions > 0
-    ? (totalSpend / (totalImpressions / 1000)).toFixed(2) : null;
-  const costPerConv = totalConv > 0
-    ? (totalSpend / totalConv).toFixed(2) : null;
+  const cpm         = totalImpressions > 0 ? (totalSpend / (totalImpressions/1000)).toFixed(2) : null;
+  const costPerConv = totalConv > 0        ? (totalSpend / totalConv).toFixed(2)               : null;
   return { cpm, costPerConv, totalSpend, totalImpressions, totalHH, totalConv };
 }
 
-// Paid Social  (Meta Ads / agency export)
-// Expected columns: Date, Spend, Impressions, Clicks, Video_Views, Landing_Page_Views
 function parsePaidSocial(wb) {
-  const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
-  let totalSpend = 0, totalImpressions = 0, totalClicks = 0,
-      totalViews = 0, totalLPV = 0;
+  const rows = _drRows(wb, 'paid-social', 'Date');
+  let totalSpend = 0, totalImpressions = 0, totalClicks = 0, totalViews = 0, totalLPV = 0;
   rows.forEach(r => {
-    totalSpend       += parseFloat(String(r['Spend'] || '').replace(/[$,]/g,''))     || 0;
-    totalImpressions += parseFloat(r['Impressions'])                                  || 0;
-    totalClicks      += parseFloat(r['Clicks'])                                       || 0;
-    totalViews       += parseFloat(r['Video_Views']       || r['Video Views'])        || 0;
-    totalLPV         += parseFloat(r['Landing_Page_Views']|| r['Landing Page Views']) || 0;
+    totalSpend       += parseFloat(String(r['Spend']||'').replace(/[$,]/g,''))        || 0;
+    totalImpressions += parseFloat(r['Impressions'])                                   || 0;
+    totalClicks      += parseFloat(r['Clicks'])                                        || 0;
+    totalViews       += parseFloat(r['Video_Views']        || r['Video Views'])        || 0;
+    totalLPV         += parseFloat(r['Landing_Page_Views'] || r['Landing Page Views']) || 0;
   });
-  const ctr    = totalImpressions > 0 ? (totalClicks / totalImpressions * 100).toFixed(2) : null;
-  const cpvc   = totalViews > 0       ? (totalSpend  / totalViews).toFixed(2)             : null;
-  const cplpv  = totalLPV   > 0       ? (totalSpend  / totalLPV).toFixed(2)               : null;
+  const ctr  = totalImpressions > 0 ? (totalClicks/totalImpressions*100).toFixed(2) : null;
+  const cpvc = totalViews > 0       ? (totalSpend/totalViews).toFixed(2)            : null;
+  const cplpv= totalLPV   > 0       ? (totalSpend/totalLPV).toFixed(2)              : null;
   return { ctr, cpvc, cplpv, totalSpend, totalImpressions, totalClicks, totalViews, totalLPV };
 }
 
-// Programmatic  (DSP / agency export)
-// Expected columns: Date, Spend, Impressions, Clicks, Coupon_Downloads
 function parseProgrammatic(wb) {
-  const ws   = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: 0 });
+  const rows = _drRows(wb, 'programmatic', 'Date');
   let totalSpend = 0, totalImpressions = 0, totalClicks = 0, totalCoupons = 0;
   rows.forEach(r => {
-    totalSpend       += parseFloat(String(r['Spend'] || '').replace(/[$,]/g,'')) || 0;
-    totalImpressions += parseFloat(r['Impressions'])                              || 0;
-    totalClicks      += parseFloat(r['Clicks'])                                   || 0;
-    totalCoupons     += parseFloat(r['Coupon_Downloads'] || r['Coupon Downloads'])|| 0;
+    totalSpend       += parseFloat(String(r['Spend']||'').replace(/[$,]/g,''))    || 0;
+    totalImpressions += parseFloat(r['Impressions'])                               || 0;
+    totalClicks      += parseFloat(r['Clicks'])                                    || 0;
+    totalCoupons     += parseFloat(r['Coupon_Downloads'] || r['Coupon Downloads']) || 0;
   });
-  const cpc  = totalClicks      > 0 ? (totalSpend / totalClicks).toFixed(2)      : null;
-  const cpm  = totalImpressions > 0 ? (totalSpend / (totalImpressions/1000)).toFixed(2) : null;
-  const ctr  = totalImpressions > 0 ? (totalClicks / totalImpressions * 100).toFixed(2) : null;
-  const cpcd = totalCoupons     > 0 ? (totalSpend  / totalCoupons).toFixed(2)    : null;
+  const cpc  = totalClicks      > 0 ? (totalSpend/totalClicks).toFixed(2)               : null;
+  const cpm  = totalImpressions > 0 ? (totalSpend/(totalImpressions/1000)).toFixed(2)   : null;
+  const ctr  = totalImpressions > 0 ? (totalClicks/totalImpressions*100).toFixed(2)     : null;
+  const cpcd = totalCoupons     > 0 ? (totalSpend/totalCoupons).toFixed(2)              : null;
   return { cpc, cpm, ctr, cpcd, totalSpend, totalImpressions, totalClicks, totalCoupons };
 }
 
@@ -5377,6 +5608,264 @@ async function gdAutoFetch() {
     }
   }
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// DATE RANGE FILTER ENGINE
+// Each channel stores { from: 'YYYY-MM-DD', to: 'YYYY-MM-DD' } or nulls for "all".
+// drFilterRows(rows, dateColName) returns only rows within the active range.
+// ═══════════════════════════════════════════════════════════════════
+
+const DR_STATE = {}; // channelId → { from: null|Date, to: null|Date }
+let   DR_WB    = {}; // channelId → raw workbook, cached for re-filter without re-fetch
+
+// Convert any date value to a plain JS Date (handles serial, ISO, MM/DD/YYYY)
+function drToDate(raw) {
+  const s = String(raw).trim();
+  if (!s) return null;
+  const serial = Number(s);
+  if (!isNaN(serial) && serial > 40000 && serial < 60000) {
+    return new Date((serial - 25569) * 86400000);
+  }
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return new Date(`${iso[1]}-${iso[2]}-${iso[3]}`);
+  const us = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (us)  return new Date(`${us[3]}-${us[1].padStart(2,'0')}-${us[2].padStart(2,'0')}`);
+  // MM/DD/YYYY already normalised
+  const mdy = s.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+  if (mdy) return new Date(`${mdy[3]}-${mdy[1]}-${mdy[2]}`);
+  const d = new Date(s);
+  return isNaN(d) ? null : d;
+}
+
+// Filter an array of row objects to the active date range for a channel.
+// dateCol = the column name string that holds the date value.
+// Returns all rows if no filter is active.
+function drFilterRows(rows, dateCol, channelId) {
+  const state = DR_STATE[channelId];
+  if (!state || (!state.from && !state.to)) return rows;
+  return rows.filter(r => {
+    const d = drToDate(r[dateCol]);
+    if (!d) return true; // keep rows with unparseable dates
+    if (state.from && d < state.from) return false;
+    if (state.to   && d > state.to)   return false;
+    return true;
+  });
+}
+
+// Same but for header:1 style arrays (raw rows with index-based columns)
+function drFilterRawRows(rows, dateColIdx, channelId) {
+  const state = DR_STATE[channelId];
+  if (!state || (!state.from && !state.to)) return rows;
+  return rows.filter(r => {
+    const d = drToDate(r[dateColIdx]);
+    if (!d) return true;
+    if (state.from && d < state.from) return false;
+    if (state.to   && d > state.to)   return false;
+    return true;
+  });
+}
+
+// Update the display label for a channel's date bar
+function drUpdateDisplay(channelId) {
+  const state = DR_STATE[channelId];
+  const el    = document.getElementById(`dr-display-${channelId}`);
+  if (!el) return;
+  if (!state || (!state.from && !state.to)) {
+    el.textContent = 'Full dataset';
+    el.className   = 'dr-range-display full';
+    return;
+  }
+  const fmt = d => d ? d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
+  el.textContent = `${fmt(state.from)} → ${fmt(state.to)}`;
+  el.className   = 'dr-range-display';
+}
+
+// Set active quick-btn highlight
+function drSetActiveQuick(channelId, preset) {
+  document.querySelectorAll(`#dr-bar-${channelId} .dr-quick-btn`).forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase() === preset.toLowerCase() ||
+      (preset === 'all' && b.textContent === 'All'));
+  });
+}
+
+// Apply the current date inputs for a channel, re-parse and re-render
+function drApply(channelId) {
+  const fromEl = document.getElementById(`dr-from-${channelId}`);
+  const toEl   = document.getElementById(`dr-to-${channelId}`);
+  const fromV  = fromEl?.value;
+  const toV    = toEl?.value;
+
+  if (!DR_STATE[channelId]) DR_STATE[channelId] = { from: null, to: null };
+  DR_STATE[channelId].from = fromV ? new Date(fromV) : null;
+  DR_STATE[channelId].to   = toV   ? new Date(toV + 'T23:59:59') : null;
+
+  drUpdateDisplay(channelId);
+  drSetActiveQuick(channelId, 'custom');
+  drReparse(channelId);
+}
+
+// Reset a channel to full dataset
+function drReset(channelId) {
+  if (!DR_STATE[channelId]) DR_STATE[channelId] = { from: null, to: null };
+  DR_STATE[channelId].from = null;
+  DR_STATE[channelId].to   = null;
+  const fromEl = document.getElementById(`dr-from-${channelId}`);
+  const toEl   = document.getElementById(`dr-to-${channelId}`);
+  if (fromEl) fromEl.value = '';
+  if (toEl)   toEl.value   = '';
+  drSetActiveQuick(channelId, 'all');
+  drUpdateDisplay(channelId);
+  drReparse(channelId);
+}
+
+// Quick preset buttons
+function drQuick(channelId, preset) {
+  const now   = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let from = null, to = null;
+
+  if (preset === 'all') {
+    drReset(channelId);
+    return;
+  }
+  to = new Date(today.getTime() + 86399999); // end of today
+
+  if (preset === '7d')  from = new Date(today); from?.setDate(from?.getDate() - 6);
+  if (preset === '30d') { from = new Date(today); from.setDate(from.getDate() - 29); }
+  if (preset === '90d') { from = new Date(today); from.setDate(from.getDate() - 89); }
+  if (preset === 'mtd') from = new Date(today.getFullYear(), today.getMonth(), 1);
+  if (preset === 'ytd') from = new Date(today.getFullYear(), 0, 1);
+
+  if (!DR_STATE[channelId]) DR_STATE[channelId] = {};
+  DR_STATE[channelId].from = from;
+  DR_STATE[channelId].to   = to;
+
+  // Update input values
+  const toISO   = d => d ? d.toISOString().slice(0,10) : '';
+  const fromEl  = document.getElementById(`dr-from-${channelId}`);
+  const toEl    = document.getElementById(`dr-to-${channelId}`);
+  if (fromEl) fromEl.value = toISO(from);
+  if (toEl)   toEl.value   = toISO(to);
+
+  drSetActiveQuick(channelId, preset);
+  drUpdateDisplay(channelId);
+  drReparse(channelId);
+}
+
+// Re-run the appropriate parser and re-render KPIs for a channel
+// Uses the cached workbook stored in DR_WB
+function drReparse(channelId) {
+  const wb = DR_WB[channelId];
+  if (!wb) return; // no data loaded yet — nothing to re-filter
+
+  const ch  = id => CHANNELS.find(c => c.id === id);
+  const fmt = n  => n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ? Math.round(n/1e3)+'K' : String(Math.round(n));
+
+  try {
+    switch (channelId) {
+      case 'paid-search': {
+        const r = parseGoogleAds(wb);
+        const c = ch('paid-search');
+        if (r.svr !== null) {
+          const svrNum = parseFloat(r.svr);
+          c.current = r.svr + '%';
+          c.pct     = Math.min(100, Math.round(svrNum / 20 * 100));
+          c.status  = svrNum >= 20 ? 'green' : svrNum >= 10 ? 'yellow' : 'red';
+          const coBreakdown = Object.entries(r.byCompany||{})
+            .sort((a,b) => b[1].cost - a[1].cost)
+            .map(([co, v]) => `${co} $${Math.round(v.cost/1000)}K`).join(' · ');
+          c.note = `Search SVR ${r.svr}% on $${Number(r.totalSpend).toLocaleString()} total spend. CPC $${r.cpc}.${coBreakdown ? ' By brand: ' + coBreakdown + '.' : ''}`;
+        }
+        break;
+      }
+      case 'web': {
+        const r = parseWebGA4(wb);
+        const c = ch('web');
+        if (r.total > 0) {
+          c.current = fmt(r.total);
+          c.note = `Organic Search ${fmt(r.organic)} (${Math.round(r.organic/r.total*100)}%). Paid Search ${fmt(r.paid)} (${Math.round(r.paid/r.total*100)}%).`;
+        }
+        break;
+      }
+      case 'sms': {
+        const r = parseSMS(wb);
+        const c = ch('sms');
+        if (r.outgoing) c.note = `${fmt(r.outgoing)} outgoing messages (${r.latestMonth}). Delivery rate: ${r.deliveryRate}%.`;
+        break;
+      }
+      case 'seo': {
+        const r = parseSEO(wb);
+        const c = ch('seo');
+        if (r.ctr !== null) {
+          const ctrNum = parseFloat(r.ctr), aiNum = r.aiScore || 0;
+          c.current = `${r.ctr}% CTR${aiNum ? ` / ${aiNum} AI` : ''}`;
+          const ctrPct = Math.min(100, Math.round(ctrNum / 3.0 * 100));
+          const aiPct  = aiNum ? Math.min(100, Math.round(aiNum / 95 * 100)) : ctrPct;
+          c.pct = Math.round((ctrPct + aiPct) / 2);
+          c.status = c.pct >= 90 ? 'green' : c.pct >= 60 ? 'yellow' : 'red';
+          c.note = `GSC CTR ${r.ctr}% (target 3.0%) · ${fmt(r.totalClicks)} clicks on ${fmt(r.totalImpressions)} impressions.${aiNum ? ` AI Visibility Score: ${aiNum} (target 95).` : ''}`;
+        }
+        break;
+      }
+      case 'listings': {
+        const r = parseListings(wb);
+        const c = ch('listings');
+        if (r.actionRate !== null) {
+          const arNum = parseFloat(r.actionRate);
+          c.current = `${r.actionRate}%`;
+          c.pct = Math.min(100, Math.round(arNum / 2.7 * 100));
+          c.status = arNum >= 3.0 ? 'green' : arNum >= 2.7 ? 'yellow' : 'red';
+          c.note = `${Number(r.totalActions).toLocaleString()} actions on ${fmt(r.totalImpressions)} impressions. Action Rate: ${r.actionRate}% (Q1 target: 2.7%).`;
+        }
+        break;
+      }
+      case 'reviews': {
+        const r = parseReviews(wb);
+        const c = ch('reviews');
+        if (r.responseRate !== null || r.avgRating !== null) {
+          const rrNum = parseFloat(r.responseRate||0), ratNum = parseFloat(r.avgRating||0);
+          c.current = `${ratNum > 0 ? ratNum+'★' : '—'}${rrNum > 0 ? ` / ${r.responseRate}% replied` : ''}`;
+          c.pct = ratNum > 0 ? Math.min(100, Math.round(ratNum / 4.85 * 100)) : 0;
+          c.status = ratNum >= 4.85 ? 'green' : ratNum >= 4.7 ? 'yellow' : ratNum > 0 ? 'red' : 'gray';
+          c.note = `${r.totalReplied} of ${r.totalReviews} reviews replied (${r.responseRate}%). Avg rating: ${r.avgRating}★ (target: 4.85★).`;
+        }
+        break;
+      }
+      case 'organic-social': {
+        const r = parseOrganicSocial(wb);
+        const c = ch('organic-social');
+        if (r.engRate !== null) {
+          const erNum = parseFloat(r.engRate);
+          c.current = `${r.engRate}%`;
+          c.pct = Math.min(100, Math.round(erNum / 5.0 * 100));
+          c.status = erNum >= 6.5 ? 'green' : erNum >= 5.0 ? 'yellow' : 'red';
+          c.note = `${r.engRate}% avg engagement rate across ${r.postCount} posts. ${fmt(r.totalEngagements)} total engagements on ${fmt(r.totalReach)} reach. Q1 target: 5.0%.`;
+        }
+        break;
+      }
+      case 'ctv': {
+        const r = parseCTV(wb);
+        const c = ch('ctv');
+        if (r.cpm !== null) {
+          const cpmNum = parseFloat(r.cpm);
+          c.current = `$${r.cpm}`;
+          c.pct = Math.min(100, Math.round(50 / cpmNum * 100));
+          c.status = cpmNum <= 50 ? 'green' : cpmNum <= 55 ? 'yellow' : 'red';
+          c.note = `CPM $${r.cpm} (target $50). ${fmt(r.totalImpressions)} impressions · $${Number(r.totalSpend).toLocaleString(undefined,{maximumFractionDigits:0})} total spend.${r.totalConv > 0 ? ` Cost/conv: $${r.costPerConv}.` : ''}`;
+        }
+        break;
+      }
+    }
+  } catch(e) { console.error('drReparse error:', channelId, e); }
+
+  renderKpiCards();
+  renderOverviewRows();
+}
+
+// ── Init date range state for all filterable channels ──
+['paid-search','web','sms','seo','listings','reviews','organic-social','ctv'].forEach(id => {
+  DR_STATE[id] = { from: null, to: null };
+});
 
 // ── Init — render with baseline values, then auto-fetch from GitHub ──
 renderKpiCards();
