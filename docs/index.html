@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FullSpeed Automotive — CMO Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #222733;
+    --accent: #e8b94a;
+    --accent2: #4a9ee8;
+    --accent3: #4ae8a0;
+    --accent4: #e84a6a;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .header-logo {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: #000;
+    letter-spacing: 0;
+  }
+  .header-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+  .header-subtitle {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .last-updated {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+  .data-period-badge {
+    background: rgba(232,185,74,0.12);
+    border: 1px solid rgba(232,185,74,0.3);
+    color: var(--accent);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+
+  /* ── Nav Tabs ── */
+  .nav-tabs {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 14px 20px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .tab-btn .tab-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    background: var(--muted);
+    vertical-align: middle;
+  }
+  .tab-btn.status-green .tab-dot { background: var(--green); }
+  .tab-btn.status-yellow .tab-dot { background: var(--yellow); }
+  .tab-btn.status-red .tab-dot { background: var(--red); }
+  .tab-btn.status-gray .tab-dot { background: var(--muted); }
+
+  /* ── Page Layout ── */
+  .page { display: none; padding: 28px 32px; }
+  .page.active { display: block; }
+
+  /* ── Section Labels ── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── KPI Grid ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  .kpi-card:hover {
+    border-color: rgba(232,185,74,0.3);
+    transform: translateY(-1px);
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .kpi-card.green::before { background: var(--green); }
+  .kpi-card.yellow::before { background: var(--yellow); }
+  .kpi-card.red::before { background: var(--red); }
+  .kpi-card.gray::before { background: var(--muted); }
+
+  .kpi-channel {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .kpi-label {
+    font-size: 12px;
+    color: var(--text);
+    margin-bottom: 10px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+  .kpi-value {
+    font-family: var(--font-display);
+    font-size: 32px;
+    letter-spacing: 1px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .kpi-card.green .kpi-value { color: var(--green); }
+  .kpi-card.yellow .kpi-value { color: var(--yellow); }
+  .kpi-card.red .kpi-value { color: var(--red); }
+  .kpi-card.gray .kpi-value { color: var(--muted); }
+
+  .kpi-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .kpi-target { font-family: var(--font-mono); }
+  .kpi-delta {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .delta-pos { background: rgba(34,197,94,0.12); color: var(--green); }
+  .delta-neg { background: rgba(239,68,68,0.12); color: var(--red); }
+  .delta-neu { background: rgba(107,114,128,0.12); color: var(--muted); }
+
+  .kpi-owner {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Channel Detail Page ── */
+  .channel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .channel-title {
+    font-family: var(--font-display);
+    font-size: 40px;
+    letter-spacing: 3px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .channel-meta-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+  .badge-vendor { border-color: rgba(74,158,232,0.4); color: var(--accent2); background: rgba(74,158,232,0.08); }
+  .badge-owner { border-color: rgba(232,185,74,0.4); color: var(--accent); background: rgba(232,185,74,0.08); }
+  .badge-lead { border-color: rgba(74,232,160,0.4); color: var(--accent3); background: rgba(74,232,160,0.08); }
+  .badge-lag { border-color: rgba(232,74,106,0.4); color: var(--accent4); background: rgba(232,74,106,0.08); }
+  .badge-impact-high { border-color: rgba(232,185,74,0.6); color: var(--accent); background: rgba(232,185,74,0.12); }
+  .badge-impact-med { border-color: rgba(107,114,128,0.4); color: var(--muted); background: rgba(107,114,128,0.08); }
+  .badge-impact-low { border-color: rgba(107,114,128,0.3); color: var(--muted); background: transparent; }
+  .badge-hold { border-color: rgba(239,68,68,0.4); color: var(--red); background: rgba(239,68,68,0.08); }
+
+  /* ── 2-col layout ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 900px) {
+    .two-col, .three-col { grid-template-columns: 1fr; }
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  /* ── Metric Rows ── */
+  .metric-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-name { font-size: 13px; color: var(--text); }
+  .metric-values {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .metric-current { color: var(--text); font-weight: 500; }
+  .metric-target { color: var(--muted); }
+  .metric-vs {
+    font-size: 10px;
+    color: var(--muted);
+    padding: 1px 4px;
+    background: var(--surface2);
+    border-radius: 3px;
+  }
+
+  /* ── Progress Bar ── */
+  .progress-wrap { margin: 6px 0 14px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+  .progress-fill.green { background: var(--green); }
+  .progress-fill.yellow { background: var(--yellow); }
+  .progress-fill.red { background: var(--red); }
+
+  /* ── Action Items ── */
+  .action-list { list-style: none; }
+  .action-list li {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.4;
+  }
+  .action-list li:last-child { border-bottom: none; }
+  .action-bullet {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(232,185,74,0.15);
+    border: 1px solid rgba(232,185,74,0.4);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── Data Status ── */
+  .data-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .data-status.ok { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: var(--green); }
+  .data-status.warn { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); color: var(--yellow); }
+  .data-status.hold { background: rgba(107,114,128,0.08); border: 1px solid rgba(107,114,128,0.2); color: var(--muted); }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+  /* ── Summary Overview Bars ── */
+  .overview-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 6px;
+    padding-left: 8px;
+  }
+  .overview-row:hover { background: rgba(255,255,255,0.02); }
+  .overview-row:last-child { border-bottom: none; }
+  .ov-channel {
+    width: 140px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .ov-kpi {
+    flex: 1;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ov-value {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    width: 80px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .ov-target {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    width: 80px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .ov-bar {
+    width: 100px;
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .ov-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+  .ov-status {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Scrollable Table ── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.015); }
+
+  /* ── Notes box ── */
+  .notes-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .notes-box strong { color: var(--text); }
+
+  /* ── HOLD state ── */
+  .hold-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    text-align: center;
+    gap: 12px;
+  }
+  .hold-icon {
+    font-size: 48px;
+    opacity: 0.3;
+  }
+  .hold-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: var(--muted);
+  }
+  .hold-desc {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 400px;
+    line-height: 1.6;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .header { padding: 0 16px; }
+    .nav-tabs { padding: 0 16px; }
+    .page { padding: 20px 16px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .ov-target, .ov-bar { display: none; }
+  }
+
+  /* ── Fade-in animation ── */
+  .page.active { animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── Upload prompt ── */
+  .upload-hint {
+    background: rgba(74,158,232,0.06);
+    border: 1px dashed rgba(74,158,232,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--accent2);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">FSA</div>
+    <div>
+      <div class="header-title">CMO DASHBOARD</div>
+      <div class="header-subtitle">FullSpeed Automotive · Marketing Performance</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <span class="last-updated" id="lastUpdated">Updated: —</span>
+    <span class="data-period-badge" id="dataPeriod">2025 Baseline</span>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs" id="navTabs">
+  <button class="tab-btn active" onclick="showPage('overview')" id="tab-overview">
+    <span class="tab-dot" style="background:var(--accent)"></span>All Channels
+  </button>
+  <button class="tab-btn status-green" onclick="showPage('paid-search')" id="tab-paid-search">
+    <span class="tab-dot"></span>Paid Search
+  </button>
+  <button class="tab-btn status-yellow" onclick="showPage('web')" id="tab-web">
+    <span class="tab-dot"></span>Web
+  </button>
+  <button class="tab-btn status-yellow" onclick="showPage('sms')" id="tab-sms">
+    <span class="tab-dot"></span>SMS
+  </button>
+  <button class="tab-btn status-yellow" onclick="showPage('email')" id="tab-email">
+    <span class="tab-dot"></span>Email
+  </button>
+  <button class="tab-btn status-yellow" onclick="showPage('direct-mail')" id="tab-direct-mail">
+    <span class="tab-dot"></span>Direct Mail
+  </button>
+  <button class="tab-btn status-yellow" onclick="showPage('seo')" id="tab-seo">
+    <span class="tab-dot"></span>SEO / AI
+  </button>
+  <button class="tab-btn status-yellow" onclick="showPage('listings')" id="tab-listings">
+    <span class="tab-dot"></span>Listings
+  </button>
+  <button class="tab-btn status-yellow" onclick="showPage('reviews')" id="tab-reviews">
+    <span class="tab-dot"></span>Reviews
+  </button>
+  <button class="tab-btn status-yellow" onclick="showPage('organic-social')" id="tab-organic-social">
+    <span class="tab-dot"></span>Organic Social
+  </button>
+  <button class="tab-btn status-gray" onclick="showPage('ctv')" id="tab-ctv">
+    <span class="tab-dot"></span>CTV
+  </button>
+  <button class="tab-btn status-gray" onclick="showPage('paid-social')" id="tab-paid-social">
+    <span class="tab-dot"></span>Paid Social
+  </button>
+  <button class="tab-btn status-gray" onclick="showPage('programmatic')" id="tab-programmatic">
+    <span class="tab-dot"></span>Programmatic
+  </button>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: OVERVIEW
+════════════════════════════════════════════════ -->
+<div class="page active" id="page-overview">
+
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+    <div>
+      <div style="font-family:var(--font-display); font-size:36px; letter-spacing:3px; line-height:1;">PRIMARY KPI ROLLUP</div>
+      <div style="font-size:12px; color:var(--muted); margin-top:4px;">All channels · Primary KPIs vs. 2026 targets</div>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted);">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>On/Ahead of Target
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted);">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--yellow)"></div>Needs Attention
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted);">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--red)"></div>Below Target
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted);">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--muted)"></div>Pending Data
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary KPI Cards -->
+  <div class="kpi-grid" id="summaryKpiGrid">
+    <!-- injected by JS -->
+  </div>
+
+  <!-- Overview Table -->
+  <div class="section-label">All Channels at a Glance</div>
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div style="padding:14px 20px 0; display:flex; align-items:center; justify-content:space-between;">
+      <div class="card-title" style="margin-bottom:0;">Channel Performance Summary</div>
+      <div style="font-size:11px; color:var(--muted);">Click any row to view channel detail →</div>
+    </div>
+    <div style="padding:0 8px 8px;">
+      <div id="overviewRows"></div>
+    </div>
+  </div>
+
+  <!-- Strategic Notes -->
+  <div class="section-label" style="margin-top:24px;">Strategic Context</div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Priority Focus Areas — Q1 2026</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Improve Paid Google Store Visit Rate (currently below 20% target). Investigate Search vs PMax attribution gap.</li>
+        <li><div class="action-bullet">2</div>Grow SMS opt-in rate from 0.6% toward 1.0% EoY target via web QR codes, email blocks, paid media sign-ups.</li>
+        <li><div class="action-bullet">3</div>Drive Email CTOR improvement on Journey emails (1.87% → 2.1% Q1 target) by adding stronger CTAs.</li>
+        <li><div class="action-bullet">4</div>Stabilize Listings impressions — investigate PMax/Demand Gen impact on GBP impression decline.</li>
+        <li><div class="action-bullet">5</div>Establish new agency relationships for Paid Social and Programmatic to unlock those channels.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Data Readiness Status</div>
+      <div class="data-status ok"><div class="status-dot"></div>Paid Search — Daily export available via Google Ads</div>
+      <div class="data-status ok"><div class="status-dot"></div>SMS — Monthly data via Cinch dashboard</div>
+      <div class="data-status ok"><div class="status-dot"></div>Direct Mail — Period totals via DripDrop</div>
+      <div class="data-status ok"><div class="status-dot"></div>Web — Daily via GA4/Looker Studio</div>
+      <div class="data-status warn"><div class="status-dot"></div>Email — Template totals only; working with Cinch for daily</div>
+      <div class="data-status warn"><div class="status-dot"></div>Listings / Reviews — Annual/quarterly aggregates only</div>
+      <div class="data-status warn"><div class="status-dot"></div>SEO/AI — No historical capture yet</div>
+      <div class="data-status hold"><div class="status-dot"></div>Paid Social / Programmatic — HOLD (new agency)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: PAID SEARCH
+════════════════════════════════════════════════ -->
+<div class="page" id="page-paid-search">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">PAID SEARCH</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">Google Ads</span>
+        <span class="badge badge-owner">Owner: Bethany</span>
+        <span class="badge badge-lead">Leading Indicator</span>
+        <span class="badge badge-impact-high">High Impact</span>
+      </div>
+    </div>
+    <div class="data-status ok" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>Daily data available via Google Ads export
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">Primary KPI — Store Visit Rate</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">—</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Current</span><span>Target: 20% (Q1) → 25% (EoY)</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:0%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Google Store Visits / Clicks (or Visits / Impressions)<br>Awaiting store visit data in export.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Secondary KPI — CPC</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--accent); letter-spacing:2px;">$3.37</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Sample period avg</span><span>Target: Minimize (mix-dependent)</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:60%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Based on sample export data. Upload latest Google Ads export to refresh.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cost per Store Visit</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--muted); letter-spacing:2px;">—</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Need Store Visit data in export to calculate.<br>Search historically 3:1 Store Visits to Cars.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Campaign Type Breakdown (Sample)</div>
+      <div class="metric-row">
+        <div class="metric-name">Search</div>
+        <div class="metric-values">
+          <span class="metric-current">$1,804 spend</span>
+          <span class="metric-target">CTR: 7.3%</span>
+          <span class="metric-vs">CPC $3.37</span>
+        </div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Demand Gen</div>
+        <div class="metric-values">
+          <span class="metric-current">$570 spend</span>
+          <span class="metric-target">CTR: 0.05%</span>
+          <span class="metric-vs">CPC $4.95</span>
+        </div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">PMax</div>
+        <div class="metric-values">
+          <span class="metric-current">—</span>
+          <span class="metric-target">Store Visits TBD</span>
+        </div>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:12px;">Sample data: Jan 14, 2026. Upload full export for trend view.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions to Move the KPI</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Establish Search:Cars ratio baseline (currently 3:1 for Search; PMax/Demand Gen unstudied). Prioritize this analysis.</li>
+        <li><div class="action-bullet">2</div>Create a unified efficiency metric combining Store Visit Rate + CPC into a single Cost per Car proxy.</li>
+        <li><div class="action-bullet">3</div>Investigate latency window: Click → Store Visit. Understand lag before optimizing bidding.</li>
+        <li><div class="action-bullet">4</div>Primary breakout: All Google first, then Search / PMax / Demand Gen secondary once attribution is understood.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="notes-box">
+    <strong>Strategic Note:</strong> Google Store Visit metric is the bridge between digital spend and in-bay revenue. Until this ratio is understood for PMax and Demand Gen (beyond the 3:1 established for Search), optimize toward CPC as the primary efficiency lever. Mix is dependent on campaign type, so avoid blended targets until segmented data matures.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: WEB
+════════════════════════════════════════════════ -->
+<div class="page" id="page-web">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">WEB</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">Google Analytics 4</span>
+        <span class="badge badge-owner">Owner: TBD</span>
+        <span class="badge badge-lead">Leading Indicator</span>
+        <span class="badge badge-impact-high">High Impact</span>
+      </div>
+    </div>
+    <div class="data-status warn" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>Daily via GA4 — export missing Month dimension
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">Primary KPI — Sessions by Source</div>
+      <div style="font-family:var(--font-display); font-size:42px; color:var(--yellow); letter-spacing:2px;">MONITOR</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Target: Q4 + Seasonality baseline. Napkin math: X Sessions = Y Cars.<br>Conversion rate must remain flat or improve alongside session growth.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Event — Get Directions CTA</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--accent); letter-spacing:2px;">7K</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Current: ~7,000/30d</span><span>Target: 8,500/30d</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:82%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">82% to target. Strong leading indicator for in-store visits.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Risk Monitor — Lighthouse Score</div>
+      <div style="font-family:var(--font-display); font-size:42px; color:var(--yellow); letter-spacing:2px;">WATCH</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">GTM changes may impact page load speed. Monitor Lighthouse scores — establish thresholds before next GTM deployment.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Sessions by Channel Group (Latest Export)</div>
+      <div class="metric-row">
+        <div class="metric-name">Organic Search</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Primary growth driver</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Paid Search</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Monitor CPC efficiency</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Direct</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Brand strength indicator</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Email / SMS</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">CRM channel indicator</span></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:12px;">Upload web_ga4.csv with full Date column to populate breakdown.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions to Move the KPI</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Fix Looker Studio export: add full Date (YYYY-MM-DD) dimension to eliminate month-assumption workaround.</li>
+        <li><div class="action-bullet">2</div>Investigate top organic session source path queries (Sam investigating). Tie findings to content strategy.</li>
+        <li><div class="action-bullet">3</div>Establish Sessions-to-Cars conversion napkin math — this becomes your web ROI proxy for exec reporting.</li>
+        <li><div class="action-bullet">4</div>Resolve Key Event tracking for Coupon Request (HOLD: 829 figures out Key Event tracking first).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: SMS
+════════════════════════════════════════════════ -->
+<div class="page" id="page-sms">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">SMS</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">Cinch / Twilio</span>
+        <span class="badge badge-owner">Owner: Brian</span>
+        <span class="badge badge-lead">Leading Indicator</span>
+        <span class="badge badge-impact-med">Medium Impact</span>
+      </div>
+    </div>
+    <div class="data-status ok" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>Monthly data available via Cinch dashboard
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">Primary KPI — Opt-in Rate</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">0.6%</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Current: 0.6%</span><span>EoY Target: 1.0%</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:60%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Opt-ins / Total Population. Competitors benchmark ~1%. Q1 target holds at 0.6% — focus on EoY growth.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Secondary — Coupon Redemption Rate</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--accent); letter-spacing:2px;">0.2%</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Current: 0.2%</span><span>Target: 0.5%</span></div>
+        <div class="progress-bar"><div class="progress-fill red" style="width:40%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">SMS Coupon Redemptions / Total SMS Sends containing coupon.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Monthly Send Volume (Latest)</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--accent3); letter-spacing:2px;">176K</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Outgoing messages per month (Dec 2024 sample). Delivery success rate: 92.9%.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Monthly Performance (2025 YTD)</div>
+      <div class="metric-row">
+        <div class="metric-name">Outgoing Messages</div>
+        <div class="metric-values"><span class="metric-current">176,050</span><span class="metric-target">Dec 2024</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Delivery Success Rate</div>
+        <div class="metric-values"><span class="metric-current">92.9%</span><span class="metric-target">Target: 95%+</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">New Opt-ins</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Upload latest export</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Net Opt-in Growth</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Key to watch</span></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:12px;">Upload latest cinch_sms.xlsx for current month figures.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions to Grow Opt-in Rate</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Add SMS opt-in blocks to more webpages and email campaigns. Include QR codes at point of service.</li>
+        <li><div class="action-bullet">2</div>Run SMS-specific blast campaigns tied to returning car promotions.</li>
+        <li><div class="action-bullet">3</div>Use paid media to drive sign-ups. Competitors are at ~1% — close the gap.</li>
+        <li><div class="action-bullet">4</div>Tie opt-in growth to Return Rate (existing customers) as the downstream KPI to validate strategy.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: EMAIL
+════════════════════════════════════════════════ -->
+<div class="page" id="page-email">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">EMAIL</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">Cinch</span>
+        <span class="badge badge-owner">Owner: Brian</span>
+        <span class="badge badge-lead">Leading Indicator</span>
+        <span class="badge badge-impact-high">High Impact</span>
+      </div>
+    </div>
+    <div class="data-status warn" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>Template totals only — working with Cinch for daily data
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">Primary KPI — Journey CTOR</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">1.87%</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Baseline (12m)</span><span>Q1 Target: 2.1%</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:89%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Click-to-Open Rate on Journey emails. 89% to Q1 target. EoY target: 4.0%.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Primary KPI — Eblast CTOR</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">0.98%</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Baseline (12m)</span><span>Q1 Target: 1.25%</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:78%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Eblast CTOR tracks alongside Journey. Same Q1 and EoY targets (1.25%).</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Secondary — Conversion Rate</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--muted); letter-spacing:2px;">—</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Requires daily send + transaction data linkage. Pending Cinch daily export availability.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Data Availability</div>
+      <div class="data-status warn"><div class="status-dot"></div>Current data: template-level aggregates (past 12 months total)</div>
+      <div class="data-status warn"><div class="status-dot"></div>No date dimension available — cannot trend over time yet</div>
+      <div class="data-status hold"><div class="status-dot"></div>Working with Cinch to obtain daily/weekly send-level data</div>
+      <div style="font-size:12px; color:var(--muted); margin-top:14px; line-height:1.6;">
+        Once daily data is available, this tab will show: send volume trends, CTOR over time, journey vs eblast comparison, and suppressed audience sizing.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions to Move the KPI</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Add stronger CTA to Journey emails — this is the single highest-leverage action to move CTOR from 1.87% → 2.1%.</li>
+        <li><div class="action-bullet">2</div>Prioritize Cinch daily export — email is a High Impact channel but is currently data-blind for trending.</li>
+        <li><div class="action-bullet">3</div>Review suppressed audience sizing — ensure active database is maximized before adding opt-in volume.</li>
+        <li><div class="action-bullet">4</div>Tie email CTOR improvements to Return Rate as the downstream validation metric.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: DIRECT MAIL
+════════════════════════════════════════════════ -->
+<div class="page" id="page-direct-mail">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">DIRECT MAIL</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">Drip Drop</span>
+        <span class="badge badge-owner">Owner: Brian</span>
+        <span class="badge badge-lag">Lagging Indicator</span>
+        <span class="badge badge-impact-low">Low Impact (current)</span>
+      </div>
+    </div>
+    <div class="data-status warn" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>Period totals only — no drop dates yet
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">Primary KPI — Household Response Rate (New)</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">2.23%</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Baseline 2025</span><span>EoY Target: 2.75%</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:81%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Households transacted / Cards mailed. Per full maturity drop (105-day maturity, 16-week validity). Current data: 1/7–10/9/2025.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cards Mailed (2025 Window)</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--accent); letter-spacing:2px;">2.85M</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Total cards mailed across Mar–Dec 2025 window. Budget in 2026: shifting to 90% new households.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Secondary KPI — ROAS</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--muted); letter-spacing:2px;">—</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Requires transaction-level linkage to mailer drops. Pending date-level data from DripDrop.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Attribution Notes</div>
+      <div class="notes-box" style="margin-bottom:0;">
+        <strong>Maturity window:</strong> 105 days to full maturity. 16-week validity window. Remove outliers before calculating response rate.<br><br>
+        <strong>2026 budget shift:</strong> Moving toward 90% new household targeting — this changes the population, not the rate. Track new vs. existing response separately.<br><br>
+        <strong>Segmentation opportunity:</strong> Radius segmentation (urban vs rural) + New Mover + Competitor Conquest audiences to test.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions to Move the KPI</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Request drop-date level data from DripDrop — critical for measuring true maturity-adjusted response rate.</li>
+        <li><div class="action-bullet">2</div>Benchmark competitor response rates — put onus on DripDrop to provide industry comparisons.</li>
+        <li><div class="action-bullet">3</div>Test radius segmentation: urban vs rural performance likely differs significantly.</li>
+        <li><div class="action-bullet">4</div>Review templated creative approach — new creative may be needed to lift response rate toward 2.75%.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: SEO / AI
+════════════════════════════════════════════════ -->
+<div class="page" id="page-seo">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">SEO / AI VISIBILITY</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">Scout / Yext / GSC</span>
+        <span class="badge badge-owner">Owner: Bethany</span>
+        <span class="badge badge-lead">Leading Indicator</span>
+        <span class="badge badge-impact-high">High Impact</span>
+      </div>
+    </div>
+    <div class="data-status warn" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>No historical data capture in dashboard yet
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">SEO Primary — CTR (GSC)</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">2.7%</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Baseline: 2.7%</span><span>Target: 3.0% (Q1) → 3.25% (EoY)</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:83%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Click-through rate from Google Search Console. Brand vs Non-Brand breakout needed.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">SEO Secondary — Avg. Position</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">19.1</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Current: 19.1</span><span>Target: 15</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:72%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Lower is better. Content positioning on web is the primary lever to improve ranking.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">AI Visibility Score</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--green); letter-spacing:2px;">91</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Current: 91</span><span>Target: 95</span></div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:91%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">By Brand + Region + Platform (ROP focus). 96% to target — strong position.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">SEO Leading Indicator — Rankings</div>
+      <div class="metric-row">
+        <div class="metric-name">Top 3 Terms Ranked</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">3 priority terms TBD</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Brand CTR (GSC)</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Breakout needed</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Non-Brand CTR (GSC)</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Breakout needed</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Zero-Click Impressions</div>
+        <div class="metric-values"><span class="metric-current">~200K est.</span><span class="metric-target">Monitor via GSC+GA4</span></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:12px;">Estimated: GSC shows ~1M impressions, GA4 shows ~800K sessions → ~200K zero-click gap.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Define the 3 priority search terms for ranking tracking — lock these with Bethany as the SEO leading indicator.</li>
+        <li><div class="action-bullet">2</div>Build Brand vs Non-Brand CTR breakout in GSC — non-brand CTR is the acquisition signal.</li>
+        <li><div class="action-bullet">3</div>Marry GSC + GA4 data to quantify zero-click impressions (~200K estimated gap).</li>
+        <li><div class="action-bullet">4</div>Establish historical data capture in Scout/Yext dashboard before metrics are lost.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: LISTINGS
+════════════════════════════════════════════════ -->
+<div class="page" id="page-listings">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">LISTINGS</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">GBP / Apple / Yext / Scout</span>
+        <span class="badge badge-owner">Owner: Louis</span>
+        <span class="badge badge-lead">Leading Indicator</span>
+        <span class="badge badge-impact-low">Low Impact (current)</span>
+      </div>
+    </div>
+    <div class="data-status warn" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>Annual aggregates only — no monthly trending yet
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">Primary KPI — Action Rate (Actions/1K Impressions)</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">—</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Target: 2.7% (Q1) → 3.0% (EoY)</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:0%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Google Listings only (ROP/GM). All Actions currently — action separation coming via Yext development.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">2025 Total Actions (GM)</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--accent); letter-spacing:2px;">—</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">2025 vs 2024 YoY data available in export. Upload Listings file to populate. Several locations showing -10% to -81% YoY changes.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Impression Threshold Watch</div>
+      <div style="font-family:var(--font-display); font-size:42px; color:var(--red); letter-spacing:2px;">DECLINE</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Impressions declining YoY across multiple locations. Investigate whether PMax / Demand Gen is cannibalizing GBP impressions.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Location-Level YoY (Sample)</div>
+      <div class="metric-row">
+        <div class="metric-name">Atlanta (Ponce de Leon)</div>
+        <div class="metric-values"><span class="metric-current">34,546 actions</span><span class="metric-target">2024: 38,423</span><span class="kpi-delta delta-neg">-10%</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Seattle (15th Ave NW)</div>
+        <div class="metric-values"><span class="metric-current">13,798 actions</span><span class="metric-target">2024: 20,836</span><span class="kpi-delta delta-neg">-34%</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Atlanta (Howell Mill)</div>
+        <div class="metric-values"><span class="metric-current">11,857 actions</span><span class="metric-target">2024: 13,765</span><span class="kpi-delta delta-neg">-14%</span></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:12px;">Declining trend across locations is a priority concern. Upload latest Listings file for full picture.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Investigate root cause of impression decline — is PMax/Demand Gen absorbing traffic that previously came through GBP?</li>
+        <li><div class="action-bullet">2</div>Work with Yext to separate action types (Call, Directions, Website) once their report development is complete.</li>
+        <li><div class="action-bullet">3</div>Identify which action type drives highest CTR and prioritize tactics around that action.</li>
+        <li><div class="action-bullet">4</div>Maintain accuracy and visibility scores — these are the levers for Listings performance.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: REVIEWS
+════════════════════════════════════════════════ -->
+<div class="page" id="page-reviews">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">REVIEWS</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">GBP / Yext / Scout</span>
+        <span class="badge badge-owner">Owner: Louis</span>
+        <span class="badge badge-lead">Leading Indicator</span>
+        <span class="badge badge-impact-med">Medium Impact</span>
+      </div>
+    </div>
+    <div class="data-status warn" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>Quarterly cadence — reviews are timestamped but no historical capture
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">Primary KPI — % Reviews Responded To</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">—</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Current: from Reviews tab</span><span>Target: 20% improvement</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:0%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Upload Reviews file to populate. Key hypothesis: unresponded reviews are 5-star/no-comment. A "Thank you" response can significantly move this metric.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Star Rating</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--green); letter-spacing:2px;">4.8</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Current: 4.8</span><span>Target: 4.85</span></div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:96%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Strong position. Small gap to target — focused response strategy should help.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">AI Brand Sentiment (Scout)</div>
+      <div style="font-family:var(--font-display); font-size:42px; color:var(--accent); letter-spacing:2px;">56/42/1</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Positive / Neutral / Negative %. Target: 65/35/0. Neutral-to-Positive conversion is the key opportunity.</div>
+      <div class="progress-wrap" style="margin-top:8px;">
+        <div class="progress-label"><span>Positive: 56%</span><span>Target: 65%</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:86%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Review Response Strategy</div>
+      <div class="notes-box" style="margin-bottom:0;">
+        <strong>Hypothesis:</strong> Most unresponded reviews are 5-star with no text comment. A templated "Thank You for leaving a review" response to these would significantly increase the % responded metric.<br><br>
+        <strong>Action:</strong> Work with Yext MRR to update response templates/tone. Establish structured rules for which review types trigger which response template.<br><br>
+        <strong>Cadence:</strong> Quarterly review cadence — reviews per location per quarter, broken out by business unit.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Implement automated "Thank You" responses for 5-star/no-comment reviews via Yext — fastest path to moving % Responded metric.</li>
+        <li><div class="action-bullet">2</div>Update Yext response template repository — refresh tone and content to drive Neutral → Positive sentiment shift.</li>
+        <li><div class="action-bullet">3</div>Establish historical data capture so review trends can be tracked over time (currently only "as of now").</li>
+        <li><div class="action-bullet">4</div>Investigate whether unresponded reviews correlate with lower Return Rate (new vs existing customer impact).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE: ORGANIC SOCIAL
+════════════════════════════════════════════════ -->
+<div class="page" id="page-organic-social">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">ORGANIC SOCIAL</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">Meta / Instagram</span>
+        <span class="badge badge-owner">Owner: Louis</span>
+        <span class="badge badge-lead">Leading Indicator</span>
+        <span class="badge badge-impact-low">Low Impact (current)</span>
+      </div>
+    </div>
+    <div class="data-status warn" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>Manual/Meta export — no automated feed yet
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">Primary KPI — Engagement Rate (Meta/GM Only)</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--yellow); letter-spacing:2px;">—</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>From Organic Social tab</span><span>Target: 5.0% (Q1) → 6.5% (EoY)</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:0%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">Actions / Impressions. GM Only (No ADI). Industry benchmark: 5%. Q1 goal: reach industry standard. EoY: surpass it.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Instagram — Follower Count</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--muted); letter-spacing:2px;">—</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Follower Count is the primary IG KPI. Upload Organic Social export to populate. Net Follower Growth is the trend metric to watch.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Downstream Impact</div>
+      <div style="font-family:var(--font-display); font-size:42px; color:var(--accent); letter-spacing:2px;">RETURN</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Primary rollup KPI: Return Rate (New, 180d). Hypothesis: engagement with content drives cars. Ratio TBD — study engagement-to-cars conversion.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Metrics to Track</div>
+      <div class="metric-row">
+        <div class="metric-name">Reach</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">By brand breakout</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Engagement (Likes/Reactions)</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Actions / Impressions</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Comments</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Quality signal</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Shares</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">Amplification signal</span></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-name">Net Follower Growth</div>
+        <div class="metric-values"><span class="metric-current">—</span><span class="metric-target">New audience growth</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Establish engagement-to-cars ratio baseline (analogous to Search's 3:1 Store Visit ratio). This unlocks ROI conversation.</li>
+        <li><div class="action-bullet">2</div>Build rural vs urban breakout for content performance — audience composition likely differs significantly by market type.</li>
+        <li><div class="action-bullet">3</div>Increase follower count as a new audience growth lever — define what "good" growth rate looks like vs industry.</li>
+        <li><div class="action-bullet">4</div>No ADI content currently — consider whether ADI expansion is appropriate given channel is Low Impact today.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PAGES: HOLD CHANNELS
+════════════════════════════════════════════════ -->
+<div class="page" id="page-ctv">
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">CTV</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">Mountain</span>
+        <span class="badge badge-owner">Owner: Bethany</span>
+        <span class="badge badge-lag">Lagging Indicator</span>
+      </div>
+    </div>
+    <div class="data-status hold" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div>Partial data — establishing baseline
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Primary KPI — CPM</div>
+      <div style="font-family:var(--font-display); font-size:52px; color:var(--accent); letter-spacing:2px;">$55</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Current: $55</span><span>Target: $50 (lower is better)</span></div>
+        <div class="progress-bar"><div class="progress-fill yellow" style="width:80%"></div></div>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Cost per 1,000 impressions. Secondary: Offline Conversion Metric (~$20 avg/conversion target). URL-specific web conversion tracking needed.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Actions</div>
+      <ul class="action-list">
+        <li><div class="action-bullet">1</div>Establish URL-specific web conversion tracking to measure CTV-driven traffic separately.</li>
+        <li><div class="action-bullet">2</div>Build offline conversion metric — target ~$20/conversion as the efficiency benchmark.</li>
+        <li><div class="action-bullet">3</div>Track Reach alongside CPM — impressions alone don't tell the story without unique reach data.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-paid-social">
+  <div class="hold-overlay">
+    <div class="hold-icon">⏸</div>
+    <div class="hold-title">PAID SOCIAL — ON HOLD</div>
+    <div class="hold-desc">New agency onboarding in progress. This channel will be activated once agency relationship and data access are established. Primary KPI and targets TBD.</div>
+    <div class="channel-meta-row" style="justify-content:center; margin-top:8px;">
+      <span class="badge badge-hold">HOLD — New Agency</span>
+      <span class="badge badge-owner">Owner: Bethany</span>
+      <span class="badge badge-impact-low">Low Impact (current)</span>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-programmatic">
+  <div class="hold-overlay">
+    <div class="hold-icon">⏸</div>
+    <div class="hold-title">PROGRAMMATIC — ON HOLD</div>
+    <div class="hold-desc">New agency onboarding in progress. Preliminary target: CPC of $22.50 (down from $25 current). Secondary KPI: Cost per Click. Activate once agency and data access confirmed.</div>
+    <div class="channel-meta-row" style="justify-content:center; margin-top:8px;">
+      <span class="badge badge-hold">HOLD — New Agency</span>
+      <span class="badge badge-owner">Owner: Bethany</span>
+      <span class="badge badge-impact-low">Low Impact (current)</span>
+    </div>
+    <div class="card" style="margin-top:20px; max-width:400px; text-align:left;">
+      <div class="card-title">When Ready</div>
+      <div class="metric-row"><div class="metric-name">Primary KPI</div><div class="metric-values"><span class="metric-current">CPC</span><span class="metric-target">Target: $22.50</span></div></div>
+      <div class="metric-row"><div class="metric-name">Current Baseline</div><div class="metric-values"><span class="metric-current">$25.00</span><span class="metric-target">-10% goal</span></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Channel data configuration ──────────────────────────────────────────────
+// To update: edit the values in this CHANNELS object.
+// Status: "green" | "yellow" | "red" | "gray"
+// pct: progress toward target (0–100)
+const CHANNELS = [
+  {
+    id: "paid-search",
+    name: "Paid Search",
+    vendor: "Google Ads",
+    primaryKpi: "Store Visit Rate",
+    current: "—",
+    target: "20% (Q1)",
+    status: "yellow",
+    pct: 0,
+    note: "Store visit data not yet in export",
+    indicator: "Leading",
+    owner: "Bethany"
+  },
+  {
+    id: "web",
+    name: "Web",
+    vendor: "GA4",
+    primaryKpi: "Sessions + Engaged Sessions by Source",
+    current: "Monitor",
+    target: "Q4 + Seasonality baseline",
+    status: "yellow",
+    pct: 82,
+    note: "Get Directions CTA: 7K of 8.5K target",
+    indicator: "Leading",
+    owner: "TBD"
+  },
+  {
+    id: "sms",
+    name: "SMS",
+    vendor: "Cinch / Twilio",
+    primaryKpi: "Opt-in Rate",
+    current: "0.6%",
+    target: "1.0% EoY",
+    status: "yellow",
+    pct: 60,
+    note: "Competitors at ~1%; focused growth plan in place",
+    indicator: "Leading",
+    owner: "Brian"
+  },
+  {
+    id: "email",
+    name: "Email",
+    vendor: "Cinch",
+    primaryKpi: "CTOR (Journey / Eblast)",
+    current: "1.87% / 0.98%",
+    target: "2.1% / 1.25% (Q1)",
+    status: "yellow",
+    pct: 84,
+    note: "Add CTA to Journey emails to close gap",
+    indicator: "Leading",
+    owner: "Brian"
+  },
+  {
+    id: "direct-mail",
+    name: "Direct Mail",
+    vendor: "Drip Drop",
+    primaryKpi: "Household Response Rate (New)",
+    current: "2.23%",
+    target: "2.75% EoY",
+    status: "yellow",
+    pct: 81,
+    note: "105-day maturity window; 90% new HH budget shift in 2026",
+    indicator: "Lagging",
+    owner: "Brian"
+  },
+  {
+    id: "seo",
+    name: "SEO / AI",
+    vendor: "Scout / Yext / GSC",
+    primaryKpi: "CTR (GSC) + AI Visibility Score",
+    current: "2.7% CTR / 91 AI Score",
+    target: "3.0% CTR / 95 AI Score",
+    status: "yellow",
+    pct: 83,
+    note: "No historical data capture yet — establish pipeline",
+    indicator: "Leading",
+    owner: "Bethany"
+  },
+  {
+    id: "listings",
+    name: "Listings",
+    vendor: "GBP / Yext",
+    primaryKpi: "Action Rate (Actions / 1K Impressions)",
+    current: "—",
+    target: "2.7% (Q1) → 3.0% EoY",
+    status: "yellow",
+    pct: 0,
+    note: "Impressions declining YoY — investigate PMax impact",
+    indicator: "Leading",
+    owner: "Louis"
+  },
+  {
+    id: "reviews",
+    name: "Reviews",
+    vendor: "GBP / Yext",
+    primaryKpi: "% Reviews Responded To",
+    current: "4.8★ rating",
+    target: "4.85★ / +20% response rate",
+    status: "yellow",
+    pct: 96,
+    note: "Star rating strong; response rate strategy needed",
+    indicator: "Leading",
+    owner: "Louis"
+  },
+  {
+    id: "organic-social",
+    name: "Organic Social",
+    vendor: "Meta / Instagram",
+    primaryKpi: "Avg Post Engagement Rate",
+    current: "—",
+    target: "5.0% (Q1) → 6.5% EoY",
+    status: "yellow",
+    pct: 0,
+    note: "Industry benchmark: 5%. GM Only (No ADI)",
+    indicator: "Leading",
+    owner: "Louis"
+  },
+  {
+    id: "ctv",
+    name: "CTV",
+    vendor: "Mountain",
+    primaryKpi: "CPM",
+    current: "$55",
+    target: "$50",
+    status: "yellow",
+    pct: 80,
+    note: "Establishing offline conversion metric",
+    indicator: "Lagging",
+    owner: "Bethany"
+  },
+  {
+    id: "paid-social",
+    name: "Paid Social",
+    vendor: "TBD",
+    primaryKpi: "HOLD — New Agency",
+    current: "—",
+    target: "TBD",
+    status: "gray",
+    pct: 0,
+    note: "On hold — new agency onboarding",
+    indicator: "—",
+    owner: "Bethany"
+  },
+  {
+    id: "programmatic",
+    name: "Programmatic",
+    vendor: "TBD",
+    primaryKpi: "CPC",
+    current: "$25",
+    target: "$22.50",
+    status: "gray",
+    pct: 0,
+    note: "On hold — new agency onboarding",
+    indicator: "Leading",
+    owner: "Bethany"
+  }
+];
+
+// ── Render Summary KPI Cards ─────────────────────────────────────────────────
+function renderKpiCards() {
+  const grid = document.getElementById('summaryKpiGrid');
+  grid.innerHTML = CHANNELS.map(ch => {
+    const deltaHtml = ch.pct > 0
+      ? `<span class="kpi-delta ${ch.pct >= 90 ? 'delta-pos' : ch.pct >= 60 ? 'delta-neu' : 'delta-neg'}">${ch.pct}% to target</span>`
+      : `<span class="kpi-delta delta-neu">Pending data</span>`;
+    return `
+      <div class="kpi-card ${ch.status}" onclick="showPage('${ch.id}')" title="Click to view ${ch.name} detail">
+        <div class="kpi-channel">${ch.name}</div>
+        <div class="kpi-label">${ch.primaryKpi}</div>
+        <div class="kpi-value">${ch.current}</div>
+        <div class="kpi-meta">
+          <span class="kpi-target">Target: ${ch.target}</span>
+          ${deltaHtml}
+        </div>
+        <div class="kpi-owner">Owner: ${ch.owner} · ${ch.indicator}</div>
+      </div>`;
+  }).join('');
+}
+
+// ── Render Overview Rows ─────────────────────────────────────────────────────
+function renderOverviewRows() {
+  const container = document.getElementById('overviewRows');
+  const colorMap = { green: 'var(--green)', yellow: 'var(--yellow)', red: 'var(--red)', gray: 'var(--muted)' };
+  container.innerHTML = CHANNELS.map(ch => `
+    <div class="overview-row" onclick="showPage('${ch.id}')">
+      <div class="ov-status" style="background:${colorMap[ch.status]}"></div>
+      <div class="ov-channel">${ch.name}</div>
+      <div class="ov-kpi">${ch.primaryKpi}</div>
+      <div class="ov-value" style="color:${colorMap[ch.status]}">${ch.current}</div>
+      <div class="ov-target">${ch.target}</div>
+      <div class="ov-bar">
+        <div class="ov-fill" style="width:${ch.pct}%;background:${colorMap[ch.status]}"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ── Tab navigation ───────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const page = document.getElementById('page-' + id);
+  const tab  = document.getElementById('tab-' + id);
+  if (page) page.classList.add('active');
+  if (tab)  tab.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Set last updated ─────────────────────────────────────────────────────────
+function setMeta() {
+  const now = new Date();
+  document.getElementById('lastUpdated').textContent =
+    'Updated: ' + now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+renderKpiCards();
+renderOverviewRows();
+setMeta();
+</script>
+</body>
+</html>
