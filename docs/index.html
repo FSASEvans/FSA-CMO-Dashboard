@@ -53,70 +53,67 @@
 
   /* ── Header ── */
   .header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    border-left: 4px solid var(--fsa-red);
-    padding: 0 32px;
+    background: var(--charcoal);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
+    align-items: stretch;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    box-shadow: 0 1px 8px rgba(0,0,0,0.22);
   }
-  .header-brand {
+  .header-accent {
+    width: 4px;
+    background: var(--fsa-red);
+    flex-shrink: 0;
+  }
+  .header-body {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0;
+    flex: 1;
+    padding: 13px 28px 13px 20px;
+    gap: 16px;
+    flex-wrap: wrap;
   }
-  .header-logo { display: none; }
-  .header-divider { display: none; }
-  .header-wordmark {
+  .header-left h1 {
     font-family: var(--font-body);
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
-    color: var(--charcoal);
-    letter-spacing: 0;
-    white-space: nowrap;
+    color: #ffffff;
+    letter-spacing: -0.2px;
+    line-height: 1.3;
   }
-  .header-wordmark .red { color: var(--fsa-red); }
-  .header-sep {
-    font-size: 15px;
-    color: var(--muted);
-    font-weight: 400;
-    margin: 0 10px;
-  }
-  .header-title {
-    font-family: var(--font-body);
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--charcoal);
-    letter-spacing: 0;
-  }
+  .header-left h1 span { color: var(--fsa-red); }
   .header-subtitle {
     font-size: 11px;
-    color: var(--muted);
+    color: rgba(255,255,255,0.45);
     font-weight: 400;
-    letter-spacing: 0;
-    margin-top: 1px;
+    margin-top: 2px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
   }
   .header-meta {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
+    flex-wrap: wrap;
   }
   .last-updated {
     font-size: 11px;
-    color: var(--muted);
+    color: rgba(255,255,255,0.4);
     font-family: var(--font-body);
     font-weight: 400;
   }
   .data-period-badge {
-    background: var(--red-bg);
-    border: 1px solid rgba(196,18,48,0.2);
-    color: var(--fsa-red);
+    background: rgba(196,18,48,0.25);
+    border: 1px solid rgba(196,18,48,0.45);
+    color: #ff8fa3;
     font-size: 11px;
     padding: 3px 10px;
     border-radius: 3px;
@@ -124,7 +121,11 @@
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+    white-space: nowrap;
   }
+  /* old classes no longer used — kept harmless */
+  .header-brand, .header-logo, .header-divider,
+  .header-wordmark, .header-sep, .header-title { display: none; }
 
   /* ── Nav Tabs ── */
   .nav-tabs {
@@ -319,9 +320,9 @@
   .upload-note { font-size: 11px; color: var(--muted); line-height: 1.5; }
   .upload-toggle {
     background: none;
-    border: 1px solid var(--border-dk);
+    border: 1px solid rgba(255,255,255,0.22);
     border-radius: 4px;
-    color: var(--text-sec);
+    color: rgba(255,255,255,0.65);
     font-family: var(--font-semi);
     font-size: 11px;
     font-weight: 600;
@@ -335,7 +336,7 @@
     gap: 6px;
     white-space: nowrap;
   }
-  .upload-toggle:hover  { background: var(--surface2); border-color: var(--fsa-red); color: var(--fsa-red); }
+  .upload-toggle:hover  { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); color: #fff; }
   .upload-toggle.active { background: var(--fsa-red); border-color: var(--fsa-red); color: #fff; }
 
   .kpi-channel {
@@ -853,22 +854,19 @@
 
 <!-- HEADER -->
 <header class="header">
-  <div class="header-brand">
-    <div>
-      <div style="display:flex; align-items:baseline; gap:0;">
-        <span class="header-wordmark">FullSpeed <span class="red">Automotive</span></span>
-        <span class="header-sep">·</span>
-        <span class="header-title">CMO Marketing Dashboard</span>
-      </div>
+  <div class="header-accent"></div>
+  <div class="header-body">
+    <div class="header-left">
+      <h1>FullSpeed <span>Automotive</span> · CMO Marketing Dashboard</h1>
       <div class="header-subtitle">Marketing Intelligence · FullSpeed Automotive Leadership</div>
     </div>
-  </div>
-  <div class="header-meta">
-    <span class="last-updated" id="lastUpdated">Updated: —</span>
-    <span class="data-period-badge" id="dataPeriod">2026 Data</span>
-    <button class="upload-toggle" id="uploadToggleBtn" onclick="toggleUploadPanel()">
-      ↑ Refresh Data
-    </button>
+    <div class="header-right">
+      <span class="last-updated" id="lastUpdated">Updated: —</span>
+      <span class="data-period-badge" id="dataPeriod">2026 Data</span>
+      <button class="upload-toggle" id="uploadToggleBtn" onclick="toggleUploadPanel()">
+        ↑ Refresh Data
+      </button>
+    </div>
   </div>
 </header>
 
