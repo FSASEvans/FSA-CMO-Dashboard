@@ -3690,22 +3690,23 @@
   </div>
 
   <div class="notes-box" style="margin-bottom:20px; border-color:var(--amber); background:var(--amber-bg);">
-    <strong>How it works:</strong> Upload a Google Ads CSV export that includes <code>Day</code>, <code>Campaign</code>, and <code>Cost</code> columns.
-    The monitor extracts store numbers from campaign names using the <code>#XXXX</code> pattern, then flags any store that recorded
-    <strong>$0 spend on any single day</strong> within the date range. Use "Alert Stakeholder" to draft and log an email notification.
+    <strong>How it works:</strong> This monitor shares the same Google Ads datasource as the Paid Search tab (<code>data/google-ads.csv</code>).
+    It auto-populates when the dashboard fetches from GitHub, or you can upload a file manually below.
+    Store numbers are extracted from campaign names using the <code>#XXXX</code> pattern, then any store with
+    <strong>$0 spend on any single day</strong> is flagged. Previously alerted store+day combinations are preserved across refreshes.
+    Use "Alert Stakeholder" to draft and log an email notification.
   </div>
 
   <!-- Stakeholder config -->
   <div class="gd-config-bar">
     <span class="gd-config-label">Alert recipient</span>
     <input type="email" class="gd-config-input" id="gd-stakeholder-email"
-           placeholder="bethany@fullspeedauto.com"
-           value="bethany@fullspeedauto.com" />
+           placeholder="Enter recipient email…" />
     <button class="gd-config-save" onclick="gdSaveEmail()">Save</button>
     <span class="gd-config-saved" id="gd-email-saved">✓ Saved</span>
     <span class="gd-config-label" style="margin-left:8px;">CC</span>
     <input type="text" class="gd-config-input" style="max-width:240px;" id="gd-cc-email"
-           placeholder="manager@fullspeedauto.com (optional)" />
+           placeholder="CC email (optional)" />
   </div>
 
   <!-- Upload zone -->
@@ -3713,8 +3714,8 @@
        onclick="document.getElementById('gdFileInput').click()"
        ondragover="gdDragOver(event)" ondragleave="gdDragLeave(event)" ondrop="gdDrop(event)">
     <div class="gd-drop-icon" id="gdDropIcon">📂</div>
-    <div class="gd-drop-title" id="gdDropTitle">Drop Google Ads CSV / XLSX here, or click to browse</div>
-    <div class="gd-drop-sub" id="gdDropSub">Needs columns: Day · Campaign · Campaign type · Cost</div>
+    <div class="gd-drop-title" id="gdDropTitle">Auto-populates from GitHub · or drop a Google Ads CSV / XLSX to override</div>
+    <div class="gd-drop-sub" id="gdDropSub">Shares data/google-ads.csv · needs columns: Day · Campaign · Campaign type · Cost</div>
     <input type="file" class="gd-drop-input" id="gdFileInput" accept=".csv,.xlsx,.xls"
            onchange="gdHandleFile(this.files[0])"/>
   </div>
@@ -4363,6 +4364,8 @@ function applyParsedFiles(files) {
         c.status  = svrNum >= 20 ? 'green' : svrNum >= 10 ? 'yellow' : 'red';
         c.note    = `Search SVR ${r.svr}% on $${Number(r.totalSpend).toLocaleString()} total spend. CPC $${r.cpc}.`;
       }
+      // ── Also feed Go Dark Monitor from the same workbook ──
+      gdRunOnWorkbook(files['google-ads'].wb, 'data/google-ads.csv');
     }
 
     // ── SMS ──
@@ -4716,141 +4719,214 @@ function gdDrop(e) {
   if (file) gdHandleFile(file);
 }
 
-// ── File ingestion ──────────────────────────────────────────────────
-function gdHandleFile(file) {
-  if (!file) return;
-  const zone = document.getElementById('gdDropZone');
-  document.getElementById('gdDropTitle').textContent = `⏳ Parsing ${file.name}…`;
+// ── Date normaliser: handles Excel serials, YYYY-MM-DD, MM/DD/YYYY, etc. ──
+function gdNormaliseDate(raw) {
+  const s = String(raw).trim();
+  if (!s) return s;
+  const serial = Number(s);
+  if (!isNaN(serial) && serial > 40000 && serial < 60000) {
+    const ms   = (serial - 25569) * 86400000;
+    const d    = new Date(ms);
+    const dd   = String(d.getUTCDate()).padStart(2,'0');
+    const mm   = String(d.getUTCMonth()+1).padStart(2,'0');
+    const yyyy = d.getUTCFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  }
+  const isoMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) return `${isoMatch[3]}/${isoMatch[2]}/${isoMatch[1]}`;
+  const usMatch = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (usMatch) return `${String(usMatch[2]).padStart(2,'0')}/${String(usMatch[1]).padStart(2,'0')}/${usMatch[3]}`;
+  return s;
+}
 
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const wb   = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      const ws   = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+// ── Campaign field decomposer (mirrors Power Query logic) ──────────
+// Campaign string format (Google Ads):
+//   COMPANY_TACTIC-RADIUS-CITY,STATE-#STORENUM-SUFFIX
+// Steps mirror Table.SplitColumn sequence in Power Query:
+//   1. Split on first "_"          → Company | rest
+//   2. Split rest on first "-"     → Tactic  | rest2
+//   3. Split rest2 on first "-"    → Radius  | rest3
+//   4. Split rest3 on first "-"    → cityState | rest4
+//   5. Split cityState on ","      → City, State
+//   6. Split rest4 on "#"          → (discard) | storeNumPart
+//   7. Split storeNumPart on "-"   → Store Number | suffix (discard)
+function gdParseCampaign(campRaw) {
+  const s = String(campRaw || '');
+  const u = s.indexOf('_');
+  const company  = u >= 0 ? s.slice(0, u) : s;
+  const rest1    = u >= 0 ? s.slice(u + 1) : '';
 
-      // Find header row (must have 'Day' or 'Date' column)
-      let hdrIdx = rows.findIndex(r =>
-        r.some(c => /^(Day|Date)$/i.test(String(c).trim()))
-      );
-      if (hdrIdx < 0) hdrIdx = 0;
-      const hdrs = rows[hdrIdx].map(c => String(c).trim());
-      const data = rows.slice(hdrIdx + 1).filter(r => r.some(c => c !== ''));
+  const d1 = rest1.indexOf('-');
+  const tactic   = d1 >= 0 ? rest1.slice(0, d1) : rest1;
+  const rest2    = d1 >= 0 ? rest1.slice(d1 + 1) : '';
 
-      // Column indices
-      const iDay  = hdrs.findIndex(h => /^(Day|Date)$/i.test(h));
-      const iCamp = hdrs.findIndex(h => /campaign/i.test(h) && !/type/i.test(h));
-      const iType = hdrs.findIndex(h => /campaign type/i.test(h));
-      const iCost = hdrs.findIndex(h => /^cost$/i.test(h));
+  const d2 = rest2.indexOf('-');
+  const radius   = d2 >= 0 ? rest2.slice(0, d2) : rest2;
+  const rest3    = d2 >= 0 ? rest2.slice(d2 + 1) : '';
 
-      if (iDay < 0 || iCamp < 0 || iCost < 0) {
-        document.getElementById('gdDropTitle').textContent = '⚠️ Missing required columns (Day, Campaign, Cost)';
-        zone.classList.remove('drag-over');
-        return;
-      }
+  const d3 = rest3.indexOf('-');
+  const cityState = d3 >= 0 ? rest3.slice(0, d3) : rest3;
+  const rest4     = d3 >= 0 ? rest3.slice(d3 + 1) : '';
 
-      const numClean = v => parseFloat(String(v).replace(/[$,]/g,'')) || 0;
+  const comma = cityState.indexOf(',');
+  const city  = comma >= 0 ? cityState.slice(0, comma).trim() : cityState.trim();
+  const state = comma >= 0 ? cityState.slice(comma + 1).trim() : '';
 
-      // ── Date normaliser: handles Excel serials, YYYY-MM-DD, MM/DD/YYYY, etc. ──
-      function gdNormaliseDate(raw) {
-        const s = String(raw).trim();
-        if (!s) return s;
-        // Excel serial number (e.g. 46077)
-        const serial = Number(s);
-        if (!isNaN(serial) && serial > 40000 && serial < 60000) {
-          // Excel epoch: Dec 30 1899; JS epoch: Jan 1 1970
-          const ms = (serial - 25569) * 86400000;
-          const d  = new Date(ms);
-          const dd = String(d.getUTCDate()).padStart(2,'0');
-          const mm = String(d.getUTCMonth()+1).padStart(2,'0');
-          const yyyy = d.getUTCFullYear();
-          return `${dd}/${mm}/${yyyy}`;
-        }
-        // YYYY-MM-DD → DD/MM/YYYY
-        const isoMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-        if (isoMatch) return `${isoMatch[3]}/${isoMatch[2]}/${isoMatch[1]}`;
-        // MM/DD/YYYY → DD/MM/YYYY
-        const usMatch = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-        if (usMatch) return `${String(usMatch[2]).padStart(2,'0')}/${String(usMatch[1]).padStart(2,'0')}/${usMatch[3]}`;
-        // Already looks like DD/MM/YYYY or other — return as-is
-        return s;
-      }
+  // rest4 = "#STORENUM-suffix" or "STORENUM-suffix"
+  const hash = rest4.indexOf('#');
+  const afterHash = hash >= 0 ? rest4.slice(hash + 1) : rest4;
+  const dash4 = afterHash.indexOf('-');
+  const storeNumber = dash4 >= 0 ? afterHash.slice(0, dash4).trim() : afterHash.trim();
 
-      // Build store map: storeNum → { rows by date }
-      const storeMap = {};
-      const allDates  = new Set();
+  return { company, tactic, radius, city, state, storeNumber };
+}
 
-      data.forEach(row => {
-        const dateRaw = gdNormaliseDate(row[iDay]);
-        const campRaw = String(row[iCamp] || '').trim();
-        const typeRaw = iType >= 0 ? String(row[iType] || '').trim() : '—';
-        const cost    = numClean(row[iCost]);
+// ── Core parsing engine — called by both file upload and GitHub fetch ──
+function gdRunOnWorkbook(wb, sourceName) {
+  try {
+    const ws   = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
 
-        if (!dateRaw || !campRaw) return;
+    let hdrIdx = rows.findIndex(r =>
+      r.some(c => /^(Day|Date)$/i.test(String(c).trim()))
+    );
+    if (hdrIdx < 0) hdrIdx = 0;
+    const hdrs = rows[hdrIdx].map(c => String(c).trim());
+    const data = rows.slice(hdrIdx + 1).filter(r => r.some(c => c !== ''));
 
-        // Extract store number from #XXXX pattern
+    const iDay  = hdrs.findIndex(h => /^(Day|Date)$/i.test(h));
+    const iCamp = hdrs.findIndex(h => /campaign/i.test(h) && !/type/i.test(h));
+    const iType = hdrs.findIndex(h => /campaign type/i.test(h));
+    const iCost = hdrs.findIndex(h => /^cost$/i.test(h));
+
+    if (iDay < 0 || iCamp < 0 || iCost < 0) {
+      console.warn('Go Dark: missing required columns (Day, Campaign, Cost)');
+      return;
+    }
+
+    const numClean = v => parseFloat(String(v).replace(/[$,]/g,'')) || 0;
+    const storeMap = {};
+    const allDates  = new Set();
+
+    data.forEach(row => {
+      const dateRaw = gdNormaliseDate(row[iDay]);
+      const campRaw = String(row[iCamp] || '').trim();
+      const typeRaw = iType >= 0 ? String(row[iType] || '').trim() : '—';
+      const cost    = numClean(row[iCost]);
+
+      if (!dateRaw || !campRaw) return;
+
+      // Parse campaign fields (Power Query equivalent)
+      const parsed = gdParseCampaign(campRaw);
+
+      // Store number: prefer Power Query parsed result, fall back to #XXXX regex
+      let storeNum = parsed.storeNumber;
+      if (!storeNum) {
         const m = campRaw.match(/#(\d{3,6})/);
-        if (!m) return; // skip campaigns without store number
-        const storeNum = m[1];
-
-        allDates.add(dateRaw);
-
-        if (!storeMap[storeNum]) {
-          storeMap[storeNum] = { campaigns: new Set(), darkDays: [], costByDate: {}, latestDate: null, latestCamp: campRaw, latestType: typeRaw };
+        if (!m) return;
+        storeNum = m[1];
+      } else if (!/^\d{3,6}$/.test(storeNum)) {
+        // storeNumber might have trailing text — extract leading digits
+        const trimmed = storeNum.match(/^(\d{3,6})/);
+        if (trimmed) storeNum = trimmed[1];
+        else {
+          const fallback = campRaw.match(/#(\d{3,6})/);
+          if (!fallback) return;
+          storeNum = fallback[1];
         }
-        storeMap[storeNum].campaigns.add(campRaw);
+      }
 
-        // Accumulate cost by date
-        if (!storeMap[storeNum].costByDate[dateRaw]) {
-          storeMap[storeNum].costByDate[dateRaw] = 0;
-        }
-        storeMap[storeNum].costByDate[dateRaw] += cost;
+      allDates.add(dateRaw);
 
-        // Track latest date
-        if (!storeMap[storeNum].latestDate || dateRaw > storeMap[storeNum].latestDate) {
-          storeMap[storeNum].latestDate = dateRaw;
-          storeMap[storeNum].latestCamp = campRaw;
-          storeMap[storeNum].latestType = typeRaw;
-        }
-      });
+      if (!storeMap[storeNum]) {
+        storeMap[storeNum] = {
+          campaigns: new Set(), darkDays: [], costByDate: {},
+          latestDate: null, latestCamp: campRaw, latestType: typeRaw,
+          // Parsed campaign breakdown (from most recent row for this store)
+          company: parsed.company, tactic: parsed.tactic,
+          radius: parsed.radius, city: parsed.city, state: parsed.state
+        };
+      }
+      storeMap[storeNum].campaigns.add(campRaw);
 
-      // Mark dark days: any date where total cost across all campaigns for that store = 0
-      Object.keys(storeMap).forEach(sn => {
-        const s = storeMap[sn];
-        s.campaigns = [...s.campaigns];
-        s.darkDays  = Object.entries(s.costByDate)
-          .filter(([, c]) => c === 0)
-          .map(([d]) => d)
-          .sort();
-        s.latestCost = s.costByDate[s.latestDate] || 0;
-        s.isDark = s.darkDays.length > 0;
-      });
+      if (!storeMap[storeNum].costByDate[dateRaw]) {
+        storeMap[storeNum].costByDate[dateRaw] = 0;
+      }
+      storeMap[storeNum].costByDate[dateRaw] += cost;
 
-      gdStoreMap = storeMap;
-      gdSentAlerts = {}; // reset sent state on new file
+      const toSortable = s => { const p = s.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : s; };
+      if (!storeMap[storeNum].latestDate || toSortable(dateRaw) > toSortable(storeMap[storeNum].latestDate)) {
+        storeMap[storeNum].latestDate = dateRaw;
+        storeMap[storeNum].latestCamp = campRaw;
+        storeMap[storeNum].latestType = typeRaw;
+        storeMap[storeNum].company    = parsed.company;
+        storeMap[storeNum].tactic     = parsed.tactic;
+        storeMap[storeNum].radius     = parsed.radius;
+        storeMap[storeNum].city       = parsed.city;
+        storeMap[storeNum].state      = parsed.state;
+      }
+    });
 
-      // Update UI
+    // Mark dark days
+    Object.keys(storeMap).forEach(sn => {
+      const s = storeMap[sn];
+      s.campaigns = [...s.campaigns];
+      const toSortable = d => { const p = d.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : d; };
+      s.darkDays  = Object.entries(s.costByDate)
+        .filter(([, c]) => c === 0)
+        .map(([d]) => d)
+        .sort((a, b) => toSortable(a).localeCompare(toSortable(b)));
+      s.latestCost = s.costByDate[s.latestDate] || 0;
+      s.isDark = s.darkDays.length > 0;
+    });
+
+    gdStoreMap = storeMap;
+
+    // Preserve existing alerted store+day keys that still exist in new data
+    const newKeys = new Set();
+    Object.entries(storeMap).forEach(([sn, s]) => {
+      s.darkDays.forEach(d => newKeys.add(`${sn}|${d}`));
+    });
+    Object.keys(gdSentAlerts).forEach(k => {
+      if (!newKeys.has(k)) delete gdSentAlerts[k];
+    });
+
+    // Update UI
+    const label = sourceName || 'google-ads.csv';
+    const zone  = document.getElementById('gdDropZone');
+    if (zone) {
       zone.classList.add('loaded');
       document.getElementById('gdDropIcon').textContent  = '✅';
-      document.getElementById('gdDropTitle').textContent = `✓ ${file.name} loaded`;
+      document.getElementById('gdDropTitle').textContent = `✓ ${label} loaded`;
       document.getElementById('gdDropSub').textContent   =
         `${data.length.toLocaleString()} rows · ${Object.keys(storeMap).length} stores · ${allDates.size} days`;
-
-      document.getElementById('gd-data-status').textContent =
-        `${file.name} · ${Object.keys(storeMap).length} stores · ${allDates.size} days`;
-
-      gdUpdateSummary(allDates.size);
-      gdRenderTable();
-      gdUpdateTabBadge();
-
-      document.getElementById('gdSummary').style.display    = '';
-      document.getElementById('gdControls').style.display   = '';
-      document.getElementById('gdTableWrap').style.display  = '';
-
-    } catch(err) {
-      document.getElementById('gdDropTitle').textContent = `⚠️ Parse error: ${err.message}`;
-      console.error(err);
     }
+
+    const statusEl = document.getElementById('gd-data-status');
+    if (statusEl) statusEl.textContent = `${label} · ${Object.keys(storeMap).length} stores · ${allDates.size} days`;
+
+    gdUpdateSummary(allDates.size);
+    gdRenderTable();
+    gdUpdateTabBadge();
+
+    const show = id => { const el = document.getElementById(id); if (el) el.style.display = ''; };
+    show('gdSummary'); show('gdControls'); show('gdTableWrap');
+
+  } catch(err) {
+    console.error('Go Dark parse error:', err);
+    const dropTitle = document.getElementById('gdDropTitle');
+    if (dropTitle) dropTitle.textContent = `⚠️ Parse error: ${err.message}`;
+  }
+}
+
+// ── File ingestion (manual upload — thin wrapper over gdRunOnWorkbook) ──
+function gdHandleFile(file) {
+  if (!file) return;
+  document.getElementById('gdDropTitle').textContent = `⏳ Parsing ${file.name}…`;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+    gdRunOnWorkbook(wb, file.name);
   };
   reader.readAsArrayBuffer(file);
 }
@@ -4922,8 +4998,20 @@ function gdRenderTable() {
 
   let entries = Object.entries(gdStoreMap).map(([sn, s]) => ({ sn, ...s }));
 
-  // Sort: dark first, then by store number
-  entries.sort((a, b) => (b.isDark ? 1 : 0) - (a.isDark ? 1 : 0) || a.sn.localeCompare(b.sn));
+  // Sort: dark stores first by most recent dark day (newest first), then active stores by store num
+  entries.sort((a, b) => {
+    if (a.isDark && !b.isDark) return -1;
+    if (!a.isDark && b.isDark) return 1;
+    if (a.isDark && b.isDark) {
+      // Compare most recent dark day descending
+      const aMax = a.darkDays[a.darkDays.length - 1] || '';
+      const bMax = b.darkDays[b.darkDays.length - 1] || '';
+      // DD/MM/YYYY → sort as YYYY-MM-DD for correct comparison
+      const toSortable = s => { const p = s.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : s; };
+      return toSortable(bMax).localeCompare(toSortable(aMax));
+    }
+    return a.sn.localeCompare(b.sn);
+  });
 
   // Filter by tab
   if (gdFilter === 'dark')  entries = entries.filter(e => e.isDark);
@@ -4958,7 +5046,7 @@ function gdRenderTable() {
       ? `<span class="gd-pill dark">🔴 ${darkLabel}</span>`
       : `<span class="gd-pill ok">🟢 Active</span>`;
 
-    const sent    = gdSentAlerts[e.sn];
+    const sent    = e.isDark && e.darkDays.every(d => gdSentAlerts[`${e.sn}|${d}`]);
     const btnCls  = sent ? 'gd-row-btn sent' : 'gd-row-btn';
     const btnTxt  = sent ? '✓ Alerted' : 'Alert';
     const btnDisabled = sent ? 'disabled' : '';
@@ -4966,13 +5054,18 @@ function gdRenderTable() {
       ? `<button class="${btnCls}" ${btnDisabled} onclick="gdOpenModal('${e.sn}')">${btnTxt}</button>`
       : `<span style="font-size:11px;color:var(--muted);">—</span>`;
 
-    // Campaign display: show latest camp + type
-    const campShort = e.latestCamp.length > 52 ? e.latestCamp.slice(0,52) + '…' : e.latestCamp;
-    const campSub   = e.latestType !== '—' ? `<div class="gd-camp-sub">${e.latestType} · ${e.campaigns.length} campaign${e.campaigns.length > 1 ? 's' : ''}</div>` : '';
+    // Campaign display: show parsed breakdown from Power Query logic
+    const companyLabel = e.company  ? `<strong>${e.company}</strong>` : '';
+    const tacticLabel  = e.tactic   ? ` · ${e.tactic}` : '';
+    const geoLabel     = (e.city || e.state) ? ` · ${[e.city, e.state].filter(Boolean).join(', ')}` : '';
+    const radiusLabel  = e.radius   ? ` · ${e.radius}` : '';
+    const campSub      = e.latestType !== '—'
+      ? `<div class="gd-camp-sub">${e.latestType}${radiusLabel} · ${e.campaigns.length} campaign${e.campaigns.length > 1 ? 's' : ''}</div>`
+      : '';
 
     return `<div class="${rowClass}">
       <div class="gd-store">${e.sn}</div>
-      <div class="gd-camp">${campShort}${campSub}</div>
+      <div class="gd-camp">${companyLabel}${tacticLabel}${geoLabel}${campSub}</div>
       ${costTxt}
       <div class="gd-date">${e.latestDate || '—'}</div>
       ${statusPill}
@@ -5015,6 +5108,7 @@ function gdOverlayClickClose(e) {
 // ── Email body builder ───────────────────────────────────────────────
 function gdBuildEmailBody(storeNum, s, note) {
   const darkList = s.darkDays.join(', ') || '(see data)';
+  const geoStr   = [s.city, s.state].filter(Boolean).join(', ');
   const camps    = s.campaigns.slice(0,3).join('\n  • ') + (s.campaigns.length > 3 ? `\n  … +${s.campaigns.length-3} more` : '');
   const ts       = new Date().toLocaleString('en-US', { dateStyle:'medium', timeStyle:'short' });
   return [
@@ -5023,6 +5117,11 @@ function gdBuildEmailBody(storeNum, s, note) {
     '',
     `Store #${storeNum} recorded $0.00 spend on the following date(s):`,
     `  ${darkList}`,
+    '',
+    s.company  ? `Company:  ${s.company}`  : null,
+    s.tactic   ? `Tactic:   ${s.tactic}`   : null,
+    geoStr     ? `Location: ${geoStr}`     : null,
+    s.radius   ? `Radius:   ${s.radius}`   : null,
     '',
     `Affected campaign(s):`,
     `  • ${camps}`,
@@ -5065,8 +5164,9 @@ function gdSendAlert() {
 
   if (!toVal) { gdToast('Missing email', 'Please enter a recipient email address.', false); return; }
 
-  // Mark sent
-  gdSentAlerts[gdModalStore] = true;
+  // Mark each dark day for this store as alerted (keyed by store|date)
+  const s2 = gdStoreMap[gdModalStore];
+  if (s2) s2.darkDays.forEach(d => { gdSentAlerts[`${gdModalStore}|${d}`] = true; });
   gdCloseModal();
   gdRenderTable();
 
@@ -5084,7 +5184,7 @@ function gdSendAlert() {
 
 // ── Alert all dark stores ────────────────────────────────────────────
 function gdAlertAll() {
-  const darkStores = Object.entries(gdStoreMap).filter(([, s]) => s.isDark && !gdSentAlerts[s.sn]);
+  const darkStores = Object.entries(gdStoreMap).filter(([sn, s]) => s.isDark && !s.darkDays.every(d => gdSentAlerts[`${sn}|${d}`]));
   if (darkStores.length === 0) { gdToast('Nothing to alert', 'All dark stores already alerted.', true); return; }
 
   // Open mailto with summary of all dark stores
@@ -5112,8 +5212,10 @@ function gdAlertAll() {
   const mailtoLink = `mailto:${toVal}?cc=${ccVal}&subject=${subject}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
   window.open(mailtoLink, '_blank');
 
-  // Mark all as sent
-  storeNums.forEach(sn => { gdSentAlerts[sn] = true; });
+  // Mark all dark days as alerted
+  storeNums.forEach(sn => {
+    gdStoreMap[sn].darkDays.forEach(d => { gdSentAlerts[`${sn}|${d}`] = true; });
+  });
   gdRenderTable();
 
   const ts = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
