@@ -1184,6 +1184,309 @@
   .journey-arrow { padding: 0 6px; color: var(--muted); font-size: 16px; }
   .journey-box.highlight { background: var(--red-bg); border-color: var(--fsa-red); }
   .journey-box.highlight .journey-box-val { color: var(--fsa-red); }
+
+  /* ════════════════════════════════════════════════
+     GO DARK MONITOR — STYLES
+  ════════════════════════════════════════════════ */
+
+  /* Tab badge */
+  .gd-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--fsa-red); color: #fff;
+    font-family: var(--font-semi); font-size: 9px; font-weight: 700;
+    min-width: 16px; height: 16px; border-radius: 8px;
+    padding: 0 4px; margin-left: 5px; vertical-align: middle;
+    animation: badge-pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes badge-pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:.7; transform:scale(1.18); }
+  }
+
+  /* Drop zone */
+  .gd-drop-zone {
+    border: 2px dashed var(--border-dk); border-radius: 8px;
+    padding: 28px 24px; text-align: center; cursor: pointer;
+    transition: all .18s; background: var(--surface); margin-bottom: 20px;
+  }
+  .gd-drop-zone:hover, .gd-drop-zone.drag-over {
+    border-color: var(--fsa-red); background: var(--red-bg);
+  }
+  .gd-drop-zone.loaded {
+    border-color: var(--green); background: var(--green-bg);
+  }
+  .gd-drop-title { font-family:var(--font-semi); font-size:14px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .gd-drop-sub   { font-size:12px; color:var(--muted); }
+  .gd-drop-icon  { font-size:26px; margin-bottom:8px; opacity:.55; }
+  .gd-drop-input { display:none; }
+
+  /* Summary strip */
+  .gd-summary {
+    display: grid; grid-template-columns: repeat(4,1fr); gap:12px; margin-bottom:20px;
+  }
+  @media(max-width:700px){ .gd-summary { grid-template-columns:1fr 1fr; } }
+  .gd-stat {
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    padding:16px 18px; text-align:center;
+  }
+  .gd-stat-val {
+    font-family:var(--font-display); font-size:42px; font-weight:700; line-height:1; margin-bottom:4px;
+  }
+  .gd-stat-lbl {
+    font-family:var(--font-semi); font-size:10px; font-weight:600;
+    letter-spacing:1.4px; text-transform:uppercase; color:var(--muted);
+  }
+  .gd-stat.danger .gd-stat-val { color:var(--fsa-red); }
+  .gd-stat.warn   .gd-stat-val { color:var(--amber); }
+  .gd-stat.ok     .gd-stat-val { color:var(--green); }
+  .gd-stat.info   .gd-stat-val { color:var(--charcoal); }
+
+  /* Alert banner */
+  .gd-banner {
+    border-radius:6px; padding:14px 20px; display:flex; align-items:center;
+    gap:12px; margin-bottom:18px; font-family:var(--font-semi); font-size:13px; font-weight:600;
+  }
+  .gd-banner.has-alerts {
+    background:var(--fsa-red); color:#fff;
+    animation: banner-flash 3s ease-in-out infinite;
+  }
+  .gd-banner.no-alerts  { background:var(--green); color:#fff; animation:none; }
+  .gd-banner.empty      { background:var(--surface2); color:var(--muted); animation:none; }
+  @keyframes banner-flash { 0%,100%{opacity:1} 50%{opacity:.88} }
+  .gd-banner-icon { font-size:20px; flex-shrink:0; }
+  .gd-banner-text { flex:1; }
+  .gd-banner-pill {
+    background:rgba(255,255,255,.22); border-radius:4px;
+    padding:3px 10px; font-size:11px; font-weight:700; white-space:nowrap;
+  }
+
+  /* Controls row */
+  .gd-controls {
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px;
+  }
+  .gd-filter-pill {
+    padding:5px 14px; border-radius:20px; font-family:var(--font-semi);
+    font-size:11px; font-weight:600; letter-spacing:.5px; cursor:pointer;
+    border:1px solid var(--border); background:var(--surface); color:var(--muted);
+    transition:all .12s;
+  }
+  .gd-filter-pill.active           { background:var(--charcoal); color:#fff; border-color:var(--charcoal); }
+  .gd-filter-pill.red.active       { background:var(--fsa-red); border-color:var(--fsa-red); color:#fff; }
+  .gd-filter-pill.green.active     { background:var(--green);   border-color:var(--green);   color:#fff; }
+  .gd-filter-search {
+    flex:1; min-width:150px; max-width:240px;
+    border:1px solid var(--border); border-radius:20px;
+    padding:5px 14px; font-family:var(--font-body); font-size:12px;
+    color:var(--text); background:var(--surface); outline:none;
+    transition:border-color .12s;
+  }
+  .gd-filter-search:focus { border-color:var(--fsa-red); }
+  .gd-alert-all-btn {
+    margin-left:auto; padding:7px 16px; background:var(--fsa-red); color:#fff;
+    border:none; border-radius:4px; font-family:var(--font-semi);
+    font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+    cursor:pointer; transition:background .12s; white-space:nowrap;
+  }
+  .gd-alert-all-btn:hover    { background:var(--fsa-red-dk); }
+  .gd-alert-all-btn:disabled { background:var(--muted); cursor:default; }
+
+  /* Table */
+  .gd-table-wrap {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; overflow:hidden; margin-bottom:24px;
+  }
+  .gd-thead {
+    display:grid;
+    grid-template-columns: 82px 1fr 100px 116px 110px 116px;
+    background:var(--surface2); border-bottom:1px solid var(--border);
+    padding:10px 16px;
+  }
+  .gd-thead span {
+    font-family:var(--font-semi); font-size:10px; font-weight:600;
+    letter-spacing:1.2px; text-transform:uppercase; color:var(--muted);
+  }
+  .gd-tbody { max-height:420px; overflow-y:auto; }
+  .gd-row {
+    display:grid;
+    grid-template-columns: 82px 1fr 100px 116px 110px 116px;
+    padding:11px 16px; border-bottom:1px solid var(--border);
+    align-items:center; transition:background .1s; cursor:default;
+  }
+  .gd-row:last-child { border-bottom:none; }
+  .gd-row:hover     { background:var(--surface2); }
+  .gd-row.dark-row  { background:rgba(196,18,48,.04); }
+  .gd-row.dark-row:hover { background:rgba(196,18,48,.08); }
+
+  .gd-store   { font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--fsa-red); }
+  .gd-row.ok-row .gd-store { color:var(--charcoal); }
+  .gd-camp    { font-size:12px; color:var(--text); font-weight:500; line-height:1.35; padding-right:10px; }
+  .gd-camp-sub{ font-size:10px; color:var(--muted); margin-top:2px; }
+  .gd-cost    { font-family:var(--font-semi); font-size:13px; font-weight:700; }
+  .gd-cost.zero { color:var(--fsa-red); }
+  .gd-cost.pos  { color:var(--green); }
+  .gd-date    { font-size:12px; color:var(--text-sec); }
+
+  /* Status pills */
+  .gd-pill {
+    display:inline-flex; align-items:center; gap:5px;
+    border-radius:20px; padding:4px 10px; white-space:nowrap;
+    font-family:var(--font-semi); font-size:10px; font-weight:700;
+    letter-spacing:.5px; text-transform:uppercase;
+  }
+  .gd-pill.dark  { background:var(--red-bg);   color:var(--fsa-red); }
+  .gd-pill.ok    { background:var(--green-bg);  color:var(--green);   }
+  .gd-pill.new   { background:var(--amber-bg);  color:var(--amber);   }
+
+  /* Per-row alert button */
+  .gd-row-btn {
+    background:none; border:1px solid var(--border-dk); border-radius:4px;
+    padding:5px 10px; font-family:var(--font-semi); font-size:10px; font-weight:600;
+    letter-spacing:.5px; text-transform:uppercase; color:var(--text-sec);
+    cursor:pointer; transition:all .12s; white-space:nowrap;
+  }
+  .gd-row-btn:hover             { background:var(--fsa-red); color:#fff; border-color:var(--fsa-red); }
+  .gd-row-btn.sent              { background:var(--green-bg); border-color:var(--green); color:var(--green); cursor:default; }
+
+  /* Stakeholder config */
+  .gd-config-bar {
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    padding:13px 18px; margin-bottom:18px;
+  }
+  .gd-config-label {
+    font-family:var(--font-semi); font-size:10px; font-weight:600;
+    letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); white-space:nowrap;
+  }
+  .gd-config-input {
+    flex:1; min-width:220px; border:1px solid var(--border); border-radius:4px;
+    padding:7px 11px; font-family:var(--font-body); font-size:12px;
+    color:var(--text); background:var(--surface2); outline:none;
+    transition:border-color .12s;
+  }
+  .gd-config-input:focus { border-color:var(--fsa-red); background:var(--surface); }
+  .gd-config-save {
+    padding:7px 16px; background:var(--charcoal); color:#fff;
+    border:none; border-radius:4px; font-family:var(--font-semi);
+    font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+    cursor:pointer; transition:background .12s; white-space:nowrap;
+  }
+  .gd-config-save:hover { background:var(--fsa-red); }
+  .gd-config-saved      { font-size:11px; color:var(--green); font-weight:600; display:none; }
+
+  /* Empty state */
+  .gd-empty {
+    text-align:center; padding:48px 24px; color:var(--muted);
+  }
+  .gd-empty-icon  { font-size:40px; margin-bottom:12px; opacity:.35; }
+  .gd-empty-title { font-family:var(--font-semi); font-size:14px; font-weight:600; color:var(--text-sec); margin-bottom:6px; }
+  .gd-empty-sub   { font-size:12px; }
+
+  /* Alert modal */
+  .gd-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.48);
+    z-index:10000; display:flex; align-items:center; justify-content:center;
+    padding:20px; opacity:0; pointer-events:none; transition:opacity .2s;
+  }
+  .gd-overlay.open { opacity:1; pointer-events:all; }
+  .gd-modal {
+    background:var(--surface); border-radius:8px; width:100%; max-width:540px;
+    box-shadow:0 20px 60px rgba(0,0,0,.28); overflow:hidden;
+    transform:translateY(14px) scale(.98); transition:transform .2s ease;
+  }
+  .gd-overlay.open .gd-modal { transform:translateY(0) scale(1); }
+  .gd-modal-head {
+    background:var(--fsa-red); color:#fff; padding:18px 22px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .gd-modal-head-title { font-family:var(--font-semi); font-size:14px; font-weight:700; letter-spacing:.5px; }
+  .gd-modal-x {
+    background:rgba(255,255,255,.2); border:none; color:#fff;
+    width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:14px;
+    display:flex; align-items:center; justify-content:center; transition:background .12s;
+  }
+  .gd-modal-x:hover { background:rgba(255,255,255,.35); }
+  .gd-modal-body    { padding:22px; }
+  .gd-modal-field   { margin-bottom:15px; }
+  .gd-modal-lbl {
+    display:block; font-family:var(--font-semi); font-size:10px; font-weight:600;
+    letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); margin-bottom:6px;
+  }
+  .gd-modal-input, .gd-modal-ta {
+    width:100%; border:1px solid var(--border); border-radius:4px;
+    padding:9px 11px; font-family:var(--font-body); font-size:13px;
+    color:var(--text); background:var(--surface); outline:none;
+    transition:border-color .12s; box-sizing:border-box;
+  }
+  .gd-modal-input:focus, .gd-modal-ta:focus { border-color:var(--fsa-red); }
+  .gd-modal-ta { resize:vertical; min-height:88px; line-height:1.55; }
+  .gd-modal-preview {
+    background:var(--surface2); border:1px solid var(--border); border-radius:4px;
+    padding:11px 13px; font-size:11px; color:var(--text-sec); line-height:1.65;
+    margin-bottom:14px; font-family:monospace; white-space:pre-wrap;
+    max-height:150px; overflow-y:auto;
+  }
+  .gd-modal-footer { display:flex; gap:10px; justify-content:flex-end; padding-top:4px; }
+  .gd-btn-send {
+    padding:10px 22px; background:var(--fsa-red); color:#fff; border:none;
+    border-radius:4px; font-family:var(--font-semi); font-size:12px; font-weight:700;
+    letter-spacing:.5px; text-transform:uppercase; cursor:pointer; transition:background .12s;
+  }
+  .gd-btn-send:hover    { background:var(--fsa-red-dk); }
+  .gd-btn-cancel {
+    padding:10px 18px; background:var(--surface2); color:var(--text-sec);
+    border:1px solid var(--border); border-radius:4px; font-family:var(--font-semi);
+    font-size:12px; font-weight:700; cursor:pointer; transition:all .12s;
+  }
+  .gd-btn-cancel:hover { background:var(--border); }
+
+  /* Toast */
+  .gd-toast-wrap {
+    position:fixed; bottom:22px; right:22px; z-index:9999;
+    display:flex; flex-direction:column; gap:10px; pointer-events:none;
+  }
+  .gd-toast {
+    background:var(--charcoal); color:#fff; border-radius:6px;
+    padding:13px 17px; min-width:290px; max-width:380px;
+    box-shadow:0 8px 32px rgba(0,0,0,.26); pointer-events:all;
+    border-left:4px solid var(--fsa-red);
+    animation:toast-in .28s ease;
+  }
+  .gd-toast.success { border-left-color:var(--green); }
+  @keyframes toast-in {
+    from { opacity:0; transform:translateX(28px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+  .gd-toast-ttl { font-family:var(--font-semi); font-size:10px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:4px; }
+  .gd-toast-msg { font-size:13px; color:rgba(255,255,255,.9); line-height:1.5; }
+
+  /* Alert log */
+  .gd-log-wrap { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+  .gd-log-head {
+    padding:11px 17px; background:var(--surface2); border-bottom:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--font-semi); font-size:10px; font-weight:600;
+    letter-spacing:1.4px; text-transform:uppercase; color:var(--muted);
+  }
+  .gd-log-clear {
+    background:none; border:none; font-size:10px; color:var(--muted); cursor:pointer;
+    font-family:var(--font-semi); font-weight:600; letter-spacing:.5px; text-transform:uppercase;
+    padding:2px 6px; border-radius:3px; transition:all .12s;
+  }
+  .gd-log-clear:hover { color:var(--fsa-red); background:var(--red-bg); }
+  .gd-log-body  { max-height:200px; overflow-y:auto; }
+  .gd-log-row   { display:flex; gap:12px; padding:9px 17px; border-bottom:1px solid var(--border); font-size:12px; align-items:flex-start; }
+  .gd-log-row:last-child { border-bottom:none; }
+  .gd-log-ts    { font-family:var(--font-semi); font-size:10px; color:var(--muted); white-space:nowrap; flex-shrink:0; margin-top:1px; }
+  .gd-log-msg   { color:var(--text-sec); line-height:1.45; }
+  .gd-log-msg strong { color:var(--text); }
+  .gd-log-empty { padding:18px 17px; font-size:12px; color:var(--muted); text-align:center; }
+
+  @media(max-width:860px){
+    .gd-thead, .gd-row { grid-template-columns: 70px 1fr 90px 100px; }
+    .gd-thead span:nth-child(n+4):nth-child(-n+5),
+    .gd-row > *:nth-child(n+4):nth-child(-n+5) { display:none; }
+  }
+
 </style>
 </head>
 <body>
@@ -1336,6 +1639,10 @@
   </button>
   <button class="tab-btn status-gray" onclick="showPage('programmatic')" id="tab-programmatic">
     <span class="tab-dot"></span>Programmatic
+  </button>
+  <button class="tab-btn status-gray" onclick="showPage('go-dark')" id="tab-go-dark" style="border-left:2px solid var(--fsa-red); margin-left:6px;">
+    <span class="tab-dot" style="background:var(--fsa-red)"></span>Go Dark Monitor
+    <span class="gd-badge" id="gd-tab-badge" style="display:none">0</span>
   </button>
 </nav>
 
@@ -3362,6 +3669,165 @@
   </div>
 </div>
 
+
+<!-- ════════════════════════════════════════════════
+     PAGE: GO DARK MONITOR
+════════════════════════════════════════════════ -->
+<div class="page" id="page-go-dark">
+
+  <div class="channel-header">
+    <div>
+      <div class="channel-title">GO DARK MONITOR</div>
+      <div class="channel-meta-row">
+        <span class="badge badge-vendor">Google Ads</span>
+        <span class="badge badge-owner">Owner: Bethany</span>
+        <span class="badge" style="background:var(--red-bg);color:var(--fsa-red);font-weight:700;">Zero-Spend Alert</span>
+      </div>
+    </div>
+    <div class="data-status ok" style="margin-bottom:0; align-self:flex-start;">
+      <div class="status-dot"></div><span id="gd-data-status">No file loaded</span>
+    </div>
+  </div>
+
+  <div class="notes-box" style="margin-bottom:20px; border-color:var(--amber); background:var(--amber-bg);">
+    <strong>How it works:</strong> Upload a Google Ads CSV export that includes <code>Day</code>, <code>Campaign</code>, and <code>Cost</code> columns.
+    The monitor extracts store numbers from campaign names using the <code>#XXXX</code> pattern, then flags any store that recorded
+    <strong>$0 spend on any single day</strong> within the date range. Use "Alert Stakeholder" to draft and log an email notification.
+  </div>
+
+  <!-- Stakeholder config -->
+  <div class="gd-config-bar">
+    <span class="gd-config-label">Alert recipient</span>
+    <input type="email" class="gd-config-input" id="gd-stakeholder-email"
+           placeholder="bethany@fullspeedauto.com"
+           value="bethany@fullspeedauto.com" />
+    <button class="gd-config-save" onclick="gdSaveEmail()">Save</button>
+    <span class="gd-config-saved" id="gd-email-saved">✓ Saved</span>
+    <span class="gd-config-label" style="margin-left:8px;">CC</span>
+    <input type="text" class="gd-config-input" style="max-width:240px;" id="gd-cc-email"
+           placeholder="manager@fullspeedauto.com (optional)" />
+  </div>
+
+  <!-- Upload zone -->
+  <div class="gd-drop-zone" id="gdDropZone"
+       onclick="document.getElementById('gdFileInput').click()"
+       ondragover="gdDragOver(event)" ondragleave="gdDragLeave(event)" ondrop="gdDrop(event)">
+    <div class="gd-drop-icon" id="gdDropIcon">📂</div>
+    <div class="gd-drop-title" id="gdDropTitle">Drop Google Ads CSV / XLSX here, or click to browse</div>
+    <div class="gd-drop-sub" id="gdDropSub">Needs columns: Day · Campaign · Campaign type · Cost</div>
+    <input type="file" class="gd-drop-input" id="gdFileInput" accept=".csv,.xlsx,.xls"
+           onchange="gdHandleFile(this.files[0])"/>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="gd-summary" id="gdSummary" style="display:none">
+    <div class="gd-stat danger">
+      <div class="gd-stat-val" id="gdStatDark">—</div>
+      <div class="gd-stat-lbl">Stores Gone Dark</div>
+    </div>
+    <div class="gd-stat info">
+      <div class="gd-stat-val" id="gdStatTotal">—</div>
+      <div class="gd-stat-lbl">Total Stores Found</div>
+    </div>
+    <div class="gd-stat info">
+      <div class="gd-stat-val" id="gdStatDays">—</div>
+      <div class="gd-stat-lbl">Days in Export</div>
+    </div>
+    <div class="gd-stat ok">
+      <div class="gd-stat-val" id="gdStatClean">—</div>
+      <div class="gd-stat-lbl">Stores All Green</div>
+    </div>
+  </div>
+
+  <!-- Alert banner -->
+  <div class="gd-banner empty" id="gdBanner">
+    <span class="gd-banner-icon">📊</span>
+    <span class="gd-banner-text">Upload a Google Ads export to run the Go Dark check.</span>
+  </div>
+
+  <!-- Filter controls -->
+  <div class="gd-controls" id="gdControls" style="display:none">
+    <button class="gd-filter-pill active" id="gdFilterAll"  onclick="gdSetFilter('all')">All</button>
+    <button class="gd-filter-pill red"    id="gdFilterDark" onclick="gdSetFilter('dark')">🔴 Gone Dark</button>
+    <button class="gd-filter-pill green"  id="gdFilterOk"   onclick="gdSetFilter('ok')">🟢 Active</button>
+    <input  type="search" class="gd-filter-search" id="gdSearch"
+            placeholder="Search store # or campaign…" oninput="gdRenderTable()"/>
+    <button class="gd-alert-all-btn" id="gdAlertAllBtn" onclick="gdAlertAll()"
+            disabled>⚡ Alert All Dark Stores</button>
+  </div>
+
+  <!-- Results table -->
+  <div class="gd-table-wrap" id="gdTableWrap" style="display:none">
+    <div class="gd-thead">
+      <span>Store #</span>
+      <span>Campaign (latest dark day)</span>
+      <span>Cost</span>
+      <span>Date</span>
+      <span>Status</span>
+      <span>Action</span>
+    </div>
+    <div class="gd-tbody" id="gdTbody">
+      <div class="gd-empty">
+        <div class="gd-empty-icon">✅</div>
+        <div class="gd-empty-title">No results</div>
+        <div class="gd-empty-sub">Try adjusting the filter.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert log -->
+  <div class="section-label" style="margin-top:8px;">Alert History (this session)</div>
+  <div class="gd-log-wrap">
+    <div class="gd-log-head">
+      Alert Log
+      <button class="gd-log-clear" onclick="gdClearLog()">Clear</button>
+    </div>
+    <div class="gd-log-body" id="gdLogBody">
+      <div class="gd-log-empty" id="gdLogEmpty">No alerts sent yet this session.</div>
+    </div>
+  </div>
+
+</div><!-- end page-go-dark -->
+
+<!-- ════ GO DARK: Alert Modal ════ -->
+<div class="gd-overlay" id="gdOverlay" onclick="gdOverlayClickClose(event)">
+  <div class="gd-modal" id="gdModal">
+    <div class="gd-modal-head">
+      <span class="gd-modal-head-title">🔴 Go Dark Alert — Store <span id="gdModalStoreNum">—</span></span>
+      <button class="gd-modal-x" onclick="gdCloseModal()">✕</button>
+    </div>
+    <div class="gd-modal-body">
+      <div class="gd-modal-field">
+        <label class="gd-modal-lbl">To</label>
+        <input type="email" class="gd-modal-input" id="gdModalTo" placeholder="recipient@fullspeedauto.com"/>
+      </div>
+      <div class="gd-modal-field">
+        <label class="gd-modal-lbl">CC</label>
+        <input type="text" class="gd-modal-input" id="gdModalCc" placeholder="cc@fullspeedauto.com"/>
+      </div>
+      <div class="gd-modal-field">
+        <label class="gd-modal-lbl">Subject</label>
+        <input type="text" class="gd-modal-input" id="gdModalSubject"/>
+      </div>
+      <div class="gd-modal-field">
+        <label class="gd-modal-lbl">Message preview</label>
+        <div class="gd-modal-preview" id="gdModalPreview"></div>
+      </div>
+      <div class="gd-modal-field">
+        <label class="gd-modal-lbl">Add note (optional)</label>
+        <textarea class="gd-modal-ta" id="gdModalNote" placeholder="e.g. Budget cap hit, campaign paused manually, etc."></textarea>
+      </div>
+      <div class="gd-modal-footer">
+        <button class="gd-btn-cancel" onclick="gdCloseModal()">Cancel</button>
+        <button class="gd-btn-send"   onclick="gdSendAlert()">📧 Send Alert</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ Toast container ════ -->
+<div class="gd-toast-wrap" id="gdToastWrap"></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════════
@@ -4130,7 +4596,7 @@ function showPage(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   // Trigger AI analysis for channel pages (not overview or hold pages)
-  const holdPages = ['paid-social', 'programmatic'];
+  const holdPages = ['paid-social', 'programmatic', 'go-dark'];
   if (id !== 'overview' && !holdPages.includes(id)) {
     generateAnalysis(id);
   }
@@ -4227,6 +4693,465 @@ function renderAnalysis(channelId, data) {
       </div>
     </div>`;
 }
+
+
+// ═══════════════════════════════════════════════════════════════════
+// GO DARK MONITOR  —  zero-spend detection & alert system
+// ═══════════════════════════════════════════════════════════════════
+
+// ── State ──────────────────────────────────────────────────────────
+let gdStoreMap   = {};   // storeNum → { campaigns, darkDays:[], latestCost, latestDate, latestCamp, type }
+let gdSentAlerts = {};   // storeNum → true  (session memory)
+let gdFilter     = 'all';
+let gdAlertLog   = [];   // { ts, msg }
+let gdModalStore = null; // store num currently in modal
+
+// ── Drag-and-drop helpers ──────────────────────────────────────────
+function gdDragOver(e)  { e.preventDefault(); document.getElementById('gdDropZone').classList.add('drag-over'); }
+function gdDragLeave(e) { document.getElementById('gdDropZone').classList.remove('drag-over'); }
+function gdDrop(e) {
+  e.preventDefault();
+  document.getElementById('gdDropZone').classList.remove('drag-over');
+  const file = e.dataTransfer?.files?.[0];
+  if (file) gdHandleFile(file);
+}
+
+// ── File ingestion ──────────────────────────────────────────────────
+function gdHandleFile(file) {
+  if (!file) return;
+  const zone = document.getElementById('gdDropZone');
+  document.getElementById('gdDropTitle').textContent = `⏳ Parsing ${file.name}…`;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb   = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const ws   = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+
+      // Find header row (must have 'Day' or 'Date' column)
+      let hdrIdx = rows.findIndex(r =>
+        r.some(c => /^(Day|Date)$/i.test(String(c).trim()))
+      );
+      if (hdrIdx < 0) hdrIdx = 0;
+      const hdrs = rows[hdrIdx].map(c => String(c).trim());
+      const data = rows.slice(hdrIdx + 1).filter(r => r.some(c => c !== ''));
+
+      // Column indices
+      const iDay  = hdrs.findIndex(h => /^(Day|Date)$/i.test(h));
+      const iCamp = hdrs.findIndex(h => /campaign/i.test(h) && !/type/i.test(h));
+      const iType = hdrs.findIndex(h => /campaign type/i.test(h));
+      const iCost = hdrs.findIndex(h => /^cost$/i.test(h));
+
+      if (iDay < 0 || iCamp < 0 || iCost < 0) {
+        document.getElementById('gdDropTitle').textContent = '⚠️ Missing required columns (Day, Campaign, Cost)';
+        zone.classList.remove('drag-over');
+        return;
+      }
+
+      const numClean = v => parseFloat(String(v).replace(/[$,]/g,'')) || 0;
+
+      // Build store map: storeNum → { rows by date }
+      const storeMap = {};
+      const allDates  = new Set();
+
+      data.forEach(row => {
+        const dateRaw = String(row[iDay] || '').trim();
+        const campRaw = String(row[iCamp] || '').trim();
+        const typeRaw = iType >= 0 ? String(row[iType] || '').trim() : '—';
+        const cost    = numClean(row[iCost]);
+
+        if (!dateRaw || !campRaw) return;
+
+        // Extract store number from #XXXX pattern
+        const m = campRaw.match(/#(\d{3,6})/);
+        if (!m) return; // skip campaigns without store number
+        const storeNum = m[1];
+
+        allDates.add(dateRaw);
+
+        if (!storeMap[storeNum]) {
+          storeMap[storeNum] = { campaigns: new Set(), darkDays: [], costByDate: {}, latestDate: null, latestCamp: campRaw, latestType: typeRaw };
+        }
+        storeMap[storeNum].campaigns.add(campRaw);
+
+        // Accumulate cost by date
+        if (!storeMap[storeNum].costByDate[dateRaw]) {
+          storeMap[storeNum].costByDate[dateRaw] = 0;
+        }
+        storeMap[storeNum].costByDate[dateRaw] += cost;
+
+        // Track latest date
+        if (!storeMap[storeNum].latestDate || dateRaw > storeMap[storeNum].latestDate) {
+          storeMap[storeNum].latestDate = dateRaw;
+          storeMap[storeNum].latestCamp = campRaw;
+          storeMap[storeNum].latestType = typeRaw;
+        }
+      });
+
+      // Mark dark days: any date where total cost across all campaigns for that store = 0
+      Object.keys(storeMap).forEach(sn => {
+        const s = storeMap[sn];
+        s.campaigns = [...s.campaigns];
+        s.darkDays  = Object.entries(s.costByDate)
+          .filter(([, c]) => c === 0)
+          .map(([d]) => d)
+          .sort();
+        s.latestCost = s.costByDate[s.latestDate] || 0;
+        s.isDark = s.darkDays.length > 0;
+      });
+
+      gdStoreMap = storeMap;
+      gdSentAlerts = {}; // reset sent state on new file
+
+      // Update UI
+      zone.classList.add('loaded');
+      document.getElementById('gdDropIcon').textContent  = '✅';
+      document.getElementById('gdDropTitle').textContent = `✓ ${file.name} loaded`;
+      document.getElementById('gdDropSub').textContent   =
+        `${data.length.toLocaleString()} rows · ${Object.keys(storeMap).length} stores · ${allDates.size} days`;
+
+      document.getElementById('gd-data-status').textContent =
+        `${file.name} · ${Object.keys(storeMap).length} stores · ${allDates.size} days`;
+
+      gdUpdateSummary(allDates.size);
+      gdRenderTable();
+      gdUpdateTabBadge();
+
+      document.getElementById('gdSummary').style.display    = '';
+      document.getElementById('gdControls').style.display   = '';
+      document.getElementById('gdTableWrap').style.display  = '';
+
+    } catch(err) {
+      document.getElementById('gdDropTitle').textContent = `⚠️ Parse error: ${err.message}`;
+      console.error(err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── Summary stats ───────────────────────────────────────────────────
+function gdUpdateSummary(numDays) {
+  const stores    = Object.values(gdStoreMap);
+  const darkCount = stores.filter(s => s.isDark).length;
+  const okCount   = stores.length - darkCount;
+
+  document.getElementById('gdStatDark').textContent  = darkCount;
+  document.getElementById('gdStatTotal').textContent = stores.length;
+  document.getElementById('gdStatDays').textContent  = numDays;
+  document.getElementById('gdStatClean').textContent = okCount;
+
+  // Update classes
+  document.querySelector('#gdSummary .gd-stat:nth-child(1)').className = `gd-stat ${darkCount > 0 ? 'danger' : 'ok'}`;
+
+  // Banner
+  const banner = document.getElementById('gdBanner');
+  if (darkCount > 0) {
+    banner.className = 'gd-banner has-alerts';
+    banner.innerHTML = `
+      <span class="gd-banner-icon">🔴</span>
+      <span class="gd-banner-text">${darkCount} store${darkCount > 1 ? 's' : ''} recorded $0 spend on at least one day — review and alert below.</span>
+      <span class="gd-banner-pill">${darkCount} ALERT${darkCount > 1 ? 'S' : ''}</span>`;
+    document.getElementById('gdAlertAllBtn').disabled = false;
+  } else {
+    banner.className = 'gd-banner no-alerts';
+    banner.innerHTML = `
+      <span class="gd-banner-icon">✅</span>
+      <span class="gd-banner-text">All stores recorded spend on every day in the export. No Go Dark events detected.</span>`;
+    document.getElementById('gdAlertAllBtn').disabled = true;
+  }
+}
+
+// ── Tab badge ───────────────────────────────────────────────────────
+function gdUpdateTabBadge() {
+  const darkCount = Object.values(gdStoreMap).filter(s => s.isDark).length;
+  const badge = document.getElementById('gd-tab-badge');
+  if (!badge) return;
+  if (darkCount > 0) {
+    badge.style.display = '';
+    badge.textContent   = darkCount;
+    // Make tab red to catch attention
+    const tab = document.getElementById('tab-go-dark');
+    if (tab) tab.classList.replace('status-gray', 'status-red');
+  } else {
+    badge.style.display = 'none';
+    const tab = document.getElementById('tab-go-dark');
+    if (tab) { tab.classList.remove('status-red'); tab.classList.add('status-green'); }
+  }
+}
+
+// ── Filter ──────────────────────────────────────────────────────────
+function gdSetFilter(f) {
+  gdFilter = f;
+  ['All','Dark','Ok'].forEach(x => {
+    const btn = document.getElementById('gdFilter' + x);
+    if (btn) btn.classList.toggle('active', f === x.toLowerCase());
+  });
+  gdRenderTable();
+}
+
+// ── Table render ────────────────────────────────────────────────────
+function gdRenderTable() {
+  const tbody  = document.getElementById('gdTbody');
+  const search = (document.getElementById('gdSearch')?.value || '').toLowerCase();
+
+  let entries = Object.entries(gdStoreMap).map(([sn, s]) => ({ sn, ...s }));
+
+  // Sort: dark first, then by store number
+  entries.sort((a, b) => (b.isDark ? 1 : 0) - (a.isDark ? 1 : 0) || a.sn.localeCompare(b.sn));
+
+  // Filter by tab
+  if (gdFilter === 'dark')  entries = entries.filter(e => e.isDark);
+  if (gdFilter === 'ok')    entries = entries.filter(e => !e.isDark);
+
+  // Search filter
+  if (search) entries = entries.filter(e =>
+    e.sn.includes(search) || e.latestCamp.toLowerCase().includes(search)
+  );
+
+  if (entries.length === 0) {
+    tbody.innerHTML = `
+      <div class="gd-empty">
+        <div class="gd-empty-icon">${gdFilter === 'dark' ? '✅' : '📊'}</div>
+        <div class="gd-empty-title">${gdFilter === 'dark' ? 'No stores gone dark' : 'No results'}</div>
+        <div class="gd-empty-sub">${gdFilter === 'dark' ? 'All stores have spend recorded on every day.' : 'Try adjusting the search or filter.'}</div>
+      </div>`;
+    return;
+  }
+
+  tbody.innerHTML = entries.map(e => {
+    const isDark   = e.isDark;
+    const rowClass = isDark ? 'gd-row dark-row' : 'gd-row ok-row';
+    const costTxt  = isDark
+      ? `<span class="gd-cost zero">$0.00</span>`
+      : `<span class="gd-cost pos">$${e.latestCost.toFixed(2)}</span>`;
+
+    const darkLabel = e.darkDays.length === 1
+      ? `Dark: ${e.darkDays[0]}`
+      : `${e.darkDays.length} dark days`;
+    const statusPill = isDark
+      ? `<span class="gd-pill dark">🔴 ${darkLabel}</span>`
+      : `<span class="gd-pill ok">🟢 Active</span>`;
+
+    const sent    = gdSentAlerts[e.sn];
+    const btnCls  = sent ? 'gd-row-btn sent' : 'gd-row-btn';
+    const btnTxt  = sent ? '✓ Alerted' : 'Alert';
+    const btnDisabled = sent ? 'disabled' : '';
+    const actionBtn = isDark
+      ? `<button class="${btnCls}" ${btnDisabled} onclick="gdOpenModal('${e.sn}')">${btnTxt}</button>`
+      : `<span style="font-size:11px;color:var(--muted);">—</span>`;
+
+    // Campaign display: show latest camp + type
+    const campShort = e.latestCamp.length > 52 ? e.latestCamp.slice(0,52) + '…' : e.latestCamp;
+    const campSub   = e.latestType !== '—' ? `<div class="gd-camp-sub">${e.latestType} · ${e.campaigns.length} campaign${e.campaigns.length > 1 ? 's' : ''}</div>` : '';
+
+    return `<div class="${rowClass}">
+      <div class="gd-store">${e.sn}</div>
+      <div class="gd-camp">${campShort}${campSub}</div>
+      ${costTxt}
+      <div class="gd-date">${e.latestDate || '—'}</div>
+      ${statusPill}
+      ${actionBtn}
+    </div>`;
+  }).join('');
+}
+
+// ── Modal open/close ────────────────────────────────────────────────
+function gdOpenModal(storeNum) {
+  gdModalStore = storeNum;
+  const s = gdStoreMap[storeNum];
+  if (!s) return;
+
+  const toEmail = document.getElementById('gd-stakeholder-email')?.value || '';
+  const ccEmail = document.getElementById('gd-cc-email')?.value || '';
+
+  document.getElementById('gdModalStoreNum').textContent = storeNum;
+  document.getElementById('gdModalTo').value      = toEmail;
+  document.getElementById('gdModalCc').value      = ccEmail;
+  document.getElementById('gdModalSubject').value =
+    `[URGENT] Go Dark Alert — Store #${storeNum} — $0 Spend Detected`;
+
+  const preview = gdBuildEmailBody(storeNum, s, '');
+  document.getElementById('gdModalPreview').textContent = preview;
+  document.getElementById('gdModalNote').value = '';
+
+  document.getElementById('gdOverlay').classList.add('open');
+}
+
+function gdCloseModal() {
+  document.getElementById('gdOverlay').classList.remove('open');
+  gdModalStore = null;
+}
+
+function gdOverlayClickClose(e) {
+  if (e.target === document.getElementById('gdOverlay')) gdCloseModal();
+}
+
+// ── Email body builder ───────────────────────────────────────────────
+function gdBuildEmailBody(storeNum, s, note) {
+  const darkList = s.darkDays.join(', ') || '(see data)';
+  const camps    = s.campaigns.slice(0,3).join('\n  • ') + (s.campaigns.length > 3 ? `\n  … +${s.campaigns.length-3} more` : '');
+  const ts       = new Date().toLocaleString('en-US', { dateStyle:'medium', timeStyle:'short' });
+  return [
+    `Go Dark Alert — Store #${storeNum}`,
+    `Generated: ${ts}`,
+    '',
+    `Store #${storeNum} recorded $0.00 spend on the following date(s):`,
+    `  ${darkList}`,
+    '',
+    `Affected campaign(s):`,
+    `  • ${camps}`,
+    '',
+    `Latest data point: ${s.latestDate} — $${s.latestCost.toFixed(2)} (${s.latestType})`,
+    '',
+    note ? `Note: ${note}` : '',
+    '─────────────────────────────────────────',
+    'Please investigate immediately:',
+    '  1. Check campaign status in Google Ads',
+    '  2. Verify budget has not been exhausted',
+    '  3. Confirm no manual pauses or policy flags',
+    '  4. Escalate to paid media team if unresolved',
+    '',
+    '— FSA CMO Dashboard · Go Dark Monitor',
+  ].filter(l => l !== null).join('\n');
+}
+
+// Live preview update as note changes
+document.addEventListener('DOMContentLoaded', () => {
+  const noteEl = document.getElementById('gdModalNote');
+  if (noteEl) {
+    noteEl.addEventListener('input', () => {
+      if (!gdModalStore) return;
+      const s = gdStoreMap[gdModalStore];
+      if (!s) return;
+      document.getElementById('gdModalPreview').textContent =
+        gdBuildEmailBody(gdModalStore, s, noteEl.value);
+    });
+  }
+});
+
+// ── Send alert (logs + marks sent; actual email requires backend) ────
+function gdSendAlert() {
+  if (!gdModalStore) return;
+  const s       = gdStoreMap[gdModalStore];
+  const toVal   = document.getElementById('gdModalTo').value;
+  const subjVal = document.getElementById('gdModalSubject').value;
+  const noteVal = document.getElementById('gdModalNote').value;
+
+  if (!toVal) { gdToast('Missing email', 'Please enter a recipient email address.', false); return; }
+
+  // Mark sent
+  gdSentAlerts[gdModalStore] = true;
+  gdCloseModal();
+  gdRenderTable();
+
+  // Log it
+  const ts = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  gdAlertLog.unshift({
+    ts,
+    msg: `<strong>Store #${gdModalStore}</strong> — Alert drafted to <strong>${toVal}</strong>. Subject: "${subjVal}".${noteVal ? ' Note: ' + noteVal : ''}`
+  });
+  gdRenderLog();
+
+  // Toast
+  gdToast('Alert logged ✓', `Store #${gdModalStore} marked as alerted. Open your email client to send.`, true);
+}
+
+// ── Alert all dark stores ────────────────────────────────────────────
+function gdAlertAll() {
+  const darkStores = Object.entries(gdStoreMap).filter(([, s]) => s.isDark && !gdSentAlerts[s.sn]);
+  if (darkStores.length === 0) { gdToast('Nothing to alert', 'All dark stores already alerted.', true); return; }
+
+  // Open mailto with summary of all dark stores
+  const toVal   = document.getElementById('gd-stakeholder-email')?.value || '';
+  const ccVal   = document.getElementById('gd-cc-email')?.value || '';
+  const storeNums = Object.keys(gdStoreMap).filter(sn => gdStoreMap[sn].isDark);
+  const subject = encodeURIComponent(`[URGENT] Go Dark Alert — ${storeNums.length} Stores — $0 Spend Detected`);
+
+  const bodyLines = [
+    `Go Dark Alert Summary`,
+    `Generated: ${new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}`,
+    '',
+    `${storeNums.length} store(s) recorded $0 spend on at least one day:`,
+    '',
+    ...storeNums.map(sn => {
+      const s = gdStoreMap[sn];
+      return `  Store #${sn} — dark on: ${s.darkDays.join(', ')}`;
+    }),
+    '',
+    'Please review each store in Google Ads immediately.',
+    '',
+    '— FSA CMO Dashboard · Go Dark Monitor',
+  ];
+
+  const mailtoLink = `mailto:${toVal}?cc=${ccVal}&subject=${subject}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+  window.open(mailtoLink, '_blank');
+
+  // Mark all as sent
+  storeNums.forEach(sn => { gdSentAlerts[sn] = true; });
+  gdRenderTable();
+
+  const ts = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  gdAlertLog.unshift({
+    ts,
+    msg: `<strong>Bulk alert</strong> — ${storeNums.length} stores flagged. Email client opened for <strong>${toVal}</strong>.`
+  });
+  gdRenderLog();
+  gdToast(`Bulk alert sent ✓`, `${storeNums.length} stores flagged and email drafted.`, true);
+}
+
+// ── Save email ───────────────────────────────────────────────────────
+function gdSaveEmail() {
+  const saved = document.getElementById('gd-email-saved');
+  if (saved) { saved.style.display = 'inline'; setTimeout(() => saved.style.display = 'none', 2000); }
+  try { localStorage.setItem('fsa_gd_stakeholder_email', document.getElementById('gd-stakeholder-email').value); } catch(e) {}
+}
+
+// ── Log ──────────────────────────────────────────────────────────────
+function gdRenderLog() {
+  const body  = document.getElementById('gdLogBody');
+  const empty = document.getElementById('gdLogEmpty');
+  if (gdAlertLog.length === 0) {
+    if (empty) empty.style.display = '';
+    if (body)  body.innerHTML = '<div class="gd-log-empty" id="gdLogEmpty">No alerts sent yet this session.</div>';
+    return;
+  }
+  const emptyEl = document.getElementById('gdLogEmpty');
+  if (emptyEl) emptyEl.style.display = 'none';
+  body.innerHTML = gdAlertLog.map(e =>
+    `<div class="gd-log-row"><span class="gd-log-ts">${e.ts}</span><span class="gd-log-msg">${e.msg}</span></div>`
+  ).join('');
+}
+
+function gdClearLog() {
+  gdAlertLog = [];
+  gdRenderLog();
+}
+
+// ── Toast ────────────────────────────────────────────────────────────
+function gdToast(title, msg, success = false) {
+  const wrap = document.getElementById('gdToastWrap');
+  if (!wrap) return;
+  const el = document.createElement('div');
+  el.className = `gd-toast${success ? ' success' : ''}`;
+  el.innerHTML = `<div class="gd-toast-ttl">${title}</div><div class="gd-toast-msg">${msg}</div>`;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'toast-in .28s ease reverse';
+    setTimeout(() => el.remove(), 280);
+  }, 4200);
+}
+
+// ── Load saved email on init ─────────────────────────────────────────
+(function() {
+  try {
+    const saved = localStorage.getItem('fsa_gd_stakeholder_email');
+    if (saved) {
+      const el = document.getElementById('gd-stakeholder-email');
+      if (el) el.value = saved;
+    }
+  } catch(e) {}
+})();
 
 // ── Init — render with baseline values, then auto-fetch from GitHub ──
 renderKpiCards();
