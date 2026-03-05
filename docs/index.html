@@ -738,7 +738,7 @@
     <div class="card">
       <div class="card-title">Cost per Store Visit</div>
       <div style="font-family:var(--font-display); font-size:52px; color:var(--muted); letter-spacing:2px;">—</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Need Store Visit data in export to calculate.<br>Search historically 3:1 Store Visits to Cars.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Need Store Visit data in export to calculate.<br>Search historically shows 3:1 Store Visits to service appointments.</div>
     </div>
   </div>
 
@@ -773,7 +773,7 @@
     <div class="card">
       <div class="card-title">Key Actions to Move the KPI</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Establish Search:Cars ratio baseline (currently 3:1 for Search; PMax/Demand Gen unstudied). Prioritize this analysis.</li>
+        <li><div class="action-bullet">1</div>Establish Search:Store Visit ratio baseline (currently 3:1 for Search; PMax/Demand Gen unstudied). Prioritize this analysis to connect ad spend to in-store traffic.</li>
         <li><div class="action-bullet">2</div>Create a unified efficiency metric combining Store Visit Rate + CPC into a single Cost per Car proxy.</li>
         <li><div class="action-bullet">3</div>Investigate latency window: Click → Store Visit. Understand lag before optimizing bidding.</li>
         <li><div class="action-bullet">4</div>Primary breakout: All Google first, then Search / PMax / Demand Gen secondary once attribution is understood.</li>
@@ -782,7 +782,7 @@
   </div>
 
   <div class="notes-box">
-    <strong>Strategic Note:</strong> Google Store Visit metric is the bridge between digital spend and in-bay revenue. Until this ratio is understood for PMax and Demand Gen (beyond the 3:1 established for Search), optimize toward CPC as the primary efficiency lever. Mix is dependent on campaign type, so avoid blended targets until segmented data matures.
+    <strong>Strategic Note:</strong> Google Store Visit metric is the bridge between digital spend and in-store traffic. Until this ratio is understood for PMax and Demand Gen (beyond the 3:1 established for Search), optimize toward CPC as the primary efficiency lever. Mix is dependent on campaign type, so avoid blended targets until segmented data matures.
   </div>
 </div>
 
@@ -809,7 +809,7 @@
     <div class="card">
       <div class="card-title">Primary KPI — Sessions by Source</div>
       <div style="font-family:var(--font-display); font-size:42px; color:var(--yellow); letter-spacing:2px;">MONITOR</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Target: Q4 + Seasonality baseline. Napkin math: X Sessions = Y Cars.<br>Conversion rate must remain flat or improve alongside session growth.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Target: Q4 + Seasonality baseline. Goal: establish Sessions-to-Store Visit conversion rate as the web efficiency benchmark. Conversion rate must remain flat or improve alongside session growth.</div>
     </div>
     <div class="card">
       <div class="card-title">Key Event — Get Directions CTA</div>
@@ -853,7 +853,7 @@
       <ul class="action-list">
         <li><div class="action-bullet">1</div>Fix Looker Studio export: add full Date (YYYY-MM-DD) dimension to eliminate month-assumption workaround.</li>
         <li><div class="action-bullet">2</div>Investigate top organic session source path queries (Sam investigating). Tie findings to content strategy.</li>
-        <li><div class="action-bullet">3</div>Establish Sessions-to-Cars conversion napkin math — this becomes your web ROI proxy for exec reporting.</li>
+        <li><div class="action-bullet">3</div>Establish Sessions-to-Store Visit conversion rate — this becomes your web efficiency proxy for exec reporting once Store Visit data is available.</li>
         <li><div class="action-bullet">4</div>Resolve Key Event tracking for Coupon Request (HOLD: 829 figures out Key Event tracking first).</li>
       </ul>
     </div>
@@ -979,7 +979,7 @@
     <div class="card">
       <div class="card-title">Secondary — Conversion Rate</div>
       <div style="font-family:var(--font-display); font-size:52px; color:var(--muted); letter-spacing:2px;">—</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Requires daily send + transaction data linkage. Pending Cinch daily export availability.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Requires daily send + engagement data linkage. Pending Cinch daily export availability.</div>
     </div>
   </div>
 
@@ -1042,7 +1042,7 @@
     <div class="card">
       <div class="card-title">Secondary KPI — ROAS</div>
       <div style="font-family:var(--font-display); font-size:52px; color:var(--muted); letter-spacing:2px;">—</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Requires transaction-level linkage to mailer drops. Pending date-level data from DripDrop.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Requires response-level linkage to mailer drops. Pending date-level data from DripDrop.</div>
     </div>
   </div>
 
@@ -1326,7 +1326,7 @@
     <div class="card">
       <div class="card-title">Downstream Impact</div>
       <div style="font-family:var(--font-display); font-size:42px; color:var(--accent); letter-spacing:2px;">RETURN</div>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Primary rollup KPI: Return Rate (New, 180d). Hypothesis: engagement with content drives cars. Ratio TBD — study engagement-to-cars conversion.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Primary rollup KPI: Return Rate (New, 180d). Hypothesis: engagement with content drives in-store visits. Engagement-to-visit ratio TBD — study as channel matures.</div>
     </div>
   </div>
 
@@ -1357,7 +1357,7 @@
     <div class="card">
       <div class="card-title">Key Actions</div>
       <ul class="action-list">
-        <li><div class="action-bullet">1</div>Establish engagement-to-cars ratio baseline (analogous to Search's 3:1 Store Visit ratio). This unlocks ROI conversation.</li>
+        <li><div class="action-bullet">1</div>Establish engagement-to-store visit ratio baseline (analogous to Search's 3:1 Store Visit ratio). This unlocks the channel's ROI conversation with leadership.</li>
         <li><div class="action-bullet">2</div>Build rural vs urban breakout for content performance — audience composition likely differs significantly by market type.</li>
         <li><div class="action-bullet">3</div>Increase follower count as a new audience growth lever — define what "good" growth rate looks like vs industry.</li>
         <li><div class="action-bullet">4</div>No ADI content currently — consider whether ADI expansion is appropriate given channel is Low Impact today.</li>
