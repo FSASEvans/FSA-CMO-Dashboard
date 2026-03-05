@@ -5445,23 +5445,6 @@ function gdRenderTable() {
     const btnCls  = sent ? 'gd-row-btn sent' : 'gd-row-btn';
     const btnTxt  = sent ? '✓ Alerted' : 'Alert';
     const btnDisabled = sent ? 'disabled' : '';
-    const actionBtn = isDark
-      ? `<button class="${btnCls}" ${btnDisabled} onclick="gdOpenModal('${e.sn}')">${btnTxt}</button>`
-      : `<span style="font-size:11px;color:var(--muted);">—</span>`;
-
-    // Campaign display: show parsed breakdown from Power Query logic
-    const companyLabel = e.company  ? `<strong>${e.company}</strong>` : '';
-    const tacticLabel  = e.tactic   ? ` · ${e.tactic}` : '';
-    const geoLabel     = (e.city || e.state) ? ` · ${[e.city, e.state].filter(Boolean).join(', ')}` : '';
-    const radiusLabel  = e.radius   ? ` · ${e.radius}` : '';
-    const campSub      = e.latestType !== '—'
-      ? `<div class="gd-camp-sub">${e.latestType}${radiusLabel} · ${e.campaigns.length} campaign${e.campaigns.length > 1 ? 's' : ''}</div>`
-      : '';
-
-    const sent    = e.isDark && e.darkDays.every(d => gdSentAlerts[`${e.sn}|${d}`]);
-    const btnCls  = sent ? 'gd-row-btn sent' : 'gd-row-btn';
-    const btnTxt  = sent ? '✓ Alerted' : 'Alert';
-    const btnDisabled = sent ? 'disabled' : '';
     const alertBtn = isDark
       ? `<button class="${btnCls}" ${btnDisabled} onclick="gdOpenModal('${e.sn}')">${btnTxt}</button>`
       : `<span style="font-size:11px;color:var(--muted);">—</span>`;
