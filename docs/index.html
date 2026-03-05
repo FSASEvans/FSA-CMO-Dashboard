@@ -217,10 +217,125 @@
     top: 0; left: 0; right: 0;
     height: 3px;
   }
-  .kpi-card.green::before { background: var(--green); }
+  /* Tinted card backgrounds by status */
+  .kpi-card.green  { background: #EDF7F1; border-color: #A8D8BC; }
+  .kpi-card.yellow { background: #FEF8ED; border-color: #F0C878; }
+  .kpi-card.red    { background: #FDF0F2; border-color: #E8A0AC; }
+  .kpi-card.gray   { background: #F5F5F7; border-color: #D0D0D0; }
+  .kpi-card.green::before  { background: var(--green); }
   .kpi-card.yellow::before { background: var(--amber); }
-  .kpi-card.red::before { background: var(--fsa-red); }
-  .kpi-card.gray::before { background: var(--muted); }
+  .kpi-card.red::before    { background: var(--fsa-red); }
+  .kpi-card.gray::before   { background: var(--muted); }
+  .kpi-card.green:hover  { box-shadow: 0 4px 14px rgba(26,122,60,0.14); }
+  .kpi-card.yellow:hover { box-shadow: 0 4px 14px rgba(180,83,9,0.12); }
+  .kpi-card.red:hover    { box-shadow: 0 4px 14px rgba(196,18,48,0.14); }
+
+  /* ── Upload Panel ── */
+  .upload-panel {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.35s ease;
+    box-shadow: inset 0 -1px 0 var(--border);
+  }
+  .upload-panel.open { max-height: 440px; }
+  .upload-panel-inner { padding: 20px 32px 24px; }
+  .upload-panel-title {
+    font-family: var(--font-semi);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .upload-panel-title span {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .upload-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .upload-slot {
+    border: 1.5px dashed var(--border-dk);
+    border-radius: 5px;
+    padding: 11px 13px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    background: var(--surface2);
+    position: relative;
+  }
+  .upload-slot:hover  { border-color: var(--fsa-red); background: var(--red-bg); }
+  .upload-slot.loaded { border-color: var(--green); border-style: solid; background: var(--green-bg); }
+  .upload-slot.error  { border-color: var(--fsa-red); border-style: solid; background: var(--red-bg); }
+  .upload-slot input[type=file] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .upload-slot-name {
+    font-family: var(--font-semi);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 2px;
+  }
+  .upload-slot-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
+  .upload-slot-status {
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 5px;
+    font-family: var(--font-semi);
+    color: var(--muted);
+  }
+  .upload-slot.loaded .upload-slot-status { color: var(--green); }
+  .upload-slot.error  .upload-slot-status { color: var(--fsa-red); }
+  .upload-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .btn-refresh {
+    background: var(--fsa-red);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 22px;
+    font-family: var(--font-semi);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-refresh:hover    { background: var(--fsa-red-dk); }
+  .btn-refresh:disabled { background: var(--muted); cursor: not-allowed; }
+  .upload-note { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .upload-toggle {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 4px;
+    color: rgba(255,255,255,0.7);
+    font-family: var(--font-semi);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .upload-toggle:hover  { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); color: #fff; }
+  .upload-toggle.active { background: var(--fsa-red); border-color: var(--fsa-red); color: #fff; }
 
   .kpi-channel {
     font-family: var(--font-semi);
@@ -659,9 +774,60 @@
   </div>
   <div class="header-meta">
     <span class="last-updated" id="lastUpdated">Updated: —</span>
-    <span class="data-period-badge" id="dataPeriod">2025 Baseline</span>
+    <span class="data-period-badge" id="dataPeriod">2026 Data</span>
+    <button class="upload-toggle" id="uploadToggleBtn" onclick="toggleUploadPanel()">
+      ↑ Refresh Data
+    </button>
   </div>
 </header>
+
+<!-- ════════════════════════════════════════════════
+     UPLOAD PANEL
+════════════════════════════════════════════════ -->
+<div class="upload-panel" id="uploadPanel">
+  <div class="upload-panel-inner">
+    <div class="upload-panel-title">
+      Refresh Dashboard Data
+      <span>Drop in new exports — dashboard recalculates instantly. Partial uploads OK.</span>
+    </div>
+    <div class="upload-grid">
+      <div class="upload-slot" id="slot-google-ads">
+        <input type="file" accept=".csv" onchange="handleFile('google-ads', this)"/>
+        <div class="upload-slot-name">Google Ads</div>
+        <div class="upload-slot-desc">CSV export · Campaign performance by day</div>
+        <div class="upload-slot-status">↑ Click to upload</div>
+      </div>
+      <div class="upload-slot" id="slot-cinch-sms">
+        <input type="file" accept=".xlsx,.xls" onchange="handleFile('cinch-sms', this)"/>
+        <div class="upload-slot-name">SMS (Cinch)</div>
+        <div class="upload-slot-desc">Excel · Monthly send & delivery data</div>
+        <div class="upload-slot-status">↑ Click to upload</div>
+      </div>
+      <div class="upload-slot" id="slot-cinch-email">
+        <input type="file" accept=".xlsx,.xls" onchange="handleFile('cinch-email', this)"/>
+        <div class="upload-slot-name">Email (Cinch)</div>
+        <div class="upload-slot-desc">Excel · Template-level send & click data</div>
+        <div class="upload-slot-status">↑ Click to upload</div>
+      </div>
+      <div class="upload-slot" id="slot-dripdrop">
+        <input type="file" accept=".xlsx,.xls" onchange="handleFile('dripdrop', this)"/>
+        <div class="upload-slot-name">Direct Mail (DripDrop)</div>
+        <div class="upload-slot-desc">Excel · Location response rate data</div>
+        <div class="upload-slot-status">↑ Click to upload</div>
+      </div>
+      <div class="upload-slot" id="slot-web-ga4">
+        <input type="file" accept=".csv" onchange="handleFile('web-ga4', this)"/>
+        <div class="upload-slot-name">Web (GA4)</div>
+        <div class="upload-slot-desc">CSV · Sessions by channel group</div>
+        <div class="upload-slot-status">↑ Click to upload</div>
+      </div>
+    </div>
+    <div class="upload-actions">
+      <button class="btn-refresh" id="refreshBtn" onclick="applyUploads()" disabled>Apply & Refresh Dashboard</button>
+      <div class="upload-note" id="uploadNote">Upload at least one file to refresh. Channels without new files keep their current values.</div>
+    </div>
+  </div>
+</div>
 
 <!-- NAV TABS -->
 <nav class="nav-tabs" id="navTabs">
@@ -1536,178 +1702,370 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-// ── Channel data configuration ──────────────────────────────────────────────
-// To update: edit the values in this CHANNELS object.
+// ═══════════════════════════════════════════════════════════════════
+// CHANNEL DATA  —  edit current/target/status/pct/note to update manually
 // Status: "green" | "yellow" | "red" | "gray"
-// pct: progress toward target (0–100)
-// ── DATA LAST REFRESHED ──────────────────────────────────────────────────────
-// Google Ads: Jan 28 – Feb 24, 2026
-// SMS: Feb 2025 – Mar 2026 (Cinch export)
-// Email: Last 12 months template totals (Cinch)
-// Direct Mail: Full campaign window (DripDrop)
-// Web: GA4 / Looker Studio export
-// ─────────────────────────────────────────────────────────────────────────────
+// pct: 0–100 progress toward target
+// Last auto-refresh: populated by upload parser below
+// ═══════════════════════════════════════════════════════════════════
 const CHANNELS = [
   {
-    id: "paid-search",
-    name: "Paid Search",
-    vendor: "Google Ads",
+    id: "paid-search", name: "Paid Search", vendor: "Google Ads",
     primaryKpi: "Store Visit Rate (Visits / Clicks)",
-    current: "3.6%",
-    target: "20% (Q1)",
-    status: "red",
-    pct: 18,
+    current: "3.6%", target: "20% (Q1)", status: "red", pct: 18,
     note: "9,866 Search store visits on $215K spend. PMax/Demand Gen ratios unstudied.",
-    indicator: "Leading",
-    owner: "Bethany"
+    indicator: "Leading", owner: "Bethany"
   },
   {
-    id: "web",
-    name: "Web",
-    vendor: "GA4",
+    id: "web", name: "Web", vendor: "GA4",
     primaryKpi: "Sessions by Source",
-    current: "1.55M",
-    target: "Q4 + Seasonality baseline",
-    status: "yellow",
-    pct: 75,
+    current: "1.55M", target: "Q4 + Seasonality baseline", status: "yellow", pct: 75,
     note: "Organic Search leads at 875K sessions. Paid Search 381K. Full date dimension needed.",
-    indicator: "Leading",
-    owner: "TBD"
+    indicator: "Leading", owner: "TBD"
   },
   {
-    id: "sms",
-    name: "SMS",
-    vendor: "Cinch / Twilio",
+    id: "sms", name: "SMS", vendor: "Cinch / Twilio",
     primaryKpi: "Opt-in Rate",
-    current: "0.6%",
-    target: "1.0% EoY",
-    status: "yellow",
-    pct: 60,
+    current: "0.6%", target: "1.0% EoY", status: "yellow", pct: 60,
     note: "~89K outgoing/mo (Feb 2026). Delivery rate 91.5%. Competitors benchmark ~1%.",
-    indicator: "Leading",
-    owner: "Brian"
+    indicator: "Leading", owner: "Brian"
   },
   {
-    id: "email",
-    name: "Email",
-    vendor: "Cinch",
+    id: "email", name: "Email", vendor: "Cinch",
     primaryKpi: "CTOR (Journey / Eblast)",
-    current: "1.54% / 1.11%",
-    target: "2.1% / 1.25% (Q1)",
-    status: "yellow",
-    pct: 73,
+    current: "1.54% / 1.11%", target: "2.1% / 1.25% (Q1)", status: "yellow", pct: 73,
     note: "Journey CTOR below 1.87% baseline — add CTAs. 23.9M total sends across 178 templates.",
-    indicator: "Leading",
-    owner: "Brian"
+    indicator: "Leading", owner: "Brian"
   },
   {
-    id: "direct-mail",
-    name: "Direct Mail",
-    vendor: "Drip Drop",
+    id: "direct-mail", name: "Direct Mail", vendor: "Drip Drop",
     primaryKpi: "Household Response Rate",
-    current: "7.26%",
-    target: "2.75% EoY (new HH only)",
-    status: "green",
-    pct: 100,
-    note: "206K HH responses on 2.85M cards mailed. Overall rate well above target. Separate new vs existing HH.",
-    indicator: "Lagging",
-    owner: "Brian"
+    current: "7.26%", target: "2.75% EoY (new HH only)", status: "green", pct: 100,
+    note: "206K HH responses on 2.85M cards mailed. Overall rate well above target.",
+    indicator: "Lagging", owner: "Brian"
   },
   {
-    id: "seo",
-    name: "SEO / AI",
-    vendor: "Scout / Yext / GSC",
+    id: "seo", name: "SEO / AI", vendor: "Scout / Yext / GSC",
     primaryKpi: "CTR (GSC) + AI Visibility Score",
-    current: "2.7% CTR / 91 AI Score",
-    target: "3.0% CTR / 95 AI Score",
-    status: "yellow",
-    pct: 83,
+    current: "2.7% CTR / 91 AI Score", target: "3.0% CTR / 95 AI Score", status: "yellow", pct: 83,
     note: "No historical data capture yet — establish pipeline urgently.",
-    indicator: "Leading",
-    owner: "Bethany"
+    indicator: "Leading", owner: "Bethany"
   },
   {
-    id: "listings",
-    name: "Listings",
-    vendor: "GBP / Yext",
+    id: "listings", name: "Listings", vendor: "GBP / Yext",
     primaryKpi: "Action Rate (Actions / 1K Impressions)",
-    current: "—",
-    target: "2.7% (Q1) → 3.0% EoY",
-    status: "yellow",
-    pct: 0,
+    current: "—", target: "2.7% (Q1) → 3.0% EoY", status: "yellow", pct: 0,
     note: "Actions declining YoY at multiple locations (-10% to -81%). Investigate PMax impact.",
-    indicator: "Leading",
-    owner: "Louis"
+    indicator: "Leading", owner: "Louis"
   },
   {
-    id: "reviews",
-    name: "Reviews",
-    vendor: "GBP / Yext",
+    id: "reviews", name: "Reviews", vendor: "GBP / Yext",
     primaryKpi: "% Reviews Responded To",
-    current: "4.8★",
-    target: "4.85★ / +20% response rate",
-    status: "yellow",
-    pct: 96,
+    current: "4.8★", target: "4.85★ / +20% response rate", status: "yellow", pct: 96,
     note: "Star rating strong at 4.8. Response rate strategy needed to hit +20% target.",
-    indicator: "Leading",
-    owner: "Louis"
+    indicator: "Leading", owner: "Louis"
   },
   {
-    id: "organic-social",
-    name: "Organic Social",
-    vendor: "Meta / Instagram",
+    id: "organic-social", name: "Organic Social", vendor: "Meta / Instagram",
     primaryKpi: "Avg Post Engagement Rate",
-    current: "—",
-    target: "5.0% (Q1) → 6.5% EoY",
-    status: "yellow",
-    pct: 0,
+    current: "—", target: "5.0% (Q1) → 6.5% EoY", status: "yellow", pct: 0,
     note: "Industry benchmark: 5%. GM Only. Export needed to populate current rate.",
-    indicator: "Leading",
-    owner: "Louis"
+    indicator: "Leading", owner: "Louis"
   },
   {
-    id: "ctv",
-    name: "CTV",
-    vendor: "Mountain",
+    id: "ctv", name: "CTV", vendor: "Mountain",
     primaryKpi: "CPM",
-    current: "$55",
-    target: "$50",
-    status: "yellow",
-    pct: 80,
+    current: "$55", target: "$50", status: "yellow", pct: 80,
     note: "Establishing offline conversion metric. URL-specific tracking needed.",
-    indicator: "Lagging",
-    owner: "Bethany"
+    indicator: "Lagging", owner: "Bethany"
   },
   {
-    id: "paid-social",
-    name: "Paid Social",
-    vendor: "TBD",
+    id: "paid-social", name: "Paid Social", vendor: "TBD",
     primaryKpi: "HOLD — New Agency",
-    current: "—",
-    target: "TBD",
-    status: "gray",
-    pct: 0,
+    current: "—", target: "TBD", status: "gray", pct: 0,
     note: "On hold — new agency onboarding in progress.",
-    indicator: "—",
-    owner: "Bethany"
+    indicator: "—", owner: "Bethany"
   },
   {
-    id: "programmatic",
-    name: "Programmatic",
-    vendor: "TBD",
+    id: "programmatic", name: "Programmatic", vendor: "TBD",
     primaryKpi: "CPC",
-    current: "$25",
-    target: "$22.50",
-    status: "gray",
-    pct: 0,
+    current: "$25", target: "$22.50", status: "gray", pct: 0,
     note: "On hold — new agency onboarding in progress.",
-    indicator: "Leading",
-    owner: "Bethany"
+    indicator: "Leading", owner: "Bethany"
   }
 ];
 
-// ── Render Summary KPI Cards ─────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// UPLOAD PANEL
+// ═══════════════════════════════════════════════════════════════════
+const pendingFiles = {};
+const FILE_SLOTS = ['google-ads','cinch-sms','cinch-email','dripdrop','web-ga4'];
+
+function toggleUploadPanel() {
+  const panel = document.getElementById('uploadPanel');
+  const btn   = document.getElementById('uploadToggleBtn');
+  const open  = panel.classList.toggle('open');
+  btn.classList.toggle('active', open);
+  btn.textContent = open ? '✕ Close' : '↑ Refresh Data';
+}
+
+function handleFile(slotId, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const slot = document.getElementById('slot-' + slotId);
+  slot.querySelector('.upload-slot-status').textContent = '⏳ Reading…';
+  slot.className = 'upload-slot';
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const wb   = XLSX.read(data, { type: 'array' });
+      pendingFiles[slotId] = { wb, name: file.name };
+      slot.classList.add('loaded');
+      slot.querySelector('.upload-slot-status').textContent = '✓ ' + file.name;
+    } catch(err) {
+      // Try as plain text (CSV)
+      try {
+        const text = new TextDecoder().decode(data);
+        pendingFiles[slotId] = { text, name: file.name };
+        slot.classList.add('loaded');
+        slot.querySelector('.upload-slot-status').textContent = '✓ ' + file.name;
+      } catch(err2) {
+        slot.classList.add('error');
+        slot.querySelector('.upload-slot-status').textContent = '✗ Could not read file';
+      }
+    }
+    updateRefreshBtn();
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function updateRefreshBtn() {
+  const hasAny = Object.keys(pendingFiles).length > 0;
+  document.getElementById('refreshBtn').disabled = !hasAny;
+  const count = Object.keys(pendingFiles).length;
+  document.getElementById('uploadNote').textContent =
+    hasAny
+      ? `${count} file${count>1?'s':''} ready. Channels without new files keep current values.`
+      : 'Upload at least one file to refresh. Partial uploads OK.';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PARSERS  — mirror the Python logic used to initially calculate KPIs
+// ═══════════════════════════════════════════════════════════════════
+
+function parseGoogleAds(wb) {
+  // CSV comes in as single-sheet workbook via XLSX; skip first 2 rows (title + date range)
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
+  // Find header row (contains 'Day')
+  let hdrIdx = rows.findIndex(r => r.some(c => String(c).trim() === 'Day'));
+  if (hdrIdx < 0) hdrIdx = 1;
+  const hdrs = rows[hdrIdx].map(c => String(c).trim());
+  const data = rows.slice(hdrIdx+1).filter(r => r.some(c => c !== ''));
+
+  const idx = n => hdrs.indexOf(n);
+  const num = v => parseFloat(String(v).replace(/[$,%]/g,'').replace(/,/g,'')) || 0;
+
+  let totals = { Search:{cost:0,clicks:0,sv:0}, 'Performance Max':{cost:0,clicks:0,sv:0}, 'Demand Gen':{cost:0,clicks:0,sv:0} };
+  data.forEach(row => {
+    const type = String(row[idx('Campaign type')]||'').trim();
+    if (!totals[type]) return;
+    totals[type].cost   += num(row[idx('Cost')]);
+    totals[type].clicks += num(row[idx('Clicks')]);
+    totals[type].sv     += num(row[idx('Store Visits')]);
+  });
+
+  const s = totals['Search'];
+  const svr = s.clicks > 0 ? (s.sv / s.clicks * 100).toFixed(1) : null;
+  const cpc = s.clicks > 0 ? (s.cost / s.clicks).toFixed(2) : null;
+  const totalSpend = Object.values(totals).reduce((a,b) => a + b.cost, 0);
+
+  return { svr, cpc, totalSpend: totalSpend.toFixed(0), totals };
+}
+
+function parseSMS(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval:'' });
+  // Forward-fill Month-Year
+  let lastMonth = '';
+  rows.forEach(r => {
+    if (r['Month - Year'] && String(r['Month - Year']).trim()) lastMonth = String(r['Month - Year']).trim();
+    else r['Month - Year'] = lastMonth;
+  });
+  // Group by month
+  const monthly = {};
+  rows.forEach(r => {
+    const m = r['Month - Year'];
+    if (!m) return;
+    if (!monthly[m]) monthly[m] = { out:0, del:0 };
+    monthly[m].out += parseFloat(r['Outgoing Messages'])||0;
+    monthly[m].del += parseFloat(r['Delivered Messages'])||0;
+  });
+  // Sort months and get latest non-partial
+  const sortable = Object.entries(monthly).map(([k,v]) => {
+    const d = new Date(k); return { label:k, out:v.out, del:v.del, date:isNaN(d)?0:d };
+  }).filter(x => x.out > 10000).sort((a,b) => b.date - a.date);
+  const latest = sortable[0];
+  const deliveryRate = latest ? (latest.del/latest.out*100).toFixed(1) : null;
+  return { latestMonth: latest?.label, outgoing: latest?.out, deliveryRate };
+}
+
+function parseEmail(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval:0 });
+  const journeyKw = ['welcome','thank you','survey','lof','recommend','birthday','service'];
+  let journey = { opened:0, clicked:0, sent:0 };
+  let eblast  = { opened:0, clicked:0, sent:0 };
+  rows.forEach(r => {
+    const tmpl = String(r['Template']||'').toLowerCase();
+    const isJourney = journeyKw.some(k => tmpl.includes(k));
+    const bucket = isJourney ? journey : eblast;
+    bucket.opened  += parseFloat(r['Opened'])||0;
+    bucket.clicked += parseFloat(r['Clicked'])||0;
+    bucket.sent    += parseFloat(r['Sent'])||0;
+  });
+  const ctor = b => b.opened > 0 ? (b.clicked/b.opened*100).toFixed(2) : null;
+  return {
+    journeyCTOR: ctor(journey),
+    eblastCTOR:  ctor(eblast),
+    totalSent:   (journey.sent + eblast.sent)
+  };
+}
+
+function parseDripDrop(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval:0 });
+  let totalCards = 0, totalResponses = 0;
+  rows.forEach(r => {
+    totalCards     += parseFloat(r['Cards Mailed'])||0;
+    totalResponses += parseFloat(r['Household Responses'])||0;
+  });
+  const hhRR = totalCards > 0 ? (totalResponses/totalCards*100).toFixed(2) : null;
+  return { totalCards: totalCards.toFixed(0), totalResponses: totalResponses.toFixed(0), hhRR };
+}
+
+function parseWebGA4(wb) {
+  const ws   = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval:0 });
+  const byChannel = {};
+  rows.forEach(r => {
+    const ch = String(r['Default channel group']||r[Object.keys(r)[0]]||'Unknown').trim();
+    byChannel[ch] = (byChannel[ch]||0) + (parseFloat(r['Sessions'])||0);
+  });
+  const total = Object.values(byChannel).reduce((a,b) => a+b, 0);
+  const organic = byChannel['Organic Search']||0;
+  const paid    = byChannel['Paid Search']||0;
+  return { total, organic, paid, byChannel };
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// APPLY UPLOADS — run parsers, update CHANNELS, re-render
+// ═══════════════════════════════════════════════════════════════════
+function applyUploads() {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  btn.textContent = 'Processing…';
+
+  setTimeout(() => { // allow UI to update
+    const ch = id => CHANNELS.find(c => c.id === id);
+    const fmt = n => n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ? Math.round(n/1e3)+'K' : String(Math.round(n));
+
+    try {
+      // ── Google Ads ──
+      if (pendingFiles['google-ads']) {
+        const f = pendingFiles['google-ads'];
+        const wb = f.wb || XLSX.read(f.text, { type:'string' });
+        const r = parseGoogleAds(wb);
+        const c = ch('paid-search');
+        if (r.svr !== null) {
+          const svrNum = parseFloat(r.svr);
+          c.current = r.svr + '%';
+          c.pct     = Math.min(100, Math.round(svrNum / 20 * 100));
+          c.status  = svrNum >= 20 ? 'green' : svrNum >= 10 ? 'yellow' : 'red';
+          c.note    = `Search SVR ${r.svr}% on $${Number(r.totalSpend).toLocaleString()} total spend. CPC $${r.cpc}.`;
+        }
+      }
+
+      // ── SMS ──
+      if (pendingFiles['cinch-sms']) {
+        const r = parseSMS(pendingFiles['cinch-sms'].wb);
+        const c = ch('sms');
+        if (r.outgoing) {
+          c.note = `${fmt(r.outgoing)} outgoing messages (${r.latestMonth}). Delivery rate: ${r.deliveryRate}%.`;
+        }
+        // opt-in rate stays manual — no opt-in column in export
+      }
+
+      // ── Email ──
+      if (pendingFiles['cinch-email']) {
+        const r = parseEmail(pendingFiles['cinch-email'].wb);
+        const c = ch('email');
+        if (r.journeyCTOR && r.eblastCTOR) {
+          const jNum = parseFloat(r.journeyCTOR), eNum = parseFloat(r.eblastCTOR);
+          c.current = `${r.journeyCTOR}% / ${r.eblastCTOR}%`;
+          const jPct = Math.min(100, Math.round(jNum / 2.1 * 100));
+          const ePct = Math.min(100, Math.round(eNum / 1.25 * 100));
+          c.pct    = Math.round((jPct + ePct) / 2);
+          c.status = c.pct >= 90 ? 'green' : c.pct >= 60 ? 'yellow' : 'red';
+          c.note   = `Journey CTOR ${r.journeyCTOR}% (target 2.1%). Eblast ${r.eblastCTOR}% (target 1.25%). ${fmt(r.totalSent)} total sends.`;
+        }
+      }
+
+      // ── Direct Mail ──
+      if (pendingFiles['dripdrop']) {
+        const r = parseDripDrop(pendingFiles['dripdrop'].wb);
+        const c = ch('direct-mail');
+        if (r.hhRR !== null) {
+          const rrNum = parseFloat(r.hhRR);
+          c.current = r.hhRR + '%';
+          c.pct     = Math.min(100, Math.round(rrNum / 2.75 * 100));
+          c.status  = rrNum >= 2.75 ? 'green' : rrNum >= 2.0 ? 'yellow' : 'red';
+          c.note    = `${Number(r.totalResponses).toLocaleString()} HH responses on ${Number(r.totalCards).toLocaleString()} cards mailed (${r.hhRR}% overall). Separate new vs existing HH for target comparison.`;
+        }
+      }
+
+      // ── Web GA4 ──
+      if (pendingFiles['web-ga4']) {
+        const r = parseWebGA4(pendingFiles['web-ga4'].wb);
+        const c = ch('web');
+        if (r.total > 0) {
+          c.current = fmt(r.total);
+          c.note    = `Organic Search ${fmt(r.organic)} (${Math.round(r.organic/r.total*100)}%). Paid Search ${fmt(r.paid)} (${Math.round(r.paid/r.total*100)}%).`;
+        }
+      }
+
+    } catch(err) {
+      console.error('Parse error:', err);
+    }
+
+    // Re-render
+    renderKpiCards();
+    renderOverviewRows();
+    setMeta();
+
+    // Update button and close panel
+    btn.textContent = '✓ Dashboard Refreshed';
+    btn.style.background = 'var(--green)';
+    document.getElementById('uploadNote').textContent =
+      'Dashboard updated from uploaded files. Upload new files any time.';
+
+    // Reset slots visually after 3s, keep panel open
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = 'Apply & Refresh Dashboard';
+      btn.style.background = '';
+    }, 3000);
+
+  }, 50);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER — KPI Cards
+// ═══════════════════════════════════════════════════════════════════
 function renderKpiCards() {
   const grid = document.getElementById('summaryKpiGrid');
   grid.innerHTML = CHANNELS.map(ch => {
@@ -1728,7 +2086,9 @@ function renderKpiCards() {
   }).join('');
 }
 
-// ── Render Overview Rows ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// RENDER — Overview Rows
+// ═══════════════════════════════════════════════════════════════════
 function renderOverviewRows() {
   const container = document.getElementById('overviewRows');
   const colorMap = { green: 'var(--green)', yellow: 'var(--amber)', red: 'var(--fsa-red)', gray: 'var(--muted)' };
@@ -1745,7 +2105,9 @@ function renderOverviewRows() {
     </div>`).join('');
 }
 
-// ── Tab navigation ───────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// NAV + META
+// ═══════════════════════════════════════════════════════════════════
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1756,14 +2118,13 @@ function showPage(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ── Set last updated ─────────────────────────────────────────────────────────
 function setMeta() {
   const now = new Date();
   document.getElementById('lastUpdated').textContent =
     'Updated: ' + now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+// ── Init ──
 renderKpiCards();
 renderOverviewRows();
 setMeta();
