@@ -339,7 +339,47 @@
   .upload-toggle:hover  { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); color: #fff; }
   .upload-toggle.active { background: var(--fsa-red); border-color: var(--fsa-red); color: #fff; }
 
-  .kpi-channel {
+  
+  /* ── Refresh Data button: channel freshness indicators ── */
+  .upload-toggle {
+    align-items: flex-start; /* allow 2-line layout */
+  }
+  .upload-toggle-label {
+    line-height: 1.1;
+  }
+  .refresh-indicators {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .refresh-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-family: var(--font-semi);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.22);
+    color: rgba(255,255,255,0.78);
+    background: rgba(255,255,255,0.06);
+    white-space: nowrap;
+  }
+  .refresh-pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+    opacity: 0.9;
+    flex-shrink: 0;
+  }
+  .refresh-pill.green  { border-color: rgba(168,216,188,0.55); color: #A8D8BC; background: rgba(26,122,60,0.12); }
+  .refresh-pill.yellow { border-color: rgba(240,200,120,0.55); color: #F0C878; background: rgba(180,83,9,0.12); }
+  .refresh-pill.red    { border-color: rgba(232,160,172,0.6);  color: #FF8FA3; background: rgba(196,18,48,0.18); }
+  .refresh-pill.gray   { border-color: rgba(255,255,255,0.18); color: rgba(255,255,255,0.50); background: rgba(255,255,255,0.06); }
+.kpi-channel {
     font-family: var(--font-semi);
     font-size: 10px;
     font-weight: 600;
@@ -1120,8 +1160,9 @@
       <span class="last-updated" id="lastUpdated">Updated: —</span>
       <span class="data-period-badge" id="dataPeriod">2026 Data</span>
       <button class="upload-toggle" id="uploadToggleBtn" onclick="toggleUploadPanel()">
-        ↑ Refresh Data
-      </button>
+        <span class="upload-toggle-label" id="uploadToggleLabel">↑ Refresh Data</span>
+        <span class="refresh-indicators" id="refreshIndicators" aria-label="Channel data freshness indicators"></span>
+</button>
     </div>
   </div>
 </header>
@@ -3219,12 +3260,82 @@ const CHANNELS = [
 const pendingFiles = {};
 const FILE_SLOTS = ['google-ads','cinch-sms','cinch-email','dripdrop','web-ga4'];
 
+// ═══════════════════════════════════════════════════════════════════
+// DATA FRESHNESS — per-channel "days since refresh" indicators
+// 0–2 days = green · 3–7 days = yellow · 8+ days = red · missing = gray
+// Persists in localStorage so indicators survive reloads.
+// ═══════════════════════════════════════════════════════════════════
+const REFRESH_STATE_KEY = 'fsa_cmo_dashboard_refresh_state_v1';
+const CHANNEL_SLOT_META = [
+  { slotId: 'google-ads',  short: 'Ads'  },
+  { slotId: 'web-ga4',     short: 'Web'  },
+  { slotId: 'cinch-sms',   short: 'SMS'  },
+  { slotId: 'cinch-email', short: 'Email'},
+  { slotId: 'dripdrop',    short: 'Mail' }
+];
+
+let refreshState = loadRefreshState();
+
+function loadRefreshState() {
+  try {
+    const raw = localStorage.getItem(REFRESH_STATE_KEY);
+    if (!raw) return {};
+    const obj = JSON.parse(raw);
+    return (obj && typeof obj === 'object') ? obj : {};
+  } catch(e) {
+    return {};
+  }
+}
+
+function saveRefreshState() {
+  try { localStorage.setItem(REFRESH_STATE_KEY, JSON.stringify(refreshState || {})); } catch(e) {}
+}
+
+function daysSince(ts) {
+  if (!ts) return null;
+  const now = Date.now();
+  const diff = now - Number(ts);
+  if (!isFinite(diff) || diff < 0) return 0;
+  return Math.floor(diff / 86400000);
+}
+
+function freshnessClass(d) {
+  if (d === null) return 'gray';
+  if (d <= 2) return 'green';
+  if (d <= 7) return 'yellow';
+  return 'red';
+}
+
+function freshnessLabel(d) {
+  if (d === null) return '—';
+  if (d === 0) return '0d';
+  return `${d}d`;
+}
+
+function renderRefreshIndicators() {
+  const el = document.getElementById('refreshIndicators');
+  if (!el) return;
+
+  el.innerHTML = CHANNEL_SLOT_META.map(m => {
+    const d = daysSince(refreshState[m.slotId]);
+    const cls = freshnessClass(d);
+    const label = freshnessLabel(d);
+    return `<span class="refresh-pill ${cls}" title="${m.short}: ${label} since last refresh"><span class="dot"></span>${m.short} ${label}</span>`;
+  }).join('');
+}
+
+function setUploadToggleLabel(isOpen) {
+  const lbl = document.getElementById('uploadToggleLabel');
+  if (lbl) lbl.textContent = isOpen ? '✕ Close' : '↑ Refresh Data';
+}
+
+
 function toggleUploadPanel() {
   const panel = document.getElementById('uploadPanel');
   const btn   = document.getElementById('uploadToggleBtn');
   const open  = panel.classList.toggle('open');
   btn.classList.toggle('active', open);
-  btn.textContent = open ? '✕ Close' : '↑ Refresh Data';
+  setUploadToggleLabel(open);
 }
 
 function handleFile(slotId, input) {
@@ -3393,6 +3504,9 @@ function applyUploads() {
     try {
       // ── Google Ads ──
       if (pendingFiles['google-ads']) {
+        refreshState['google-ads'] = Date.now();
+        saveRefreshState();
+        renderRefreshIndicators();
         const f = pendingFiles['google-ads'];
         const wb = f.wb || XLSX.read(f.text, { type:'string' });
         const r = parseGoogleAds(wb);
@@ -3408,6 +3522,9 @@ function applyUploads() {
 
       // ── SMS ──
       if (pendingFiles['cinch-sms']) {
+        refreshState['cinch-sms'] = Date.now();
+        saveRefreshState();
+        renderRefreshIndicators();
         const r = parseSMS(pendingFiles['cinch-sms'].wb);
         const c = ch('sms');
         if (r.outgoing) {
@@ -3418,6 +3535,9 @@ function applyUploads() {
 
       // ── Email ──
       if (pendingFiles['cinch-email']) {
+        refreshState['cinch-email'] = Date.now();
+        saveRefreshState();
+        renderRefreshIndicators();
         const r = parseEmail(pendingFiles['cinch-email'].wb);
         const c = ch('email');
         if (r.journeyCTOR && r.eblastCTOR) {
@@ -3433,6 +3553,9 @@ function applyUploads() {
 
       // ── Direct Mail ──
       if (pendingFiles['dripdrop']) {
+        refreshState['dripdrop'] = Date.now();
+        saveRefreshState();
+        renderRefreshIndicators();
         const r = parseDripDrop(pendingFiles['dripdrop'].wb);
         const c = ch('direct-mail');
         if (r.hhRR !== null) {
@@ -3446,6 +3569,9 @@ function applyUploads() {
 
       // ── Web GA4 ──
       if (pendingFiles['web-ga4']) {
+        refreshState['web-ga4'] = Date.now();
+        saveRefreshState();
+        renderRefreshIndicators();
         const r = parseWebGA4(pendingFiles['web-ga4'].wb);
         const c = ch('web');
         if (r.total > 0) {
@@ -3638,6 +3764,8 @@ function renderAnalysis(channelId, data) {
 renderKpiCards();
 renderOverviewRows();
 setMeta();
+renderRefreshIndicators();
+
 </script>
 </body>
 </html>
