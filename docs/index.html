@@ -1568,6 +1568,49 @@
   }
 
 
+
+  /* ── Target Editor ───────────────────────────────────────────── */
+  .target-editor {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 11px 16px; margin-bottom: 20px;
+    font-family: var(--font-semi);
+  }
+  .target-editor-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.4px;
+    text-transform: uppercase; color: var(--muted); white-space: nowrap;
+  }
+  .target-editor-group {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .target-editor-sublabel {
+    font-size: 10px; font-weight: 700; letter-spacing: .8px;
+    text-transform: uppercase; color: var(--text-sec); white-space: nowrap;
+  }
+  .target-editor-input {
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 5px 10px; font-family: var(--font-semi); font-size: 12px;
+    font-weight: 600; color: var(--text); background: var(--surface2);
+    outline: none; width: 110px; transition: border-color .12s;
+  }
+  .target-editor-input:focus { border-color: var(--fsa-red); background: var(--surface); }
+  .target-editor-save {
+    padding: 5px 14px; background: var(--charcoal); color: #fff;
+    border: none; border-radius: 4px; font-family: var(--font-semi);
+    font-size: 11px; font-weight: 700; cursor: pointer; transition: background .12s;
+    letter-spacing: .4px;
+  }
+  .target-editor-save:hover { background: var(--fsa-red); }
+  .target-editor-saved {
+    font-size: 11px; color: var(--green); font-weight: 700;
+    opacity: 0; transition: opacity .3s; white-space: nowrap;
+  }
+  .target-editor-saved.show { opacity: 1; }
+  .target-editor-kpi {
+    font-size: 11px; color: var(--muted); margin-left: auto;
+    font-style: italic; white-space: nowrap;
+  }
+
   /* ── Date Range Filter Bar ──────────────────────────────────────── */
   .date-range-bar {
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
@@ -2006,6 +2049,22 @@
     <span class="date-range-summary" id="dr-summary-paid-search"></span>
     <button class="date-range-clear" onclick="drClear('paid-search')">✕ Clear</button>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-paid-search">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-paid-search" placeholder="e.g. 20%" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-paid-search" placeholder="e.g. 25%" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('paid-search')">Save</button>
+    <span class="target-editor-saved" id="te-saved-paid-search">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: Store Visit Rate</span>
+  </div>
+
 
 
   <!-- PRIMARY KPI DEEP DIVE -->
@@ -2236,6 +2295,22 @@
     <span class="date-range-summary" id="dr-summary-web"></span>
     <button class="date-range-clear" onclick="drClear('web')">✕ Clear</button>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-web">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-web" placeholder="e.g. 20%" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-web" placeholder="e.g. 25%" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('web')">Save</button>
+    <span class="target-editor-saved" id="te-saved-web">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: Sessions by Source</span>
+  </div>
+
 
 
   <!-- PRIMARY KPI DEEP DIVE -->
@@ -2439,6 +2514,22 @@
     <span class="date-range-summary" id="dr-summary-sms"></span>
     <button class="date-range-clear" onclick="drClear('sms')">✕ Clear</button>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-sms">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-sms" placeholder="e.g. 20%" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-sms" placeholder="e.g. 25%" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('sms')">Save</button>
+    <span class="target-editor-saved" id="te-saved-sms">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: Opt-in Rate</span>
+  </div>
+
 
 
   <!-- PRIMARY KPI DEEP DIVE -->
@@ -2632,6 +2723,22 @@
     <span class="date-range-summary" id="dr-summary-email"></span>
     <button class="date-range-clear" onclick="drClear('email')">✕ Clear</button> <span style="color:var(--amber);font-size:10px;">⚠ No date column in current export</span>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-email">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-email" placeholder="e.g. 20%" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-email" placeholder="e.g. 25%" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('email')">Save</button>
+    <span class="target-editor-saved" id="te-saved-email">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: CTOR (Journey / Eblast)</span>
+  </div>
+
 
 
   <!-- PRIMARY KPI DEEP DIVE: DUAL KPI (Journey + Eblast CTOR) -->
@@ -2811,6 +2918,22 @@
     <span class="date-range-summary" id="dr-summary-direct-mail"></span>
     <button class="date-range-clear" onclick="drClear('direct-mail')">✕ Clear</button> <span style="color:var(--amber);font-size:10px;">⚠ No date column in current export</span>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-direct-mail">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-direct-mail" placeholder="e.g. 20%" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-direct-mail" placeholder="e.g. 25%" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('direct-mail')">Save</button>
+    <span class="target-editor-saved" id="te-saved-direct-mail">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: Household Response Rate</span>
+  </div>
+
 
 
   <div class="kpi-deepdive">
@@ -2967,6 +3090,22 @@
     <span class="date-range-summary" id="dr-summary-seo"></span>
     <button class="date-range-clear" onclick="drClear('seo')">✕ Clear</button>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-seo">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-seo" placeholder="e.g. 20%" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-seo" placeholder="e.g. 25%" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('seo')">Save</button>
+    <span class="target-editor-saved" id="te-saved-seo">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: CTR + AI Visibility Score</span>
+  </div>
+
 
 
   <!-- DUAL PRIMARY KPIs: SEO CTR + AI Visibility -->
@@ -3162,6 +3301,22 @@
     <span class="date-range-summary" id="dr-summary-listings"></span>
     <button class="date-range-clear" onclick="drClear('listings')">✕ Clear</button>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-listings">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-listings" placeholder="e.g. 20%" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-listings" placeholder="e.g. 25%" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('listings')">Save</button>
+    <span class="target-editor-saved" id="te-saved-listings">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: Action Rate</span>
+  </div>
+
 
 
   <div class="kpi-deepdive">
@@ -3358,6 +3513,22 @@
     <span class="date-range-summary" id="dr-summary-reviews"></span>
     <button class="date-range-clear" onclick="drClear('reviews')">✕ Clear</button>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-reviews">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-reviews" placeholder="e.g. 20%" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-reviews" placeholder="e.g. 25%" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('reviews')">Save</button>
+    <span class="target-editor-saved" id="te-saved-reviews">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: % Reviews Responded To</span>
+  </div>
+
 
 
   <!-- PRIMARY KPI: % Reviews Responded To -->
@@ -3555,6 +3726,22 @@
     <span class="date-range-summary" id="dr-summary-organic-social"></span>
     <button class="date-range-clear" onclick="drClear('organic-social')">✕ Clear</button>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-organic-social">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-organic-social" placeholder="e.g. 20%" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-organic-social" placeholder="e.g. 25%" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('organic-social')">Save</button>
+    <span class="target-editor-saved" id="te-saved-organic-social">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: Avg Post Engagement Rate</span>
+  </div>
+
 
 
   <div class="kpi-deepdive">
@@ -3755,6 +3942,22 @@
       <div class="status-dot"></div>Partial data — establishing baseline
     </div>
   </div>
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-ctv">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-ctv" placeholder="e.g. $50" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-ctv" placeholder="e.g. $48" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('ctv')">Save</button>
+    <span class="target-editor-saved" id="te-saved-ctv">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: CPM</span>
+  </div>
+
 
   <div class="kpi-deepdive">
     <div class="kpi-deepdive-header">
@@ -3873,6 +4076,22 @@
     </div>
   </div>
   <div style="padding:0 32px 28px;">
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-paid-social">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-paid-social" placeholder="e.g. $50" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-paid-social" placeholder="e.g. $48" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('paid-social')">Save</button>
+    <span class="target-editor-saved" id="te-saved-paid-social">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: CPVC / CTR</span>
+  </div>
+
     <div class="section-label" style="margin-top:24px;">When Channel Activates — KPI Framework</div>
     <div class="monitoring-grid">
       <div class="monitor-card">
@@ -3914,6 +4133,22 @@
     </div>
   </div>
   <div style="padding:0 32px 28px;">
+  <!-- Target Editor -->
+  <div class="target-editor" id="te-bar-programmatic">
+    <span class="target-editor-label">Targets</span>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoQ</span>
+      <input class="target-editor-input" id="te-eoq-programmatic" placeholder="e.g. $50" />
+    </div>
+    <div class="target-editor-group">
+      <span class="target-editor-sublabel">EoY</span>
+      <input class="target-editor-input" id="te-eoy-programmatic" placeholder="e.g. $48" />
+    </div>
+    <button class="target-editor-save" onclick="teSave('programmatic')">Save</button>
+    <span class="target-editor-saved" id="te-saved-programmatic">✓ Saved</span>
+    <span class="target-editor-kpi">Primary KPI: CPC</span>
+  </div>
+
     <div class="section-label" style="margin-top:24px;">Pre-Defined KPI Framework — Ready to Activate</div>
     <div class="monitoring-grid">
       <div class="monitor-card">
@@ -4156,84 +4391,84 @@ const CHANNELS = [
   {
     id: "paid-search", name: "Paid Search", vendor: "Google Ads",
     primaryKpi: "Store Visit Rate (Visits / Clicks)",
-    current: "3.6%", target: "20% (Q1)", status: "red", pct: 18,
+    current: "3.6%", target: "20% (Q1)", targetEoQ: "20%", targetEoY: "25%", status: "red", pct: 18,
     note: "9,866 Search store visits on $215K spend. PMax/Demand Gen ratios unstudied.",
     indicator: "Leading", owner: "Bethany"
   },
   {
     id: "web", name: "Web", vendor: "GA4",
     primaryKpi: "Sessions by Source",
-    current: "1.55M", target: "Q4 + Seasonality baseline", status: "yellow", pct: 75,
+    current: "1.55M", target: "Q4 + Seasonality baseline", targetEoQ: "—", targetEoY: "—", status: "yellow", pct: 75,
     note: "Organic Search leads at 875K sessions. Paid Search 381K. Full date dimension needed.",
     indicator: "Leading", owner: "TBD"
   },
   {
     id: "sms", name: "SMS", vendor: "Cinch / Twilio",
     primaryKpi: "Opt-in Rate",
-    current: "0.6%", target: "1.0% EoY", status: "yellow", pct: 60,
+    current: "0.6%", target: "1.0% EoY", targetEoQ: "—", targetEoY: "1.0%", status: "yellow", pct: 60,
     note: "~89K outgoing/mo (Feb 2026). Delivery rate 91.5%. Competitors benchmark ~1%.",
     indicator: "Leading", owner: "Brian"
   },
   {
     id: "email", name: "Email", vendor: "Cinch",
     primaryKpi: "CTOR (Journey / Eblast)",
-    current: "1.54% / 1.11%", target: "2.1% / 1.25% (Q1)", status: "yellow", pct: 73,
+    current: "1.54% / 1.11%", target: "2.1% / 1.25% (Q1)", targetEoQ: "2.1% / 1.25%", targetEoY: "2.5% / 1.5%", status: "yellow", pct: 81,
     note: "Journey CTOR below 1.87% baseline — add CTAs. 23.9M total sends across 178 templates.",
     indicator: "Leading", owner: "Brian"
   },
   {
     id: "direct-mail", name: "Direct Mail", vendor: "Drip Drop",
     primaryKpi: "Household Response Rate",
-    current: "7.26%", target: "2.75% EoY (new HH only)", status: "green", pct: 100,
+    current: "7.26%", target: "2.75% EoY (new HH only)", targetEoQ: "2.75%", targetEoY: "3.0%", status: "green", pct: 100,
     note: "206K HH responses on 2.85M cards mailed. Overall rate well above target.",
     indicator: "Lagging", owner: "Brian"
   },
   {
     id: "seo", name: "SEO / AI", vendor: "Scout / Yext / GSC",
     primaryKpi: "CTR (GSC) + AI Visibility Score",
-    current: "2.7% CTR / 91 AI Score", target: "3.0% CTR / 95 AI Score", status: "yellow", pct: 83,
+    current: "2.7% CTR / 91 AI Score", target: "3.0% CTR / 95 AI Score", targetEoQ: "3.0% / 95", targetEoY: "3.5% / 97", status: "yellow", pct: 93,
     note: "No historical data capture yet — establish pipeline urgently.",
     indicator: "Leading", owner: "Bethany"
   },
   {
     id: "listings", name: "Listings", vendor: "GBP / Yext",
     primaryKpi: "Action Rate (Actions / 1K Impressions)",
-    current: "—", target: "2.7% (Q1) → 3.0% EoY", status: "yellow", pct: 0,
+    current: "—", target: "2.7% (Q1) → 3.0% EoY", targetEoQ: "2.7%", targetEoY: "3.0%", status: "yellow", pct: 0,
     note: "Actions declining YoY at multiple locations (-10% to -81%). Investigate PMax impact.",
     indicator: "Leading", owner: "Louis"
   },
   {
     id: "reviews", name: "Reviews", vendor: "GBP / Yext",
     primaryKpi: "% Reviews Responded To",
-    current: "4.8★", target: "4.85★ / +20% response rate", status: "yellow", pct: 96,
+    current: "4.8★", target: "4.85★ / +20% response rate", targetEoQ: "4.85★", targetEoY: "4.9★", status: "yellow", pct: 96,
     note: "Star rating strong at 4.8. Response rate strategy needed to hit +20% target.",
     indicator: "Leading", owner: "Louis"
   },
   {
     id: "organic-social", name: "Organic Social", vendor: "Meta / Instagram",
     primaryKpi: "Avg Post Engagement Rate",
-    current: "—", target: "5.0% (Q1) → 6.5% EoY", status: "yellow", pct: 0,
+    current: "—", target: "5.0% (Q1) → 6.5% EoY", targetEoQ: "5.0%", targetEoY: "6.5%", status: "yellow", pct: 0,
     note: "Industry benchmark: 5%. GM Only. Export needed to populate current rate.",
     indicator: "Leading", owner: "Louis"
   },
   {
     id: "ctv", name: "CTV", vendor: "Mountain",
     primaryKpi: "CPM",
-    current: "$55", target: "$50", status: "yellow", pct: 80,
+    current: "$55", target: "$50", targetEoQ: "$50", targetEoY: "$48", status: "yellow", pct: 91,
     note: "Establishing offline conversion metric. URL-specific tracking needed.",
     indicator: "Lagging", owner: "Bethany"
   },
   {
     id: "paid-social", name: "Paid Social", vendor: "TBD",
     primaryKpi: "HOLD — New Agency",
-    current: "—", target: "TBD", status: "gray", pct: 0,
+    current: "—", target: "TBD", targetEoQ: "TBD", targetEoY: "TBD", status: "gray", pct: 0,
     note: "On hold — new agency onboarding in progress.",
     indicator: "—", owner: "Bethany"
   },
   {
     id: "programmatic", name: "Programmatic", vendor: "TBD",
     primaryKpi: "CPC",
-    current: "$25", target: "$22.50", status: "gray", pct: 0,
+    current: "$25", target: "$22.50", targetEoQ: "$22.50", targetEoY: "$21.00", status: "gray", pct: 90,
     note: "On hold — new agency onboarding in progress.",
     indicator: "Leading", owner: "Bethany"
   }
@@ -4716,7 +4951,11 @@ function applyParsedFiles(files) {
       const r = parseSMS(files['cinch-sms'].wb);
       const c = ch('sms');
       if (r.outgoing) {
-        c.note = `${fmt(r.outgoing)} outgoing messages (${r.latestMonth}). Delivery rate: ${r.deliveryRate}%.`;
+        const delNum = parseFloat(r.deliveryRate);
+        c.current = `${r.deliveryRate}% delivery`;
+        c.pct     = Math.min(100, Math.round(delNum / 95 * 100)); // 95% delivery = target
+        c.status  = delNum >= 95 ? 'green' : delNum >= 90 ? 'yellow' : 'red';
+        c.note    = `${fmt(r.outgoing)} outgoing messages (${r.latestMonth}). Delivery rate: ${r.deliveryRate}%.`;
       }
     }
 
@@ -4760,8 +4999,11 @@ function applyParsedFiles(files) {
       const r = parseWebGA4(files['web-ga4'].wb);
       const c = ch('web');
       if (r.total > 0) {
+        const organicPct = Math.round(r.organic / r.total * 100);
         c.current = fmt(r.total);
-        c.note    = `Organic Search ${fmt(r.organic)} (${Math.round(r.organic/r.total*100)}%). Paid Search ${fmt(r.paid)} (${Math.round(r.paid/r.total*100)}%).`;
+        c.pct     = Math.min(100, organicPct); // organic share as health proxy
+        c.status  = organicPct >= 55 ? 'green' : organicPct >= 40 ? 'yellow' : 'red';
+        c.note    = `Organic Search ${fmt(r.organic)} (${organicPct}%). Paid Search ${fmt(r.paid)} (${Math.round(r.paid/r.total*100)}%).`;
       }
     }
 
@@ -4893,13 +5135,15 @@ function renderKpiCards() {
     const deltaHtml = ch.pct > 0
       ? `<span class="kpi-delta ${ch.pct >= 90 ? 'delta-pos' : ch.pct >= 60 ? 'delta-neu' : 'delta-neg'}">${ch.pct}% to target</span>`
       : `<span class="kpi-delta delta-neu">Pending data</span>`;
+    const eoqStr = (ch.targetEoQ && ch.targetEoQ !== '—' && ch.targetEoQ !== 'TBD') ? `<span style="margin-right:8px;">EoQ: <strong>${ch.targetEoQ}</strong></span>` : '';
+    const eoyStr = (ch.targetEoY && ch.targetEoY !== '—' && ch.targetEoY !== 'TBD') ? `EoY: <strong>${ch.targetEoY}</strong>` : '';
     return `
       <div class="kpi-card ${ch.status}" onclick="showPage('${ch.id}')" title="Click to view ${ch.name} detail">
         <div class="kpi-channel">${ch.name}</div>
         <div class="kpi-label">${ch.primaryKpi}</div>
         <div class="kpi-value">${ch.current}</div>
         <div class="kpi-meta">
-          <span class="kpi-target">Target: ${ch.target}</span>
+          <span class="kpi-target" style="display:block;margin-bottom:2px;">${eoqStr}${eoyStr}</span>
           ${deltaHtml}
         </div>
         <div class="kpi-owner">Owner: ${ch.owner} · ${ch.indicator}</div>
@@ -4913,17 +5157,22 @@ function renderKpiCards() {
 function renderOverviewRows() {
   const container = document.getElementById('overviewRows');
   const colorMap = { green: 'var(--green)', yellow: 'var(--amber)', red: 'var(--fsa-red)', gray: 'var(--muted)' };
-  container.innerHTML = CHANNELS.map(ch => `
+  container.innerHTML = CHANNELS.map(ch => {
+    const eoqStr = (ch.targetEoQ && ch.targetEoQ !== '—' && ch.targetEoQ !== 'TBD') ? `EoQ ${ch.targetEoQ}` : '';
+    const eoyStr = (ch.targetEoY && ch.targetEoY !== '—' && ch.targetEoY !== 'TBD') ? `EoY ${ch.targetEoY}` : '';
+    const targetStr = [eoqStr, eoyStr].filter(Boolean).join(' · ') || ch.target;
+    return `
     <div class="overview-row" onclick="showPage('${ch.id}')">
       <div class="ov-status" style="background:${colorMap[ch.status]}"></div>
       <div class="ov-channel">${ch.name}</div>
       <div class="ov-kpi">${ch.primaryKpi}</div>
       <div class="ov-value" style="color:${colorMap[ch.status]}">${ch.current}</div>
-      <div class="ov-target">${ch.target}</div>
+      <div class="ov-target">${targetStr}</div>
       <div class="ov-bar">
         <div class="ov-fill" style="width:${ch.pct}%;background:${colorMap[ch.status]}"></div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -4949,6 +5198,8 @@ function showPage(id) {
   if (id === 'go-dark') {
     gdAutoFetch();
   }
+  // Populate target editor inputs for the channel
+  tePopulate(id);
 }
 
 function setMeta() {
@@ -5141,7 +5392,7 @@ function gdRunOnWorkbook(wb, sourceName, range) {
     );
     if (hdrIdx < 0) hdrIdx = 0;
     const hdrs = rows[hdrIdx].map(c => String(c).trim());
-    const data = rows.slice(hdrIdx + 1).filter(r => r.some(c => c !== ''));
+    let data   = rows.slice(hdrIdx + 1).filter(r => r.some(c => c !== ''));
 
     const iDay  = hdrs.findIndex(h => /^(Day|Date)$/i.test(h));
     const iCamp = hdrs.findIndex(h => /campaign/i.test(h) && !/type/i.test(h));
@@ -5724,13 +5975,13 @@ function gdSendAlert() {
 
 // ── Alert all dark stores ────────────────────────────────────────────
 function gdAlertAll() {
-  const darkStores = Object.entries(gdStoreMap).filter(([sn, s]) => s.isDark && !s.darkDays.every(d => gdSentAlerts[`${sn}|${d}`]));
-  if (darkStores.length === 0) { gdToast('Nothing to alert', 'All dark stores already alerted.', true); return; }
+  // Respect active filters — only alert stores visible in current view
+  const visibleDark = gdGetFilteredEntries().filter(e => e.isDark && !e.darkDays.every(d => gdSentAlerts[`${e.sn}|${d}`]));
+  if (visibleDark.length === 0) { gdToast('Nothing to alert', 'All visible dark stores already alerted.', true); return; }
 
-  // Open mailto with summary of all dark stores
-  const toVal   = document.getElementById('gd-stakeholder-email')?.value || '';
-  const ccVal   = document.getElementById('gd-cc-email')?.value || '';
-  const storeNums = Object.keys(gdStoreMap).filter(sn => gdStoreMap[sn].isDark);
+  const toVal    = document.getElementById('gd-stakeholder-email')?.value || '';
+  const ccVal    = document.getElementById('gd-cc-email')?.value || '';
+  const storeNums = visibleDark.map(e => e.sn);
   const subject = encodeURIComponent(`[URGENT] Go Dark Alert — ${storeNums.length} Stores — $0 Spend Detected`);
 
   const bodyLines = [
@@ -6132,7 +6383,89 @@ function parseSMSFiltered(wb, range) {
   return { latestMonth: latest?.label, outgoing: latest?.out, deliveryRate };
 }
 
+
+// ═══════════════════════════════════════════════════════════════════
+// TARGET EDITOR — EoQ / EoY per-channel target management
+// ═══════════════════════════════════════════════════════════════════
+
+const TARGET_STORAGE_KEY = 'fsa_channel_targets';
+
+// Load saved targets from localStorage and apply to CHANNELS array
+function loadSavedTargets() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(TARGET_STORAGE_KEY) || '{}');
+    CHANNELS.forEach(ch => {
+      if (saved[ch.id]) {
+        if (saved[ch.id].eoq !== undefined) ch.targetEoQ = saved[ch.id].eoq;
+        if (saved[ch.id].eoy !== undefined) ch.targetEoY = saved[ch.id].eoy;
+      }
+    });
+  } catch(e) {}
+}
+
+// Save a single channel's targets
+function saveChannelTarget(channelId, eoq, eoy) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(TARGET_STORAGE_KEY) || '{}');
+    saved[channelId] = { eoq, eoy };
+    localStorage.setItem(TARGET_STORAGE_KEY, JSON.stringify(saved));
+  } catch(e) {}
+}
+
+// Called from the Save button in each channel's target editor
+function teSave(channelId) {
+  const eoqEl = document.getElementById(`te-eoq-${channelId}`);
+  const eoyEl = document.getElementById(`te-eoy-${channelId}`);
+  if (!eoqEl || !eoyEl) return;
+
+  const eoq = eoqEl.value.trim();
+  const eoy = eoyEl.value.trim();
+
+  // Update CHANNELS array
+  const ch = CHANNELS.find(c => c.id === channelId);
+  if (ch) {
+    ch.targetEoQ = eoq;
+    ch.targetEoY = eoy;
+    // Also update the combined target string shown in overview
+    ch.target = buildTargetString(eoq, eoy);
+  }
+
+  // Persist
+  saveChannelTarget(channelId, eoq, eoy);
+
+  // Re-render overview cards so target display updates immediately
+  renderKpiCards();
+  renderOverviewRows();
+
+  // Flash saved indicator
+  const savedEl = document.getElementById(`te-saved-${channelId}`);
+  if (savedEl) {
+    savedEl.classList.add('show');
+    setTimeout(() => savedEl.classList.remove('show'), 2000);
+  }
+}
+
+function buildTargetString(eoq, eoy) {
+  const hasEoQ = eoq && eoq !== '—' && eoq !== 'TBD';
+  const hasEoY = eoy && eoy !== '—' && eoy !== 'TBD';
+  if (hasEoQ && hasEoY && eoq !== eoy) return `${eoq} EoQ · ${eoy} EoY`;
+  if (hasEoY) return `${eoy} EoY`;
+  if (hasEoQ) return `${eoq} EoQ`;
+  return eoy || eoq || '—';
+}
+
+// Populate input values when a channel page is shown
+function tePopulate(channelId) {
+  const ch  = CHANNELS.find(c => c.id === channelId);
+  if (!ch) return;
+  const eoqEl = document.getElementById(`te-eoq-${channelId}`);
+  const eoyEl = document.getElementById(`te-eoy-${channelId}`);
+  if (eoqEl) eoqEl.value = ch.targetEoQ || '';
+  if (eoyEl) eoyEl.value = ch.targetEoY || '';
+}
+
 // ── Init — render with baseline values, then auto-fetch from GitHub ──
+loadSavedTargets(); // apply any user-saved EoQ/EoY targets before first render
 renderKpiCards();
 renderOverviewRows();
 setMeta();
