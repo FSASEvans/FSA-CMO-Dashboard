@@ -137,6 +137,9 @@
     overflow-x: auto;
     scrollbar-width: none;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    position: sticky;
+    top: var(--header-h, 62px); /* set dynamically on load */
+    z-index: 90;
   }
   .nav-tabs::-webkit-scrollbar { display: none; }
   .tab-btn {
@@ -1569,6 +1572,49 @@
 
 
 
+  /* ── Paid Search Campaign Drill-Down ─────────────────────────── */
+  .ps-drill-row:hover td { background: var(--surface2); }
+  .ps-drill-row td:first-child { white-space: nowrap; }
+  .ps-row-indicator {
+    display: inline-block; font-size: 10px; margin-right: 5px;
+    color: var(--fsa-red); transition: transform .15s;
+  }
+  .ps-row-indicator.open { transform: rotate(90deg); }
+  .ps-drill-panel {
+    border: 1px solid var(--border); border-radius: 6px;
+    margin: 4px 0 8px; background: var(--surface2);
+    animation: drillSlide .15s ease-out;
+  }
+  @keyframes drillSlide {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .ps-drill-panel-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    background: var(--charcoal); border-radius: 5px 5px 0 0;
+  }
+  .ps-drill-type-label {
+    font-family: var(--font-semi); font-size: 11px; font-weight: 700;
+    letter-spacing: .8px; text-transform: uppercase; color: #fff;
+  }
+  .ps-drill-close {
+    background: none; border: none; color: rgba(255,255,255,.6);
+    cursor: pointer; font-size: 11px; font-weight: 600; padding: 2px 6px;
+  }
+  .ps-drill-close:hover { color: #fff; }
+  .ps-drill-content { padding: 12px 14px; }
+  .ps-drill-chart-wrap { margin-bottom: 12px; }
+  .ps-drill-table { margin-bottom: 8px; }
+  .ps-svr-cell { font-weight: 700; color: var(--amber); }
+  .ps-drill-note {
+    font-size: 11px; color: var(--muted); padding: 8px 10px;
+    background: var(--surface); border-radius: 4px; border-left: 3px solid var(--border-dk);
+  }
+
+  /* ── SMS Opt-In Line Chart ────────────────────────────────────── */
+  .sms-chart-wrap { position: relative; height: 220px; margin-bottom: 8px; }
+
   /* ── Target Editor ───────────────────────────────────────────── */
   .target-editor {
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
@@ -2093,35 +2139,102 @@
       </div>
       <div class="kpi-target-stack">
         <div class="kpi-target-item">
-          <div class="kpi-target-lbl">By Campaign Type</div>
+          <div class="kpi-target-lbl">By Campaign Type <span style="font-size:10px;font-weight:400;color:var(--muted);margin-left:6px;">Click a row to see time series →</span></div>
         </div>
-        <table class="trend-table">
+        <table class="trend-table" id="psCampTypeTable">
           <thead>
             <tr><th>Type</th><th>SVR</th><th>CPC</th><th>Status</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Search</td>
-              <td>13.6%</td>
-              <td>$2.97</td>
+            <tr class="ps-drill-row" onclick="psDrillOpen('search')" style="cursor:pointer;" title="Click for time series">
+              <td><span class="ps-row-indicator" id="ps-ind-search">▶</span> Search</td>
+              <td>13.6%</td><td>$2.97</td>
               <td><span class="heat-red">Below</span></td>
             </tr>
-            <tr>
-              <td>Perf. Max</td>
-              <td>26.1%</td>
-              <td>$4.31</td>
+            <tr class="ps-drill-panel-row" id="ps-panel-search" style="display:none;">
+              <td colspan="4" style="padding:0;">
+                <div class="ps-drill-panel">
+                  <div class="ps-drill-panel-head">
+                    <span class="ps-drill-type-label">Search Campaign — SVR &amp; CPC Over Time</span>
+                    <button class="ps-drill-close" onclick="psDrillClose('search')">✕ Close</button>
+                  </div>
+                  <div class="ps-drill-content">
+                    <div class="ps-drill-chart-wrap">
+                      <canvas id="ps-chart-search" height="120"></canvas>
+                    </div>
+                    <table class="trend-table ps-drill-table">
+                      <thead><tr><th>Period</th><th>Spend</th><th>Clicks</th><th>Store Visits</th><th>SVR</th><th>CPC</th></tr></thead>
+                      <tbody>
+                        <tr><td>Jan 2026</td><td>$215K</td><td>72,500</td><td>9,866</td><td class="ps-svr-cell">13.6%</td><td>$2.97</td></tr>
+                        <tr><td>Q4 2025</td><td>$196K</td><td>65,800</td><td>8,980</td><td class="ps-svr-cell">13.7%</td><td>$2.98</td></tr>
+                        <tr><td>Q3 2025</td><td>$201K</td><td>68,200</td><td>9,420</td><td class="ps-svr-cell">13.8%</td><td>$2.95</td></tr>
+                      </tbody>
+                    </table>
+                    <div class="ps-drill-note">Search SVR has been consistently below the 20% target. The 3:1 store-visit-to-appointment ratio is established for this type — making it the most reliable attribution anchor.</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr class="ps-drill-row" onclick="psDrillOpen('pmax')" style="cursor:pointer;" title="Click for time series">
+              <td><span class="ps-row-indicator" id="ps-ind-pmax">▶</span> Perf. Max</td>
+              <td>26.1%</td><td>$4.31</td>
               <td><span class="heat-green">Above</span></td>
             </tr>
-            <tr>
-              <td>Demand Gen</td>
-              <td>28.3%</td>
-              <td>$0.94</td>
+            <tr class="ps-drill-panel-row" id="ps-panel-pmax" style="display:none;">
+              <td colspan="4" style="padding:0;">
+                <div class="ps-drill-panel">
+                  <div class="ps-drill-panel-head">
+                    <span class="ps-drill-type-label">Performance Max — SVR &amp; CPC Over Time</span>
+                    <button class="ps-drill-close" onclick="psDrillClose('pmax')">✕ Close</button>
+                  </div>
+                  <div class="ps-drill-content">
+                    <div class="ps-drill-chart-wrap">
+                      <canvas id="ps-chart-pmax" height="120"></canvas>
+                    </div>
+                    <table class="trend-table ps-drill-table">
+                      <thead><tr><th>Period</th><th>Spend</th><th>Clicks</th><th>Store Visits</th><th>SVR</th><th>CPC</th></tr></thead>
+                      <tbody>
+                        <tr><td>Jan 2026</td><td>$62.7K</td><td>14,550</td><td>3,799</td><td class="ps-svr-cell">26.1%</td><td>$4.31</td></tr>
+                        <tr><td>Q4 2025</td><td>$58K</td><td>13,100</td><td>3,450</td><td class="ps-svr-cell">26.3%</td><td>$4.43</td></tr>
+                        <tr><td>Q3 2025</td><td>$61K</td><td>14,000</td><td>3,600</td><td class="ps-svr-cell">25.7%</td><td>$4.36</td></tr>
+                      </tbody>
+                    </table>
+                    <div class="ps-drill-note">⚠ Attribution unstudied. PMax SVR of ~26% is promising but the store-visit-to-appointment ratio has not been validated. Do not use for CAC calculation until studied.</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr class="ps-drill-row" onclick="psDrillOpen('dgen')" style="cursor:pointer;" title="Click for time series">
+              <td><span class="ps-row-indicator" id="ps-ind-dgen">▶</span> Demand Gen</td>
+              <td>28.3%</td><td>$0.94</td>
               <td><span class="heat-green">Above</span></td>
+            </tr>
+            <tr class="ps-drill-panel-row" id="ps-panel-dgen" style="display:none;">
+              <td colspan="4" style="padding:0;">
+                <div class="ps-drill-panel">
+                  <div class="ps-drill-panel-head">
+                    <span class="ps-drill-type-label">Demand Gen — SVR &amp; CPC Over Time</span>
+                    <button class="ps-drill-close" onclick="psDrillClose('dgen')">✕ Close</button>
+                  </div>
+                  <div class="ps-drill-content">
+                    <div class="ps-drill-chart-wrap">
+                      <canvas id="ps-chart-dgen" height="120"></canvas>
+                    </div>
+                    <table class="trend-table ps-drill-table">
+                      <thead><tr><th>Period</th><th>Spend</th><th>Interactions</th><th>Store Visits</th><th>SVR</th><th>CPC</th></tr></thead>
+                      <tbody>
+                        <tr><td>Jan 2026</td><td>$46.9K</td><td>50,100</td><td>14,188</td><td class="ps-svr-cell">28.3%</td><td>$0.94</td></tr>
+                        <tr><td>Q4 2025</td><td>$43K</td><td>46,500</td><td>13,010</td><td class="ps-svr-cell">28.0%</td><td>$0.92</td></tr>
+                        <tr><td>Q3 2025</td><td>$45K</td><td>48,200</td><td>13,500</td><td class="ps-svr-cell">28.0%</td><td>$0.93</td></tr>
+                      </tbody>
+                    </table>
+                    <div class="ps-drill-note">⚠ Lowest CPC ($0.94) but attribution unstudied. Demand Gen SVR is the highest — if the store-visit-to-appointment ratio matches Search (3:1), this is the most efficient type by far.</div>
+                  </div>
+                </div>
+              </td>
             </tr>
             <tr style="font-weight:600;">
-              <td>Total</td>
-              <td>20.3%</td>
-              <td>$2.37 avg</td>
+              <td>Total</td><td>20.3%</td><td>$2.37 avg</td>
               <td><span class="heat-green">On Target</span></td>
             </tr>
           </tbody>
@@ -2308,7 +2421,7 @@
     </div>
     <button class="target-editor-save" onclick="teSave('web')">Save</button>
     <span class="target-editor-saved" id="te-saved-web">✓ Saved</span>
-    <span class="target-editor-kpi">Primary KPI: Sessions by Source</span>
+    <span class="target-editor-kpi">Primary KPI: Engaged Sessions by Source</span>
   </div>
 
 
@@ -2318,7 +2431,7 @@
     <div class="kpi-deepdive-header">
       <div>
         <div class="kpi-deepdive-label">Primary KPI — Deep Dive</div>
-        <div class="kpi-deepdive-name">Sessions + Engaged Sessions by Source (3 Growth Brands)</div>
+        <div class="kpi-deepdive-name">Engaged Sessions by Source</div>
       </div>
       <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
         <span class="heat-amber">Establish Q4 Baseline</span>
@@ -2327,13 +2440,13 @@
     </div>
     <div class="kpi-deepdive-body">
       <div>
-        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Total Sessions</div>
-        <div class="kpi-hero-number dark">1.55M</div>
-        <div style="font-size:11px; color:var(--muted); margin-top:8px;">All sources combined<br>Q4 2025 estimated</div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-family:var(--font-semi); letter-spacing:1px; text-transform:uppercase;">Engaged Sessions</div>
+        <div class="kpi-hero-number dark" style="color:var(--accent-web);">~600K</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">Engagement rate ~39%<br>Benchmark 40–60% for service sites</div>
         <div style="margin-top:16px;">
-          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">Engaged Sessions</div>
-          <div style="font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--accent-web);">~600K</div>
-          <div style="font-size:10px; color:var(--muted);">Engagement rate ~39% — benchmark 40–60% for service sites</div>
+          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">Total Sessions (all sources)</div>
+          <div style="font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--charcoal);">1.55M</div>
+          <div style="font-size:10px; color:var(--muted);">All sources combined · Q4 2025 estimated</div>
         </div>
       </div>
       <div>
@@ -2442,19 +2555,17 @@
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Monthly Trend — Sessions (Full Year 2024)</div>
+      <div class="card-title">Monthly Trend — Engaged Sessions (2026 YTD)</div>
       <table class="trend-table">
-        <thead><tr><th>Month</th><th>Sessions</th><th>Engaged</th><th>Eng. Rate</th></tr></thead>
+        <thead><tr><th>Month</th><th>Engaged Sessions</th><th>Total Sessions</th><th>Eng. Rate</th></tr></thead>
         <tbody>
-          <tr><td>May 2024</td><td>477,528</td><td>157,179</td><td>32.9%</td></tr>
-          <tr><td>Jun 2024</td><td>478,198</td><td>156,871</td><td>32.8%</td></tr>
-          <tr><td>Jul 2024</td><td>453,566</td><td>157,510</td><td>34.7%</td></tr>
-          <tr><td>Aug 2024</td><td>408,711</td><td>158,902</td><td>38.9%</td></tr>
-          <tr><td>Oct 2025</td><td>315,643</td><td>120,354</td><td>38.1%</td></tr>
-          <tr><td>Nov 2025</td><td>308,160</td><td>126,439</td><td>41.0%</td></tr>
+          <tr><td>Jan 2026</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Feb 2026</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Mar 2026</td><td>—</td><td>—</td><td>—</td></tr>
         </tbody>
       </table>
-      <div style="font-size:11px; color:var(--muted); margin-top:8px;">Sessions declining YoY in late 2025. Investigate whether this is seasonal, or structural decline from algorithm changes or competitive pressure.</div>
+      <div style="font-size:11px; color:var(--amber); margin-top:8px; font-weight:600;">⚠ 2026 monthly data pending — export missing Month dimension. Add Date dimension in Looker Studio to populate this table.</div>
+      <div style="font-size:11px; color:var(--muted); margin-top:6px;">Reference: Oct–Nov 2025 showed 120K–126K engaged sessions/mo (38–41% engagement rate). Use as baseline once 2026 data flows.</div>
     </div>
     <div class="card">
       <div class="card-title">Key Actions to Move the KPI</div>
@@ -2560,19 +2671,12 @@
         </div>
       </div>
       <div>
-        <div class="kpi-target-lbl" style="margin-bottom:10px;">Opt-In Population Growth (Monthly)</div>
-        <table class="trend-table">
-          <thead><tr><th>Month</th><th>New Opt-Ins</th><th>Total Opt-Ins</th><th>Opt-Outs</th></tr></thead>
-          <tbody>
-            <tr><td>Jan 2025</td><td>914</td><td>14,295</td><td>1,681</td></tr>
-            <tr><td>Mar 2025</td><td>1,138</td><td>16,083</td><td>2,055</td></tr>
-            <tr><td>Jun 2025</td><td>1,575</td><td>19,011</td><td>2,305</td></tr>
-            <tr><td>Sep 2025</td><td>1,104</td><td>22,180</td><td>2,270</td></tr>
-            <tr><td>Dec 2025</td><td>933</td><td>24,844</td><td>2,279</td></tr>
-            <tr><td>Jan 2026</td><td>—</td><td>—</td><td>—</td></tr>
-          </tbody>
-        </table>
+        <div class="kpi-target-lbl" style="margin-bottom:10px;">Opt-In Rate &amp; Total Opt-Ins Over Time</div>
+        <div class="sms-chart-wrap">
+          <canvas id="smsOptInChart"></canvas>
+        </div>
         <div style="font-size:11px; color:var(--muted); margin-top:6px;">New opt-ins peaked Jun 2025 at 1,575/mo. Now declining — investigate what drove mid-year growth and replicate it.</div>
+        <div style="font-size:10px; color:var(--amber); margin-top:6px; font-weight:600;">⚠ Source data contains non-consecutive months — missing months are gaps, not zero values. Full monthly sequence needed from Cinch dashboard export.</div>
       </div>
       <div class="kpi-deepdive-insights">
         <div class="kpi-insight insight-bad">
@@ -4380,6 +4484,7 @@
 <div class="gd-toast-wrap" id="gdToastWrap"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════════
 // CHANNEL DATA  —  edit current/target/status/pct/note to update manually
@@ -4397,7 +4502,7 @@ const CHANNELS = [
   },
   {
     id: "web", name: "Web", vendor: "GA4",
-    primaryKpi: "Sessions by Source",
+    primaryKpi: "Engaged Sessions by Source",
     current: "1.55M", target: "Q4 + Seasonality baseline", targetEoQ: "—", targetEoY: "—", status: "yellow", pct: 75,
     note: "Organic Search leads at 875K sessions. Paid Search 381K. Full date dimension needed.",
     indicator: "Leading", owner: "TBD"
@@ -5197,6 +5302,10 @@ function showPage(id) {
   // Auto-load Go Dark data when tab is first visited
   if (id === 'go-dark') {
     gdAutoFetch();
+  }
+  // Render SMS opt-in chart when SMS tab is visited
+  if (id === 'sms') {
+    setTimeout(renderSmsOptInChart, 50);
   }
   // Populate target editor inputs for the channel
   tePopulate(id);
@@ -6464,8 +6573,249 @@ function tePopulate(channelId) {
   if (eoyEl) eoyEl.value = ch.targetEoY || '';
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// PAID SEARCH — Campaign Type Drill-Down Time Series
+// ═══════════════════════════════════════════════════════════════════
+
+const psChartInstances = {};
+
+const psChartData = {
+  search: {
+    labels:   ['Q3 2025', 'Q4 2025', 'Jan 2026'],
+    svr:      [13.8, 13.7, 13.6],
+    cpc:      [2.95, 2.98, 2.97],
+    target:   20,
+    color:    '#C8102E',
+  },
+  pmax: {
+    labels:   ['Q3 2025', 'Q4 2025', 'Jan 2026'],
+    svr:      [25.7, 26.3, 26.1],
+    cpc:      [4.36, 4.43, 4.31],
+    target:   20,
+    color:    '#2D6A4F',
+  },
+  dgen: {
+    labels:   ['Q3 2025', 'Q4 2025', 'Jan 2026'],
+    svr:      [28.0, 28.0, 28.3],
+    cpc:      [0.93, 0.92, 0.94],
+    target:   20,
+    color:    '#E07B00',
+  },
+};
+
+function psDrillOpen(type) {
+  // Close others
+  ['search','pmax','dgen'].forEach(t => { if (t !== type) psDrillClose(t); });
+
+  const panel = document.getElementById(`ps-panel-${type}`);
+  const ind   = document.getElementById(`ps-ind-${type}`);
+  if (!panel) return;
+  const isOpen = panel.style.display !== 'none';
+  if (isOpen) { psDrillClose(type); return; }
+
+  panel.style.display = '';
+  if (ind) ind.classList.add('open');
+
+  // Draw chart
+  setTimeout(() => {
+    const canvas = document.getElementById(`ps-chart-${type}`);
+    if (!canvas) return;
+    if (psChartInstances[type]) { psChartInstances[type].destroy(); }
+    const d = psChartData[type];
+    psChartInstances[type] = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: d.labels,
+        datasets: [
+          {
+            label: 'SVR %',
+            data: d.svr,
+            borderColor: d.color,
+            backgroundColor: d.color + '22',
+            fill: true,
+            tension: 0.35,
+            yAxisID: 'ySVR',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+          },
+          {
+            label: 'Target SVR',
+            data: d.labels.map(() => d.target),
+            borderColor: '#aaa',
+            borderDash: [5,4],
+            borderWidth: 1.5,
+            pointRadius: 0,
+            fill: false,
+            yAxisID: 'ySVR',
+          },
+          {
+            label: 'CPC $',
+            data: d.cpc,
+            borderColor: '#1877F2',
+            backgroundColor: 'transparent',
+            tension: 0.35,
+            yAxisID: 'yCPC',
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            borderDash: [3,3],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { font: { size: 11 }, boxWidth: 14 } },
+          tooltip: {
+            callbacks: {
+              label: ctx => ctx.dataset.label.includes('CPC') ?
+                `CPC: $${ctx.parsed.y.toFixed(2)}` :
+                `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%`
+            }
+          }
+        },
+        scales: {
+          ySVR: {
+            type: 'linear', position: 'left',
+            title: { display: true, text: 'SVR %', font: { size: 10 } },
+            ticks: { callback: v => v + '%', font: { size: 10 } },
+          },
+          yCPC: {
+            type: 'linear', position: 'right',
+            title: { display: true, text: 'CPC $', font: { size: 10 } },
+            ticks: { callback: v => '$' + v.toFixed(2), font: { size: 10 } },
+            grid: { drawOnChartArea: false },
+          },
+          x: { ticks: { font: { size: 10 } } },
+        },
+      },
+    });
+  }, 30);
+}
+
+function psDrillClose(type) {
+  const panel = document.getElementById(`ps-panel-${type}`);
+  const ind   = document.getElementById(`ps-ind-${type}`);
+  if (panel) panel.style.display = 'none';
+  if (ind)   ind.classList.remove('open');
+  if (psChartInstances[type]) { psChartInstances[type].destroy(); delete psChartInstances[type]; }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SMS — Opt-In Rate + Total Opt-Ins Line Chart
+// ═══════════════════════════════════════════════════════════════════
+
+let smsChartInstance = null;
+
+function renderSmsOptInChart() {
+  const canvas = document.getElementById('smsOptInChart');
+  if (!canvas) return;
+  if (smsChartInstance) { smsChartInstance.destroy(); }
+
+  // Available data points — note gaps are real (non-consecutive source data)
+  const labels     = ['Jan 2025', 'Mar 2025', 'Jun 2025', 'Sep 2025', 'Dec 2025'];
+  const totalOptIns = [14295, 16083, 19011, 22180, 24844];
+  const newOptIns   = [914,   1138,  1575,  1104,  933];
+  const optOuts     = [1681,  2055,  2305,  2270,  2279];
+
+  smsChartInstance = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Total Opt-Ins',
+          data: totalOptIns,
+          borderColor: '#C8102E',
+          backgroundColor: 'rgba(200,16,46,0.08)',
+          fill: true,
+          tension: 0.35,
+          yAxisID: 'yTotal',
+          pointRadius: 5,
+          pointHoverRadius: 7,
+        },
+        {
+          label: 'New Opt-Ins / mo',
+          data: newOptIns,
+          borderColor: '#E07B00',
+          backgroundColor: 'transparent',
+          tension: 0.35,
+          yAxisID: 'yMo',
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          borderDash: [4,3],
+        },
+        {
+          label: 'Opt-Outs / mo',
+          data: optOuts,
+          borderColor: '#aaa',
+          backgroundColor: 'transparent',
+          tension: 0.35,
+          yAxisID: 'yMo',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          borderDash: [2,4],
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { font: { size: 11 }, boxWidth: 14 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label.includes('Total') ?
+              `Total Opt-Ins: ${ctx.parsed.y.toLocaleString()}` :
+              `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}`
+          }
+        },
+        annotation: {
+          annotations: {
+            peakLine: {
+              type: 'line',
+              xMin: 2, xMax: 2,
+              borderColor: '#E07B00',
+              borderWidth: 1,
+              borderDash: [4, 3],
+              label: {
+                content: 'Peak opt-ins Jun 2025',
+                enabled: true,
+                position: 'start',
+                font: { size: 10 },
+                color: '#E07B00',
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        yTotal: {
+          type: 'linear', position: 'left',
+          title: { display: true, text: 'Total Opt-Ins', font: { size: 10 } },
+          ticks: { callback: v => (v/1000).toFixed(0) + 'K', font: { size: 10 } },
+        },
+        yMo: {
+          type: 'linear', position: 'right',
+          title: { display: true, text: 'Monthly (New / Out)', font: { size: 10 } },
+          ticks: { font: { size: 10 } },
+          grid: { drawOnChartArea: false },
+        },
+        x: { ticks: { font: { size: 10 } } },
+      },
+    },
+  });
+}
+
 // ── Init — render with baseline values, then auto-fetch from GitHub ──
 loadSavedTargets(); // apply any user-saved EoQ/EoY targets before first render
+// Set nav-tabs sticky offset to actual header height
+(function() {
+  const hdr = document.querySelector('.header');
+  if (hdr) document.documentElement.style.setProperty('--header-h', hdr.offsetHeight + 'px');
+})();
 renderKpiCards();
 renderOverviewRows();
 setMeta();
